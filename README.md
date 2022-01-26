@@ -11,4 +11,4 @@
 -   [x] Entity Pemakaian Pelanggan
 
 -   [ ] Validasi input
--   [ ] All CRUD
+-   [x] All CRUD
