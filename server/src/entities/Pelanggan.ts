@@ -3,9 +3,11 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm";
 import GolonganPelanggan from "./GolonganPelanggan";
+import PemakaianPelanggan from "./PemakaianPelanggan";
 
 @Entity()
 class Pelanggan {
@@ -21,5 +23,8 @@ class Pelanggan {
     @ManyToOne(() => GolonganPelanggan, (golongan) => golongan.pelanggan)
     @JoinColumn({ name: "golongan" })
     golongan!: GolonganPelanggan;
+
+    @OneToMany(() => PemakaianPelanggan, (pemakaian) => pemakaian.pelanggan)
+    pemakaian!: PemakaianPelanggan[];
 }
 export default Pelanggan;
