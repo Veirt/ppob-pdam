@@ -8,4 +8,4 @@
 - [x] Entity Pelanggan
 - [x] Entity Golongan Pelanggan
 - [ ] Entity Tarif Pemakaian
-- [ ] Entity Pemakaian Pelanggan
+- [x] Entity Pemakaian Pelanggan
