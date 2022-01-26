@@ -11,7 +11,7 @@ router.use("/auth", AuthRouter);
 router.use("/petugas/role", RolePetugasRouter);
 router.use("/petugas", PetugasRouter);
 router.use("/pelanggan/pemakaian", PemakaianRouter);
-router.use("/pelanggan/golongan", GolonganRouter);
 router.use("/pelanggan", PelangganRouter);
+router.use("/golongan", GolonganRouter);
 
 export default router;
