@@ -1,6 +1,7 @@
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
 import TarifPemakaian from "../entities/TarifPemakaian";
+import { validateTarif } from "../utils/validation";
 
 const tarifRepository = getRepository(TarifPemakaian);
 
@@ -19,7 +20,9 @@ export const getTarif: Controller = async (_, res) => {
 };
 
 export const createTarif: Controller = async (req, res) => {
-    // TODO: validate input
+    const validationResult = await validateTarif(req.body);
+    if (validationResult.length > 0) return res.json(validationResult);
+
     const { kubik_awal, kubik_akhir, tarif, golongan } = req.body;
     const newTarif = tarifRepository.create({
         kubik_awal,
@@ -34,10 +37,11 @@ export const createTarif: Controller = async (req, res) => {
 };
 
 export const updateTarif: Controller = async (req, res) => {
-    // TODO: validate input
+    const validationResult = await validateTarif(req.body);
+    if (validationResult.length > 0) return res.json(validationResult);
+
     const tarif = await tarifRepository.findOne(req.params.id);
 
-    // TODO: better validation
     if (!tarif) {
         return res.status(404).json();
     }
@@ -50,7 +54,6 @@ export const updateTarif: Controller = async (req, res) => {
 export const deleteTarif: Controller = async (req, res) => {
     const tarif = await tarifRepository.findOne(req.params.id);
 
-    // TODO: better validation
     if (!tarif) {
         return res.status(404).json();
     }

@@ -1,6 +1,7 @@
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
 import Pelanggan from "../entities/Pelanggan";
+import { validatePelanggan } from "../utils/validation";
 
 const pelangganRepository = getRepository(Pelanggan);
 
@@ -19,10 +20,9 @@ export const getPelanggan: Controller = async (_, res) => {
 };
 
 export const createPelanggan: Controller = async (req, res) => {
-    // TODO: validate input
-    if (Object.keys(req.body).length < 3) {
-        return res.status(400).json({ msg: "Silakan isi form. " });
-    }
+    const validationResult = await validatePelanggan(req.body);
+    if (validationResult.length > 0) return res.json(validationResult);
+
     const { nama, alamat, golongan } = req.body;
 
     const newPelanggan = pelangganRepository.create({ nama, alamat, golongan });
@@ -32,12 +32,13 @@ export const createPelanggan: Controller = async (req, res) => {
 };
 
 export const updatePelanggan: Controller = async (req, res) => {
-    // TODO: validate input
+    const validationResult = await validatePelanggan(req.body);
+    if (validationResult.length > 0) return res.json(validationResult);
+
     const pelanggan = await pelangganRepository.findOne(req.params.id, {
         relations: ["golongan"],
     });
 
-    // TODO: better validation
     if (!pelanggan) {
         return res.status(404).json();
     }
@@ -49,9 +50,7 @@ export const updatePelanggan: Controller = async (req, res) => {
 
 export const deletePelanggan: Controller = async (req, res) => {
     const pelanggan = await pelangganRepository.findOne(req.params.id);
-    console.log(pelanggan);
 
-    // TODO: better validation
     if (!pelanggan) {
         return res.status(404).json();
     }

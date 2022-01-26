@@ -2,6 +2,7 @@ import * as argon2 from "argon2";
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
 import Petugas from "../entities/Petugas";
+import { validatePetugas } from "../utils/validation";
 
 const petugasRepository = getRepository(Petugas);
 
@@ -18,10 +19,9 @@ export const getPetugas: Controller = async (_, res) => {
 };
 
 export const createPetugas: Controller = async (req, res) => {
-    // TODO: validate input
-    if (Object.keys(req.body).length < 4) {
-        return res.status(400).json({ msg: "Silakan isi form. " });
-    }
+    const validationResult = await validatePetugas(req.body);
+    if (validationResult.length > 0) return res.json(validationResult);
+
     const { nama, username, password, role } = req.body;
 
     const newPetugas = petugasRepository.create({
@@ -32,18 +32,19 @@ export const createPetugas: Controller = async (req, res) => {
     });
     await petugasRepository.save(newPetugas);
 
-    return res.json({ msg: "Success" });
+    return res.json({ msg: "Successfully added petugas" });
 };
 
 export const updatePetugas: Controller = async (req, res) => {
-    // TODO: validate input
+    const validationResult = await validatePetugas(req.body, req.params.id);
+    if (validationResult.length > 0) return res.json(validationResult);
+
     const { nama, username, password, role } = req.body;
 
     const petugas = await petugasRepository.findOne(req.params.id, {
         relations: ["role"],
     });
 
-    // TODO: better validation
     if (!petugas) {
         return res.status(404).json();
     }
@@ -67,7 +68,6 @@ export const deletePetugas: Controller = async (req, res) => {
         relations: ["role"],
     });
 
-    // TODO: better validation
     if (!petugas) {
         return res.status(404).json();
     }

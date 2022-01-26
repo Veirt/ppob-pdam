@@ -1,6 +1,7 @@
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
 import PemakaianPelanggan from "../entities/PemakaianPelanggan";
+import { validatePemakaian } from "../utils/validation";
 
 const pemakaianRepository = getRepository(PemakaianPelanggan);
 
@@ -19,8 +20,10 @@ export const getPemakaian: Controller = async (_, res) => {
 };
 
 export const createPemakaian: Controller = async (req, res) => {
-    // TODO: validate input
     // TODO: cek tunggakan dan apakah sudah bulan ini
+    //
+    const validationResult = await validatePemakaian(req.body);
+    if (validationResult.length > 0) return res.json(validationResult);
 
     const { pelanggan, meter_awal, meter_akhir } = req.body;
     const newPemakaian = pemakaianRepository.create({
@@ -37,10 +40,11 @@ export const createPemakaian: Controller = async (req, res) => {
 };
 
 export const updatePemakaian: Controller = async (req, res) => {
-    // TODO: validate input
+    const validationResult = await validatePemakaian(req.body);
+    if (validationResult.length > 0) return res.json(validationResult);
+
     const pemakaian = await pemakaianRepository.findOne(req.params.id);
 
-    // TODO: better validation
     if (!pemakaian) {
         return res.status(404).json();
     }
@@ -53,7 +57,6 @@ export const updatePemakaian: Controller = async (req, res) => {
 export const deletePemakaian: Controller = async (req, res) => {
     const pemakaian = await pemakaianRepository.findOne(req.params.id);
 
-    // TODO: better validation
     if (!pemakaian) {
         return res.status(404).json();
     }

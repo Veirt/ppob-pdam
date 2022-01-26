@@ -1,6 +1,7 @@
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
 import RolePetugas from "../entities/RolePetugas";
+import { validateRole } from "../utils/validation";
 
 const roleRepository = getRepository(RolePetugas);
 
@@ -15,7 +16,9 @@ export const getRole: Controller = async (_, res) => {
 };
 
 export const createRole: Controller = async (req, res) => {
-    // TODO: validate input
+    const validationResult = await validateRole(req.body);
+    if (validationResult.length > 0) return res.json(validationResult);
+
     const newRole = roleRepository.create(req.body);
     await roleRepository.save(newRole);
 
@@ -23,10 +26,11 @@ export const createRole: Controller = async (req, res) => {
 };
 
 export const updateRole: Controller = async (req, res) => {
-    // TODO: validate input
+    const validationResult = await validateRole(req.body, req.params.id);
+    if (validationResult.length > 0) return res.json(validationResult);
+
     const role = await roleRepository.findOne(req.params.id);
 
-    // TODO: better validation
     if (!role) {
         return res.status(404).json();
     }
@@ -39,7 +43,6 @@ export const updateRole: Controller = async (req, res) => {
 export const deleteRole: Controller = async (req, res) => {
     const role = await roleRepository.findOne(req.params.id);
 
-    // TODO: better validation
     if (!role) {
         return res.status(404).json();
     }
