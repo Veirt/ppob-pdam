@@ -39,9 +39,12 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (idPetugas, done) => {
     try {
-        const petugas = await petugasRepository.findOne({
-            id_petugas: idPetugas as number,
-        });
+        const petugas = await petugasRepository.findOne(
+            {
+                id_petugas: idPetugas as number,
+            },
+            { relations: ["role"] }
+        );
 
         if (!petugas) {
             throw Error("Petugas tidak ditemukan");

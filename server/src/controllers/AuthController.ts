@@ -1,5 +1,5 @@
 import passport from "passport";
-import { Controller } from "../../@types/controller";
+import { Controller } from "../../@types/express";
 
 export const login: Controller = async (req, res, next) => {
     passport.authenticate("local", (err, user) => {
@@ -22,4 +22,8 @@ export const login: Controller = async (req, res, next) => {
             });
         });
     })(req, res, next);
+};
+
+export const getMyInfo: Controller = (req, res, next) => {
+    return res.json(req.user);
 };

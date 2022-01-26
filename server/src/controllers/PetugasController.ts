@@ -1,5 +1,5 @@
 import { getRepository } from "typeorm";
-import { Controller } from "../../@types/controller";
+import type { Controller } from "../../@types/express";
 import Petugas from "../entities/Petugas";
 
 const petugasRepository = getRepository(Petugas);
