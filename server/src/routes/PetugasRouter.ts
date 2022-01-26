@@ -1,8 +1,9 @@
 import { Router } from "express";
-import { getPetugas } from "../controllers/PetugasController";
+import { createPetugas, getPetugas } from "../controllers/PetugasController";
 
 const PetugasRouter = Router();
 
 PetugasRouter.get("/", getPetugas);
+PetugasRouter.post("/", createPetugas);
 
 export default PetugasRouter;
