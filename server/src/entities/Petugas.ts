@@ -8,7 +8,7 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from "typeorm";
-import Role from "./Role";
+import RolePetugas from "./RolePetugas";
 
 @Entity()
 class Petugas {
@@ -26,9 +26,9 @@ class Petugas {
 
     // Role bisa punya banyak petugas
     // Petugas hanya bisa punya 1 role
-    @ManyToOne(() => Role, (role) => role.petugas)
+    @ManyToOne(() => RolePetugas, (role) => role.petugas)
     @JoinColumn({ name: "role" })
-    role!: Role;
+    role!: RolePetugas;
 
     async verifyPassword(rawPassword: string) {
         const verified = await argon2.verify(this.password, rawPassword);

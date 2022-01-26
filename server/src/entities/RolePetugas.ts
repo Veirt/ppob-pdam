@@ -1,8 +1,8 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import Petugas from "./Petugas";
 
-@Entity()
-class Role {
+@Entity({ name: "role_petugas" })
+class RolePetugas {
     @PrimaryGeneratedColumn()
     id_role!: number;
 
@@ -13,4 +13,4 @@ class Role {
     petugas!: Petugas[];
 }
 
-export default Role;
+export default RolePetugas;

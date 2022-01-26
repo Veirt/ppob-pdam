@@ -5,7 +5,7 @@
 - [x] Entity Petugas
 - [x] Entity Role Petugas
 
-- [ ] Entity Pelanggan
-- [ ] Entity Golongan Pelanggan
+- [x] Entity Pelanggan
+- [x] Entity Golongan Pelanggan
 - [ ] Entity Tarif Pemakaian
 - [ ] Entity Pemakaian Pelanggan
