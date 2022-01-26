@@ -3,6 +3,9 @@ import session from "express-session";
 import passport from "passport";
 import connectDatabase from "./config/typeorm";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 connectDatabase().then(async () => {
     const app = express();
     app.use(express.json());
@@ -12,7 +15,7 @@ connectDatabase().then(async () => {
         session({
             saveUninitialized: true,
             resave: true,
-            secret: "asdjaisdkjasdlkjasdlkjsd",
+            secret: process.env.SESSION_SECRET!,
         })
     );
     app.use(passport.initialize());
