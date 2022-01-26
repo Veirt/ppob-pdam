@@ -8,7 +8,7 @@ class GolonganPelanggan {
     id_golongan!: number;
 
     @Column({ type: "varchar", length: 255 })
-    nama!: string;
+    nama_golongan!: string;
 
     @OneToMany(() => Pelanggan, (pelanggan) => pelanggan.golongan)
     pelanggan!: Pelanggan[];
