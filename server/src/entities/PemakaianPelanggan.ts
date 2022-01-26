@@ -16,7 +16,7 @@ class PemakaianPelanggan {
     id_pemakaian!: number;
 
     @ManyToOne(() => Pelanggan, (pelanggan) => pelanggan.pemakaian)
-    @JoinColumn({ name: "pelanggan_fk" })
+    @JoinColumn({ name: "pelanggan" })
     pelanggan!: Pelanggan;
 
     @Column({ type: "int" })

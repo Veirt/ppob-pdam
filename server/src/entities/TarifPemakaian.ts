@@ -24,7 +24,7 @@ class TarifPemakaian {
     tarif!: number;
 
     @ManyToOne(() => GolonganPelanggan, (golongan) => golongan.tarif)
-    @JoinColumn({ name: "golongan_fk" })
+    @JoinColumn({ name: "golongan" })
     golongan!: GolonganPelanggan;
 }
 
