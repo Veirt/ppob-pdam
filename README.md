@@ -10,5 +10,5 @@
 -   [x] Entity Tarif Pemakaian
 -   [x] Entity Pemakaian Pelanggan
 
--   [ ] Validasi input
+-   [x] Validasi input
 -   [x] All CRUD
