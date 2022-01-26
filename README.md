@@ -7,5 +7,5 @@
 
 - [x] Entity Pelanggan
 - [x] Entity Golongan Pelanggan
-- [ ] Entity Tarif Pemakaian
+- [x] Entity Tarif Pemakaian
 - [x] Entity Pemakaian Pelanggan

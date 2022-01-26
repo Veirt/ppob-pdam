@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import Pelanggan from "./Pelanggan";
+import TarifPemakaian from "./TarifPemakaian";
 
 @Entity({ name: "golongan_pelanggan" })
 class GolonganPelanggan {
@@ -11,6 +12,9 @@ class GolonganPelanggan {
 
     @OneToMany(() => Pelanggan, (pelanggan) => pelanggan.golongan)
     pelanggan!: Pelanggan[];
+
+    @OneToMany(() => TarifPemakaian, (tarif) => tarif.golongan)
+    tarif!: TarifPemakaian[];
 }
 
 export default GolonganPelanggan;
