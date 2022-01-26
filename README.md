@@ -9,3 +9,5 @@
 - [x] Entity Golongan Pelanggan
 - [x] Entity Tarif Pemakaian
 - [x] Entity Pemakaian Pelanggan
+
+- [ ] Validasi input
