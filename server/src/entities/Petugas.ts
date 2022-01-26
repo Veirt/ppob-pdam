@@ -36,8 +36,9 @@ class Petugas {
     }
 
     @BeforeInsert()
-    @BeforeUpdate()
     async hashPassword() {
+        if (!this.password) return;
+
         this.password = await argon2.hash(this.password);
     }
 }
