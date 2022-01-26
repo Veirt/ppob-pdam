@@ -1,1 +1,64 @@
-<mxfile host="app.diagrams.net" modified="2022-01-22T14:42:06.624Z" agent="5.0 (Windows)" etag="kJO5NEDE-E-QZYYm02Wm" version="16.4.5" type="github"><diagram id="uMM3siVCVbOM3F6NofLO" name="Page-1">7VnbctowEP0aHpvxPfgxQEKnk0zpkE6Tp4zAiq1GlhhZgMnXV7JlfIXgFOpc+oKlI60s79mzWuyeOQzjMQOL4IZ6EPcMzYt75qhnGK6hiV8JbFLA6tsp4DPkpZCeA1P0DBWo7Pwl8mBUmsgpxRwtyuCcEgLnvIQBxui6PO2R4vJdF8CHNWA6B7iO/kIeD1K0b5zn+FeI/CC7s+646UgIssnqSaIAeHRdgMzLnjlklPK0FcZDiKXvMr+kdlc7RrcbY5DwQwzGD88/gvh2/DT7tv75ML5a3waTL2qViG+yB4aeeH7VpYwH1KcE4MscHTC6JB6Uq2qil8+5pnQhQF2AvyHnG0UmWHIqoICHWI3CGPE7ZS7b97J9ZqveKC4MjTZZh3C2ucsnyu59tp7s5GZJL7NLn08+1E63ZT6gSzaHe3xlqfADzId8z7z+llwhCkhDKPYj7BjEgKNVeR9Ahae/nZczKBqKxBaEGl0Sqn9MQp0uCTU7VeiWxPvCSDtCtbdHqNsloWqTK4CX6k5TFHEY9gwHi00PZky0fJ54JkU8tMqgCdiE0i2GNqEoue42E7srWDYs9p1gRKBYYwDI08FWk9HFzeE3rcYuxuLkljG6DhCH0wVICF2L2qEcgSBapMf5I4plJKulVpBxGO8PlDqxysA01VGsahEj66/zk123FBYUT/UMPHow2O/w/HVcs6TvM83aAjs0nvQmkCHhNciOL3znQOFbXQrfqQl/AvnSF/cxtGv6JDZejYWcaf1lxRxBILZdFohu2XWBGA0CcU6lj/N3WM4YfaeiD9PpWB/996CP/h59TCCZAw54/eC5kR4DpHPt6G9OO27NnxdeiLr3lGmVPWUbXXsqe9lQcFVD4TMSAZiEIgbE92XIHVgxXWAQAt5k2rp+El7nlUIJI5+I9lx4X6aOgeQGzQG+UAMh8rw0L8IIPYNZspTMLwtZQSautAc9eyTXEqkwSrOiXDriTBxLQ4qpTEmEErnKI8K4Ah0hJly7XJk1iUdvCAnzZCGh10JC8b8r4XxUaozzMjdNic1toMY4GTXGLmoK+vok5Dh65S9Nk3C0f8qO2SKX3gIfBS0yqbiCUJ5IZBbJy4u5+JOEgVUrPur/bJs0err0WX/Lse9EVWXeq99kvPporub0v91B24BWZmMREaTNvv8XEFUFZBGXfWfSG97tNCVCt70ERDf/bJOMFb59mZd/AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2022-01-26T05:44:40.178Z" agent="5.0 (X11)" etag="j6JPciY1SL29pxVWqY6h" version="16.4.6" type="github">
+  <diagram id="uMM3siVCVbOM3F6NofLO" name="Page-1">
+    <mxGraphModel dx="1102" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="G_zQhxTGkbJwU_GFwThP-4" target="G_zQhxTGkbJwU_GFwThP-8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" parent="1" source="G_zQhxTGkbJwU_GFwThP-4" target="G_zQhxTGkbJwU_GFwThP-6" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="sdZTkzF2ThpnrSBqMyDu-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="G_zQhxTGkbJwU_GFwThP-4" target="G_zQhxTGkbJwU_GFwThP-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-4" value="Sistem&lt;br&gt;&lt;div&gt;Payment Point &lt;br&gt;&lt;/div&gt;&lt;div&gt;Online Bank&lt;/div&gt;&lt;div&gt;PDAM&lt;br&gt;&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;" parent="1" vertex="1">
+          <mxGeometry x="330" y="230" width="140" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.693;entryY=0.043;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="G_zQhxTGkbJwU_GFwThP-6" target="G_zQhxTGkbJwU_GFwThP-4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-6" value="Petugas Loket" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="550" y="145" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.286;entryY=0.036;entryDx=0;entryDy=0;entryPerimeter=0;" parent="1" source="G_zQhxTGkbJwU_GFwThP-8" target="G_zQhxTGkbJwU_GFwThP-4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-8" value="Petugas Pencatat&lt;br&gt;Meteran" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="150" y="145" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="sdZTkzF2ThpnrSBqMyDu-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=1;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="G_zQhxTGkbJwU_GFwThP-9" target="G_zQhxTGkbJwU_GFwThP-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="420" y="540" />
+              <mxPoint x="420" y="455" />
+              <mxPoint x="450" y="455" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-9" value="Admin" style="rounded=1;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="350" y="540" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-10" value="&lt;div&gt;Data Pelanggan&lt;/div&gt;&lt;div&gt;Alamat Pelanggan&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="95" y="245" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-11" value="Data Meteran" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="275" y="145" width="90" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-12" value="Data Pelanggan" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="610" y="245" width="100" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-13" value="&lt;div&gt;Data Tagihan&lt;/div&gt;&lt;div&gt;&amp;nbsp;Pelanggan&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="450" y="140" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="G_zQhxTGkbJwU_GFwThP-14" value="&lt;div&gt;Data Petugas&lt;br&gt;&lt;/div&gt;&lt;div&gt;Data Pelanggan&lt;/div&gt;&lt;div&gt;Data Meteran&lt;br&gt;&lt;/div&gt;&lt;div&gt;Data Tagihan&lt;/div&gt;&lt;div&gt;Data Golongan&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="460" y="390" width="100" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="sdZTkzF2ThpnrSBqMyDu-8" value="Info Petugas&lt;br&gt;&lt;div&gt;Info Pelanggan&lt;/div&gt;&lt;div&gt;Info Meteran&lt;/div&gt;&lt;div&gt;Info Tagihan&lt;/div&gt;&lt;div&gt;Info Golongan&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="240" y="380" width="100" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
