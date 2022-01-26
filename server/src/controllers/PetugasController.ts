@@ -17,6 +17,7 @@ export const getPetugas: Controller = async (_, res) => {
 };
 
 export const createPetugas: Controller = async (req, res) => {
+    // TODO: validate input
     if (Object.keys(req.body).length < 4) {
         return res.status(400).json({ msg: "Silakan isi form. " });
     }
