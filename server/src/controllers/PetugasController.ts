@@ -4,6 +4,13 @@ import Petugas from "../entities/Petugas";
 
 const petugasRepository = getRepository(Petugas);
 
+export const getPetugasById: Controller = async (req, res) => {
+    const petugas = await petugasRepository.findOne(req.params.id, {
+        relations: ["role"],
+    });
+    return res.json(petugas);
+};
+
 export const getPetugas: Controller = async (_, res) => {
     const petugas = await petugasRepository.find({ relations: ["role"] });
     return res.json(petugas);
