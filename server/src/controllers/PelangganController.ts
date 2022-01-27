@@ -7,14 +7,14 @@ const pelangganRepository = getRepository(Pelanggan);
 
 export const getPelangganById: Controller = async (req, res) => {
     const pelanggan = await pelangganRepository.findOne(req.params.id, {
-        relations: ["golongan"],
+        relations: ["golongan", "pemakaian"],
     });
     return res.json(pelanggan);
 };
 
 export const getPelanggan: Controller = async (_, res) => {
     const pelanggan = await pelangganRepository.find({
-        relations: ["golongan"],
+        relations: ["golongan", "pemakaian"],
     });
     return res.json(pelanggan);
 };
