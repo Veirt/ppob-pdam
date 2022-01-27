@@ -2,6 +2,7 @@ import * as argon2 from "argon2";
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
 import Petugas from "../entities/Petugas";
+import { handleError, handleValidationError } from "../utils/errorResponse";
 import { validatePetugas } from "../utils/validation";
 
 const petugasRepository = getRepository(Petugas);
@@ -10,57 +11,62 @@ export const getPetugasById: Controller = async (req, res) => {
     const petugas = await petugasRepository.findOne(req.params.id, {
         relations: ["role"],
     });
+
     return res.json(petugas);
 };
 
 export const getPetugas: Controller = async (_, res) => {
     const petugas = await petugasRepository.find({ relations: ["role"] });
+
     return res.json(petugas);
 };
 
 export const createPetugas: Controller = async (req, res) => {
-    const validationResult = await validatePetugas(req.body);
-    if (validationResult.length > 0) return res.json(validationResult);
-
-    const { nama, username, password, role } = req.body;
+    const validationResult = handleValidationError(
+        await validatePetugas(req.body)
+    );
+    if (validationResult)
+        return handleError("validation", res, validationResult);
 
     const newPetugas = petugasRepository.create({
-        nama,
-        username,
-        password,
-        role,
+        nama: req.body.nama,
+        username: req.body.username,
+        password: req.body.password,
+        role: req.body.role,
     });
-    await petugasRepository.save(newPetugas);
 
-    return res.json({ msg: "Successfully added petugas" });
+    const savedPetugas = await petugasRepository.save(newPetugas);
+
+    return res.json({
+        nama: savedPetugas.nama,
+        username: savedPetugas.username,
+        role: savedPetugas.role,
+    });
 };
 
 export const updatePetugas: Controller = async (req, res) => {
-    const validationResult = await validatePetugas(req.body, req.params.id);
-    if (validationResult.length > 0) return res.json(validationResult);
-
-    const { nama, username, password, role } = req.body;
+    const validationResult = handleValidationError(
+        await validatePetugas(req.body, req.params.id)
+    );
+    if (validationResult)
+        return handleError("validation", res, validationResult);
 
     const petugas = await petugasRepository.findOne(req.params.id, {
         relations: ["role"],
     });
+    if (!petugas) return handleError("notFound", res);
 
-    if (!petugas) {
-        return res.status(404).json();
+    // encrypt password
+    if (req.body.password) {
+        req.body.password = await argon2.hash(req.body.password);
     }
 
-    if (password) {
-        await petugasRepository.update(petugas, {
-            nama,
-            username,
-            password: await argon2.hash(password),
-            role,
-        });
-    } else {
-        await petugasRepository.update(petugas, { nama, username, role });
-    }
+    await petugasRepository.save({
+        ...petugas,
+        ...req.body,
+    });
 
-    return res.status(200).json({ msg: "Successfully updated" });
+    return res.status(204).json();
 };
 
 export const deletePetugas: Controller = async (req, res) => {
@@ -68,10 +74,9 @@ export const deletePetugas: Controller = async (req, res) => {
         relations: ["role"],
     });
 
-    if (!petugas) {
-        return res.status(404).json();
-    }
+    if (!petugas) return handleError("notFound", res);
 
-    await petugasRepository.delete(req.params.id);
-    return res.json({ msg: "Successfully deleted" });
+    const deletedPetugas = await petugasRepository.delete(req.params.id);
+
+    return res.json(deletedPetugas);
 };

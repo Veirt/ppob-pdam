@@ -1,52 +1,56 @@
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
 import RolePetugas from "../entities/RolePetugas";
+import { handleError, handleValidationError } from "../utils/errorResponse";
 import { validateRole } from "../utils/validation";
 
 const roleRepository = getRepository(RolePetugas);
 
 export const getRoleById: Controller = async (req, res) => {
     const role = await roleRepository.findOne(req.params.id);
+
     return res.json(role);
 };
 
 export const getRole: Controller = async (_, res) => {
     const role = await roleRepository.find();
+
     return res.json(role);
 };
 
 export const createRole: Controller = async (req, res) => {
-    const validationResult = await validateRole(req.body);
-    if (validationResult.length > 0) return res.json(validationResult);
+    const validationResult = handleValidationError(
+        await validateRole(req.body)
+    );
+    if (validationResult)
+        return handleError("validation", res, validationResult);
 
     const newRole = roleRepository.create(req.body);
-    await roleRepository.save(newRole);
+    const savedRole = await roleRepository.save(newRole);
 
-    return res.json({ msg: "Success" });
+    return res.json(savedRole);
 };
 
 export const updateRole: Controller = async (req, res) => {
-    const validationResult = await validateRole(req.body, req.params.id);
-    if (validationResult.length > 0) return res.json(validationResult);
+    const validationResult = handleValidationError(
+        await validateRole(req.body)
+    );
+    if (validationResult)
+        return handleError("validation", res, validationResult);
 
     const role = await roleRepository.findOne(req.params.id);
-
-    if (!role) {
-        return res.status(404).json();
-    }
+    if (!role) return handleError("notFound", res);
 
     await roleRepository.update(role, req.body);
 
-    return res.status(200).json({ msg: "Successfully updated" });
+    return res.status(204).json();
 };
 
 export const deleteRole: Controller = async (req, res) => {
     const role = await roleRepository.findOne(req.params.id);
+    if (!role) return handleError("notFound", res);
 
-    if (!role) {
-        return res.status(404).json();
-    }
+    const deletedRole = await roleRepository.delete(req.params.id);
 
-    await roleRepository.delete(req.params.id);
-    return res.json({ msg: "Successfully deleted" });
+    return res.json(deletedRole);
 };

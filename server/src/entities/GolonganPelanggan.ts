@@ -10,6 +10,9 @@ class GolonganPelanggan {
     @Column({ type: "varchar", length: 255 })
     nama_golongan!: string;
 
+    @Column({ type: "int" })
+    denda!: number;
+
     @OneToMany(() => Pelanggan, (pelanggan) => pelanggan.golongan)
     pelanggan!: Pelanggan[];
 
