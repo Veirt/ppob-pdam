@@ -12,3 +12,6 @@
 
 -   [x] Validasi input
 -   [x] All CRUD
+
+-   [x] Denda
+-   [ ] Pembayaran
