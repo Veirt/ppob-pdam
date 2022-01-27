@@ -1,9 +1,9 @@
+import dotenv from "dotenv";
 import express from "express";
 import session from "express-session";
 import passport from "passport";
 import connectDatabase from "./config/typeorm";
 
-import dotenv from "dotenv";
 dotenv.config();
 
 connectDatabase().then(async () => {

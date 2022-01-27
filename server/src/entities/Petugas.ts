@@ -1,7 +1,6 @@
 import * as argon2 from "argon2";
 import {
     BeforeInsert,
-    BeforeUpdate,
     Column,
     Entity,
     JoinColumn,
