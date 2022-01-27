@@ -24,5 +24,10 @@ connectDatabase().then(async () => {
 
     import("./routes").then((router) => app.use(router.default));
 
+    // handle uncaught error
+    process.on("uncaughtException", (err) => {
+        console.error(`Unexpected error: ${err}`);
+    });
+
     app.listen(8080, () => console.log("Listening on http://localhost:8080"));
 });
