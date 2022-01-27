@@ -118,8 +118,6 @@ const pemakaianSchema = {
     pelanggan: { type: "string", numeric: true },
     meter_awal: { type: "string", numeric: true },
     meter_akhir: { type: "string", numeric: true },
-    tanggal: { type: "date" },
-    sudah_dibayar: { type: "string", numeric: true, max: 1 },
 };
 
 export const validatePemakaian = async (body: any) => {
@@ -189,6 +187,32 @@ export const validateRole = async (body: any, id?: string) => {
             message: "Role already exists.",
             field: "role",
             actual: body.nama_role,
+        });
+    }
+
+    return result as Array<any>;
+};
+
+const pembayaranSchema = {
+    biaya_admin: { type: "string", numeric: true },
+    petugas: { type: "string", numeric: true },
+};
+
+export const validatePembayaran = async (body: any) => {
+    let result = v.compile(pembayaranSchema)(body);
+    if (result === true) {
+        result = [];
+    }
+
+    const petugas = await petugasRepository.findOne({
+        id_petugas: body.petugas,
+    });
+    if (!petugas) {
+        (result as Array<any>).push({
+            type: "invalid",
+            message: "Petugas doesn't exist",
+            field: "petugas",
+            actual: body.role,
         });
     }
 

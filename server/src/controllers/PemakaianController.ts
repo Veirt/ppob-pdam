@@ -1,6 +1,9 @@
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
+import Pelanggan from "../entities/Pelanggan";
 import PemakaianPelanggan from "../entities/PemakaianPelanggan";
+import TagihanPelanggan from "../entities/TagihanPelanggan";
+import TarifPemakaian from "../entities/TarifPemakaian";
 import { handleError, handleValidationError } from "../utils/errorResponse";
 import { validatePemakaian } from "../utils/validation";
 
@@ -35,10 +38,39 @@ export const createPemakaian: Controller = async (req, res) => {
         meter_awal: req.body.meter_awal,
         meter_akhir: req.body.meter_akhir,
         tanggal: new Date(),
-        sudah_dibayar: 0,
     });
 
     const savedPemakaian = await pemakaianRepository.save(newPemakaian);
+
+    // setelah save pemakaian, bikin tagihan.
+    const pelanggan = await getRepository(Pelanggan).findOneOrFail(
+        savedPemakaian.pelanggan,
+        { relations: ["golongan"] }
+    );
+
+    const total_pemakaian =
+        savedPemakaian.meter_akhir - savedPemakaian.meter_awal;
+
+    const tarifRepository = getRepository(TarifPemakaian);
+    const tarifPemakaian = await tarifRepository
+        .createQueryBuilder()
+        .where("golongan = :golongan", {
+            golongan: pelanggan.golongan.id_golongan,
+        })
+        .andWhere(
+            "IF(kubik_akhir IS NULL, :total_pemakaian > kubik_awal, :total_pemakaian BETWEEN kubik_awal AND kubik_akhir)",
+            { total_pemakaian }
+        )
+        .getOne();
+
+    const total_bayar = total_pemakaian * Number(tarifPemakaian?.tarif);
+
+    const tagihanRepository = getRepository(TagihanPelanggan);
+    await tagihanRepository.save({
+        total_bayar,
+        total_pemakaian,
+        pemakaian: savedPemakaian,
+    });
 
     return res.json(savedPemakaian);
 };

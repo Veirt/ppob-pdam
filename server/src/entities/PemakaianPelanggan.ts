@@ -7,9 +7,6 @@ import {
 } from "typeorm";
 import Pelanggan from "./Pelanggan";
 
-// Tiap pelanggan punya banyak tarif pemakaian
-// Terhubung di tabel ini.
-// ada FK Pelanggan
 @Entity({ name: "pemakaian_pelanggan" })
 class PemakaianPelanggan {
     @PrimaryGeneratedColumn()
@@ -27,9 +24,6 @@ class PemakaianPelanggan {
 
     @Column({ type: "date" })
     tanggal!: Date;
-
-    @Column({ type: "tinyint" })
-    sudah_dibayar!: number;
 }
 
 export default PemakaianPelanggan;
