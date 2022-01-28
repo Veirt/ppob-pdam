@@ -2,11 +2,13 @@ import Validator from "fastest-validator";
 import { getRepository } from "typeorm";
 import GolonganPelanggan from "../entities/GolonganPelanggan";
 import Pelanggan from "../entities/Pelanggan";
+import PemakaianPelanggan from "../entities/PemakaianPelanggan";
 import Petugas from "../entities/Petugas";
 import RolePetugas from "../entities/RolePetugas";
 
 const petugasRepository = getRepository(Petugas);
 const pelangganRepository = getRepository(Pelanggan);
+const pemakaianRepository = getRepository(PemakaianPelanggan);
 const golonganRepository = getRepository(GolonganPelanggan);
 const roleRepository = getRepository(RolePetugas);
 
@@ -133,6 +135,25 @@ export const validatePemakaian = async (body: any) => {
         (result as Array<any>).push({
             type: "invalid",
             message: "Pelanggan doesn't exist",
+            field: "pelanggan",
+            actual: body.pelanggan,
+        });
+    }
+
+    const pemakaian = await pemakaianRepository
+        .createQueryBuilder()
+        .where("pelanggan = :pelanggan")
+        .andWhere("MONTH(tanggal) = MONTH(CURRENT_DATE())")
+        .andWhere("YEAR(tanggal) = YEAR(CURRENT_DATE())")
+        .setParameters({
+            pelanggan: pelanggan?.id_pelanggan,
+        })
+        .getOne();
+
+    if (pemakaian) {
+        (result as Array<any>).push({
+            type: "invalid",
+            message: "Pelanggan sudah punya pemakaian bulan ini.",
             field: "pelanggan",
             actual: body.pelanggan,
         });

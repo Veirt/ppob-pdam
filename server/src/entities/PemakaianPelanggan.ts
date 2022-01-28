@@ -3,9 +3,11 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToOne,
     PrimaryGeneratedColumn,
 } from "typeorm";
 import Pelanggan from "./Pelanggan";
+import TagihanPelanggan from "./TagihanPelanggan";
 
 @Entity({ name: "pemakaian_pelanggan" })
 class PemakaianPelanggan {
@@ -24,6 +26,10 @@ class PemakaianPelanggan {
 
     @Column({ type: "date" })
     tanggal!: Date;
+
+    @OneToOne(() => TagihanPelanggan, { cascade: true })
+    @JoinColumn({ name: "tagihan" })
+    tagihan!: TagihanPelanggan;
 }
 
 export default PemakaianPelanggan;

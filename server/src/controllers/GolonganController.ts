@@ -27,7 +27,6 @@ export const createGolongan: Controller = async (req, res) => {
 
     const newGolongan = golonganRepository.create({
         nama_golongan: req.body.nama_golongan,
-        denda: req.body.denda,
     });
     const savedGolongan = await golonganRepository.save(newGolongan);
 

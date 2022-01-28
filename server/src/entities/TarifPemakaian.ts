@@ -17,7 +17,7 @@ class TarifPemakaian {
     @Column({ type: "int" })
     kubik_awal!: number;
 
-    @Column({ type: "int" })
+    @Column({ type: "int", nullable: true })
     kubik_akhir!: number;
 
     @Column({ type: "bigint" })

@@ -6,6 +6,7 @@ import {
     OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm";
+import Denda from "./Denda";
 import GolonganPelanggan from "./GolonganPelanggan";
 import PemakaianPelanggan from "./PemakaianPelanggan";
 
@@ -26,5 +27,8 @@ class Pelanggan {
 
     @OneToMany(() => PemakaianPelanggan, (pemakaian) => pemakaian.pelanggan)
     pemakaian!: PemakaianPelanggan[];
+
+    @OneToMany(() => Denda, (denda) => denda.pelanggan)
+    denda!: Denda[];
 }
 export default Pelanggan;
