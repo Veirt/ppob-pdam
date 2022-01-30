@@ -21,6 +21,9 @@ class TagihanPelanggan {
     @OneToOne(() => PembayaranPelanggan)
     @JoinColumn({ name: "pembayaran" })
     pembayaran?: PembayaranPelanggan;
+
+    @Column({ type: "int", nullable: true })
+    denda?: number;
 }
 
 export default TagihanPelanggan;

@@ -27,7 +27,11 @@ class PemakaianPelanggan {
     @Column({ type: "date" })
     tanggal!: Date;
 
-    @OneToOne(() => TagihanPelanggan, { cascade: true })
+    @OneToOne(() => TagihanPelanggan, {
+        cascade: true,
+        onUpdate: "CASCADE",
+        onDelete: "CASCADE",
+    })
     @JoinColumn({ name: "tagihan" })
     tagihan!: TagihanPelanggan;
 }

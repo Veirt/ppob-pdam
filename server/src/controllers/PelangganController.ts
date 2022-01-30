@@ -8,7 +8,12 @@ const pelangganRepository = getRepository(Pelanggan);
 
 export const getPelangganById: Controller = async (req, res) => {
     const pelanggan = await pelangganRepository.findOne(req.params.id, {
-        relations: ["golongan", "pemakaian"],
+        relations: [
+            "golongan",
+            "pemakaian",
+            "pemakaian.tagihan",
+            "pemakaian.tagihan.pembayaran",
+        ],
     });
 
     return res.json(pelanggan);
@@ -16,7 +21,7 @@ export const getPelangganById: Controller = async (req, res) => {
 
 export const getPelanggan: Controller = async (_, res) => {
     const pelanggan = await pelangganRepository.find({
-        relations: ["golongan", "pemakaian"],
+        relations: ["golongan"],
     });
 
     return res.json(pelanggan);
