@@ -24,6 +24,6 @@ export const login: Controller = async (req, res, next) => {
     })(req, res, next);
 };
 
-export const getMyInfo: Controller = (req, res, next) => {
+export const getMyInfo: Controller = (req, res) => {
     return res.json(req.user);
 };
