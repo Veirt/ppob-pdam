@@ -7,8 +7,6 @@ const petugasRepository = getRepository(Petugas);
 
 passport.use(
     new LocalStrategy(async (username, password, done) => {
-        console.log({ username, password });
-
         try {
             const petugas = await petugasRepository.findOne(
                 { username },
