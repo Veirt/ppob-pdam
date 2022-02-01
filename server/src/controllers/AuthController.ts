@@ -24,6 +24,11 @@ export const login: Controller = async (req, res, next) => {
     })(req, res, next);
 };
 
+export const logout: Controller = (req, res) => {
+    req.logOut();
+    return res.json({ msg: "Successfully logged out" });
+};
+
 export const getMyInfo: Controller = (req, res) => {
     return res.json(req.user);
 };

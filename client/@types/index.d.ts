@@ -7,3 +7,12 @@ export interface Customer {
         nama_golongan: string;
     };
 }
+
+export interface User {
+    id_petugas?: number;
+    username?: string;
+    role?: {
+        id_role: number;
+        nama_role: string;
+    };
+}
