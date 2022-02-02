@@ -18,7 +18,7 @@ class TagihanPelanggan {
     @Column({ type: "int" })
     total_bayar!: number;
 
-    @OneToOne(() => PembayaranPelanggan)
+    @OneToOne(() => PembayaranPelanggan, (pembayaran) => pembayaran.tagihan)
     @JoinColumn({ name: "pembayaran" })
     pembayaran?: PembayaranPelanggan;
 

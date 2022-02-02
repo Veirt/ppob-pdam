@@ -217,6 +217,7 @@ export const validateRole = async (body: any, id?: string) => {
 const pembayaranSchema = {
     biaya_admin: { type: "string", numeric: true },
     petugas: { type: "string", numeric: true },
+    tagihan: { type: "string", numeric: true },
 };
 
 export const validatePembayaran = async (body: any) => {

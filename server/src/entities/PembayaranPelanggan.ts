@@ -6,6 +6,7 @@ import {
     PrimaryGeneratedColumn,
 } from "typeorm";
 import Petugas from "./Petugas";
+import TagihanPelanggan from "./TagihanPelanggan";
 
 @Entity({ name: "pembayaran_pelanggan" })
 class PembayaranPelanggan {
@@ -21,6 +22,9 @@ class PembayaranPelanggan {
     @OneToOne(() => Petugas)
     @JoinColumn({ name: "petugas" })
     petugas!: Petugas;
+
+    @OneToOne(() => TagihanPelanggan, (tagihan) => tagihan.pembayaran)
+    tagihan!: TagihanPelanggan;
 }
 
 export default PembayaranPelanggan;

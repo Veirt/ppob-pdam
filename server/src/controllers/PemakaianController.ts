@@ -11,7 +11,7 @@ const tarifRepository = getRepository(TarifPemakaian);
 
 export const getPemakaianById: Controller = async (req, res) => {
     const pemakaian = await pemakaianRepository.findOne(req.params.id, {
-        relations: ["pelanggan", "tagihan"],
+        relations: ["pelanggan", "tagihan", "tagihan.pembayaran"],
     });
 
     return res.json(pemakaian);
