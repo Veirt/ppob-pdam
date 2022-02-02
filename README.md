@@ -18,4 +18,4 @@
 -   [ ] Pembayaran
 
 -   [ ] Search and filter
--   [ ] Dashbaord (jml pelanggan, mengarah ke pelanggan yg blum bayar)
+-   [ ] Dashboard (jml pelanggan, mengarah ke pelanggan yg blum bayar)
