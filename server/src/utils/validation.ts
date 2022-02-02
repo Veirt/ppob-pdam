@@ -64,7 +64,12 @@ const pelangganSchema = {
     alamat: {
         type: "string",
     },
-    golongan: { type: "string", numeric: true },
+    golongan: {
+        type: "object",
+        props: {
+            id_golongan: "number",
+        },
+    },
 };
 
 export const validatePelanggan = async (body: any) => {
