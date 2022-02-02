@@ -2,18 +2,14 @@ import {
     Box,
     Button,
     Container,
-    FormControl,
-    FormErrorMessage,
-    FormHelperText,
     FormLabel,
     Input,
-    Text,
     useToast,
 } from "@chakra-ui/react";
-import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { UserContext } from "../../components/providers/UserProvider";
+import api, { isAxiosError } from "../../utils/api";
 
 interface State {
     username: string;
@@ -38,7 +34,7 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const res = await axios.post(
+            const res = await api.post(
                 `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`,
                 { ...state },
                 { withCredentials: true }
@@ -48,7 +44,7 @@ const Login = () => {
 
             router.replace("/");
         } catch (err) {
-            if (axios.isAxiosError(err)) {
+            if (isAxiosError(err)) {
                 toast({
                     position: "top-right",
                     title: "Error",
@@ -68,31 +64,29 @@ const Login = () => {
     return (
         <Container>
             <form onSubmit={handleSubmit}>
-                <FormControl>
-                    <Box my={3}>
-                        <FormLabel htmlFor="username">Username</FormLabel>
-                        <Input
-                            id="username"
-                            name="username"
-                            type="text"
-                            value={state.username}
-                            onChange={handleChange}
-                            required
-                        />
-                    </Box>
+                <Box my={3}>
+                    <FormLabel htmlFor="username">Username</FormLabel>
+                    <Input
+                        id="username"
+                        name="username"
+                        type="text"
+                        value={state.username}
+                        onChange={handleChange}
+                        required
+                    />
+                </Box>
 
-                    <Box my={3}>
-                        <FormLabel htmlFor="password">Password</FormLabel>
-                        <Input
-                            id="password"
-                            name="password"
-                            type="password"
-                            value={state.password}
-                            onChange={handleChange}
-                            required
-                        />
-                    </Box>
-                </FormControl>
+                <Box my={3}>
+                    <FormLabel htmlFor="password">Password</FormLabel>
+                    <Input
+                        id="password"
+                        name="password"
+                        type="password"
+                        value={state.password}
+                        onChange={handleChange}
+                        required
+                    />
+                </Box>
 
                 <Button
                     isLoading={isLoading}

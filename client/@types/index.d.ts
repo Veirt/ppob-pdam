@@ -1,11 +1,13 @@
+export interface Golongan {
+    id_golongan: number;
+    nama_golongan?: string;
+}
+
 export interface Customer {
     id_pelanggan: number;
     nama: string;
     alamat: string;
-    golongan: {
-        id_golongan: number;
-        nama_golongan: string;
-    };
+    golongan: Golongan;
 }
 
 export interface User {
@@ -15,4 +17,11 @@ export interface User {
         id_role: number;
         nama_role: string;
     };
+}
+
+export interface ValidationError {
+    type: string;
+    message: string;
+    field: string;
+    actual: any;
 }

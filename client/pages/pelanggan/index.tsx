@@ -1,21 +1,52 @@
-import { Container, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import axios from "axios";
+import {
+    Button,
+    Container,
+    Flex,
+    Table,
+    Tbody,
+    Td,
+    Th,
+    Thead,
+    Tr,
+    useToast,
+} from "@chakra-ui/react";
+import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { Customer } from "../../@types";
+import DeleteWithAlert from "../../components/alert";
+import api from "../../utils/api";
 
 const Pelanggan = () => {
+    const toast = useToast();
+
     const [customers, setCustomers] = useState<Customer[]>([]);
 
-    useEffect(() => {
-        const fetchPelanggan = async () => {
-            const res = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_ENDPOINT}/pelanggan`
-            );
-            setCustomers(res.data);
-        };
+    const fetchPelanggan = async () => {
+        const res = await api.get("/pelanggan");
+        setCustomers(res.data);
+    };
 
+    useEffect(() => {
         fetchPelanggan();
     }, []);
+
+    const handleDelete = async (id: number) => {
+        try {
+            await api.delete(`/pelanggan/${id}`);
+            toast({
+                position: "top-right",
+                title: "Success",
+                description: "Berhasil menghapus pelanggan",
+                status: "success",
+                duration: 3000,
+                isClosable: true,
+            });
+        } catch (err) {
+            console.error(err);
+        } finally {
+            fetchPelanggan();
+        }
+    };
 
     return (
         <>
@@ -23,10 +54,11 @@ const Pelanggan = () => {
                 <Table variant="simple">
                     <Thead>
                         <Tr>
-                            <Th>Id Pelangagn</Th>
-                            <Th>Alamat</Th>
+                            <Th>Id Pelanggan</Th>
                             <Th>Nama</Th>
+                            <Th>Alamat</Th>
                             <Th>Golongan</Th>
+                            <Th>Actions</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
@@ -37,6 +69,29 @@ const Pelanggan = () => {
                                     <Td>{customer.nama}</Td>
                                     <Td>{customer.alamat}</Td>
                                     <Td>{customer.golongan.nama_golongan}</Td>
+                                    <Td>
+                                        <Flex>
+                                            <NextLink
+                                                href={`/pelanggan/${customer.id_pelanggan}`}
+                                            >
+                                                <Button bgColor={"green.300"}>
+                                                    Edit
+                                                </Button>
+                                            </NextLink>
+                                            <DeleteWithAlert
+                                                title="Delete Pelanggan"
+                                                onClick={() =>
+                                                    handleDelete(
+                                                        customer.id_pelanggan
+                                                    )
+                                                }
+                                            >
+                                                Apakah anda yakin untuk
+                                                menghapus pelanggan bernama
+                                                {` ${customer.nama}`}?
+                                            </DeleteWithAlert>
+                                        </Flex>
+                                    </Td>
                                 </Tr>
                             );
                         })}
