@@ -1,5 +1,5 @@
 import Validator from "fastest-validator";
-import { getRepository } from "typeorm";
+import { getRepository, Not, Repository } from "typeorm";
 import GolonganPelanggan from "../entities/GolonganPelanggan";
 import Pelanggan from "../entities/Pelanggan";
 import PemakaianPelanggan from "../entities/PemakaianPelanggan";
@@ -11,6 +11,19 @@ const pelangganRepository = getRepository(Pelanggan);
 const pemakaianRepository = getRepository(PemakaianPelanggan);
 const golonganRepository = getRepository(GolonganPelanggan);
 const roleRepository = getRepository(RolePetugas);
+
+const checkIfExist = async <T, U>(
+    repository: Repository<T>,
+    key: keyof T,
+    value: U
+) => {
+    try {
+        await repository.findOneOrFail({ [key]: value });
+        return true;
+    } catch {
+        return false;
+    }
+};
 
 const v = new Validator();
 
@@ -26,19 +39,17 @@ const petugasSchema = {
 };
 
 export const validatePetugas = async (body: any, id?: string) => {
-    let result = v.compile(petugasSchema)(body);
+    let result = await v.compile(petugasSchema)(body);
     if (result === true) {
         result = [];
     }
 
     const petugas = await petugasRepository.findOne({
-        username: body.username,
+        where: { username: body.username, id_petugas: Not(id) },
     });
 
-    // second condition
-    // prevent error when username is still the same
-    if (petugas && Number(id) !== petugas.id_petugas) {
-        (result as Array<any>).push({
+    if (petugas) {
+        result.push({
             type: "unique",
             message: "Username already exists.",
             field: "username",
@@ -46,9 +57,9 @@ export const validatePetugas = async (body: any, id?: string) => {
         });
     }
 
-    const role = await roleRepository.findOne({ id_role: body.role });
-    if (!role) {
-        (result as Array<any>).push({
+    const roleExist = await checkIfExist(roleRepository, "id_role", body.role);
+    if (!roleExist) {
+        result.push({
             type: "invalid",
             message: "Role doesn't exist",
             field: "role",
@@ -56,7 +67,7 @@ export const validatePetugas = async (body: any, id?: string) => {
         });
     }
 
-    return result as Array<any>;
+    return result;
 };
 
 const pelangganSchema = {
@@ -73,16 +84,18 @@ const pelangganSchema = {
 };
 
 export const validatePelanggan = async (body: any) => {
-    let result = v.compile(pelangganSchema)(body);
+    let result = await v.compile(pelangganSchema)(body);
     if (result === true) {
         result = [];
     }
 
-    const golongan = await golonganRepository.findOne({
-        id_golongan: body.golongan.id_golongan,
-    });
-    if (!golongan) {
-        (result as Array<any>).push({
+    const golonganExist = await checkIfExist(
+        golonganRepository,
+        "id_golongan",
+        body.golongan.id_golongan
+    );
+    if (!golonganExist) {
+        result.push({
             type: "invalid",
             message: "Golongan doesn't exist",
             field: "golongan",
@@ -90,7 +103,7 @@ export const validatePelanggan = async (body: any) => {
         });
     }
 
-    return result as Array<any>;
+    return result;
 };
 
 const tarifSchema = {
@@ -101,16 +114,18 @@ const tarifSchema = {
 };
 
 export const validateTarif = async (body: any) => {
-    let result = v.compile(tarifSchema)(body);
+    let result = await v.compile(tarifSchema)(body);
     if (result === true) {
         result = [];
     }
 
-    const golongan = await golonganRepository.findOne({
-        id_golongan: body.golongan,
-    });
-    if (!golongan) {
-        (result as Array<any>).push({
+    const golonganExist = await checkIfExist(
+        golonganRepository,
+        "id_golongan",
+        body.golongan.id_golongan
+    );
+    if (!golonganExist) {
+        result.push({
             type: "invalid",
             message: "Golongan doesn't exist",
             field: "golongan",
@@ -118,7 +133,7 @@ export const validateTarif = async (body: any) => {
         });
     }
 
-    return result as Array<any>;
+    return result;
 };
 
 const pemakaianSchema = {
@@ -128,7 +143,7 @@ const pemakaianSchema = {
 };
 
 export const validatePemakaian = async (body: any) => {
-    let result = v.compile(pemakaianSchema)(body);
+    let result = await v.compile(pemakaianSchema)(body);
     if (result === true) {
         result = [];
     }
@@ -137,7 +152,7 @@ export const validatePemakaian = async (body: any) => {
         id_pelanggan: body.pelanggan,
     });
     if (!pelanggan) {
-        (result as Array<any>).push({
+        result.push({
             type: "invalid",
             message: "Pelanggan doesn't exist",
             field: "pelanggan",
@@ -164,7 +179,7 @@ export const validatePemakaian = async (body: any) => {
         });
     }
 
-    return result as Array<any>;
+    return result;
 };
 
 const golonganSchema = {
@@ -172,17 +187,20 @@ const golonganSchema = {
 };
 
 export const validateGolongan = async (body: any, id?: string) => {
-    let result = v.compile(golonganSchema)(body);
+    let result = await v.compile(golonganSchema)(body);
     if (result === true) {
         result = [];
     }
 
     const golongan = await golonganRepository.findOne({
-        nama_golongan: body.nama_golongan,
+        where: {
+            nama_golongan: body.nama_golongan,
+            id_golongan: Not(id),
+        },
     });
 
-    if (golongan && Number(id) !== golongan.id_golongan) {
-        (result as Array<any>).push({
+    if (golongan) {
+        result.push({
             type: "unique",
             message: "Golongan already exists.",
             field: "golongan",
@@ -190,7 +208,7 @@ export const validateGolongan = async (body: any, id?: string) => {
         });
     }
 
-    return result as Array<any>;
+    return result;
 };
 
 const roleSchema = {
@@ -198,17 +216,20 @@ const roleSchema = {
 };
 
 export const validateRole = async (body: any, id?: string) => {
-    let result = v.compile(roleSchema)(body);
+    let result = await v.compile(roleSchema)(body);
     if (result === true) {
         result = [];
     }
 
     const role = await roleRepository.findOne({
-        nama_role: body.nama_role,
+        where: {
+            id_role: Not(id),
+            nama_role: body.nama_role,
+        },
     });
 
-    if (role && Number(id) !== role.id_role) {
-        (result as Array<any>).push({
+    if (role) {
+        result.push({
             type: "unique",
             message: "Role already exists.",
             field: "role",
@@ -216,7 +237,7 @@ export const validateRole = async (body: any, id?: string) => {
         });
     }
 
-    return result as Array<any>;
+    return result;
 };
 
 const pembayaranSchema = {
@@ -226,16 +247,19 @@ const pembayaranSchema = {
 };
 
 export const validatePembayaran = async (body: any) => {
-    let result = v.compile(pembayaranSchema)(body);
+    let result = await v.compile(pembayaranSchema)(body);
     if (result === true) {
         result = [];
     }
 
-    const petugas = await petugasRepository.findOne({
-        id_petugas: body.petugas,
-    });
-    if (!petugas) {
-        (result as Array<any>).push({
+    const petugasExist = await checkIfExist(
+        petugasRepository,
+        "id_petugas",
+        body.petugas
+    );
+
+    if (!petugasExist) {
+        result.push({
             type: "invalid",
             message: "Petugas doesn't exist",
             field: "petugas",
@@ -243,5 +267,5 @@ export const validatePembayaran = async (body: any) => {
         });
     }
 
-    return result as Array<any>;
+    return result;
 };
