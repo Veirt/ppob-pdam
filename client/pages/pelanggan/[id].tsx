@@ -18,7 +18,7 @@ const EditCustomer = () => {
         {
             nama: "",
             alamat: "",
-            golongan: { id_golongan: 0 },
+            golongan: { id_golongan: 0, nama_golongan: "" },
         }
     );
 
@@ -31,8 +31,8 @@ const EditCustomer = () => {
         setLoading(true);
 
         try {
-            await api.post(
-                "/pelanggan",
+            await api.patch(
+                `/pelanggan/${id}`,
                 { ...customer },
                 { withCredentials: true }
             );

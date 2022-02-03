@@ -56,7 +56,11 @@ export const updatePelanggan: Controller = async (req, res) => {
     });
     if (!pelanggan) return handleError("notFound", res);
 
-    await pelangganRepository.update(pelanggan, req.body);
+    await pelangganRepository.update(pelanggan, {
+        nama: req.body.nama,
+        alamat: req.body.alamat,
+        golongan: req.body.golongan.id_golongan,
+    });
 
     return res.status(204).json();
 };

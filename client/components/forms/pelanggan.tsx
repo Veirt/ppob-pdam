@@ -47,7 +47,7 @@ const CustomerForm: FC<IProps> = ({
                                 id="nama"
                                 name="nama"
                                 type="text"
-                                value={state.nama}
+                                value={state.nama || ""}
                                 onChange={handleChange}
                                 required
                             />
@@ -59,7 +59,7 @@ const CustomerForm: FC<IProps> = ({
                                 id="alamat"
                                 name="alamat"
                                 type="text"
-                                value={state.alamat}
+                                value={state.alamat || ""}
                                 onChange={handleChange}
                                 required
                             />
@@ -68,12 +68,13 @@ const CustomerForm: FC<IProps> = ({
                         <Box my={3}>
                             <FormLabel htmlFor="golongan">Golongan</FormLabel>
                             <Select
+                                id="golongan"
+                                instanceId="golongan-select"
                                 name="golongan"
-                                //TODO: fix tranniescript
                                 options={golonganOptions}
                                 value={{
-                                    value: state.golongan.id_golongan,
-                                    label: state.golongan.nama_golongan,
+                                    value: state.golongan?.id_golongan || 0,
+                                    label: state.golongan?.nama_golongan || "",
                                 }}
                                 onChange={(golongan) => {
                                     setState({
@@ -81,6 +82,8 @@ const CustomerForm: FC<IProps> = ({
                                         golongan: {
                                             id_golongan: golongan!
                                                 .value as number,
+                                            nama_golongan: golongan!
+                                                .label as string,
                                         },
                                     });
                                 }}

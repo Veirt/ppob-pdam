@@ -79,14 +79,14 @@ export const validatePelanggan = async (body: any) => {
     }
 
     const golongan = await golonganRepository.findOne({
-        id_golongan: body.golongan,
+        id_golongan: body.golongan.id_golongan,
     });
     if (!golongan) {
         (result as Array<any>).push({
             type: "invalid",
             message: "Golongan doesn't exist",
             field: "golongan",
-            actual: body.golongan,
+            actual: body.golongan.id_golongan,
         });
     }
 
