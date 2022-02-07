@@ -1,5 +1,33 @@
+import {
+    background,
+    Box,
+    Button,
+    Container,
+    Flex,
+    Link,
+} from "@chakra-ui/react";
 import type { NextPage } from "next";
+import NextLink from "next/link";
 import Head from "next/head";
+import { FC } from "react";
+
+const DashboardItem: FC = ({ children }) => {
+    return (
+        <Box
+            mx={"5"}
+            padding={"3"}
+            border={"1px"}
+            borderColor={"whiteAlpha.50"}
+            borderRadius="sm"
+            background={"whitesmoke"}
+            width={"48"}
+            height={"55"}
+            _hover={{ borderColor: "teal.200" }}
+        >
+            {children}
+        </Box>
+    );
+};
 
 const Home: NextPage = () => {
     return (
@@ -12,6 +40,21 @@ const Home: NextPage = () => {
                 />
                 <link rel="icon" href="/favicon.ico" />
             </Head>
+
+            <Container maxW={"container.xl"} my="5">
+                <Flex>
+                    <DashboardItem>
+                        <NextLink href="/pelanggan" passHref>
+                            <Link>Pelanggan</Link>
+                        </NextLink>
+                    </DashboardItem>
+                    <DashboardItem>
+                        <NextLink href="/petugas" passHref>
+                            <Link>Petugas</Link>
+                        </NextLink>
+                    </DashboardItem>
+                </Flex>
+            </Container>
         </>
     );
 };

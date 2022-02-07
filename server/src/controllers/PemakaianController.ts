@@ -1,3 +1,4 @@
+import { ValidationError } from "fastest-validator";
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
 import Pelanggan from "../entities/Pelanggan";
@@ -75,8 +76,27 @@ export const createPemakaian: Controller = async (req, res) => {
             total_pemakaian,
         })
         .getOne();
+    //TODO: better validation
+    if (!tarifPemakaian) {
+        return res.status(400).json([
+            {
+                type: "invalid",
+                field: "pelanggan",
+                message: "Golongan tidak punya tarif",
+            } as ValidationError,
+        ]);
+    }
+    if (req.body.meter_akhir < meter_awal) {
+        return res.status(400).json([
+            {
+                type: "invalid",
+                field: "meter_akhir",
+                message: "Meter akhir kurang dari meter awal",
+            } as ValidationError,
+        ]);
+    }
 
-    const total_bayar = total_pemakaian * Number(tarifPemakaian?.tarif);
+    const total_bayar = total_pemakaian * Number(tarifPemakaian.tarif);
 
     const newPemakaian = pemakaianRepository.create({
         pelanggan: req.body.pelanggan,

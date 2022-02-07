@@ -35,7 +35,6 @@ export const createPembayaran: Controller = async (req, res) => {
 
     // TODO: cek denda
     // relasi dengan pemakaian
-
     const tagihan = await tagihanRepository.findOne(req.body.tagihan, {
         relations: ["pembayaran"],
     });
