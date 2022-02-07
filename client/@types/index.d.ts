@@ -25,3 +25,7 @@ export interface ValidationError {
     field: string;
     actual: any;
 }
+
+export interface Query {
+    search: string;
+}

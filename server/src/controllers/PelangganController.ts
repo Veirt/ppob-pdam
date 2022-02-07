@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { getRepository, ILike } from "typeorm";
 import type { Controller } from "../../@types/express";
 import Pelanggan from "../entities/Pelanggan";
 import { handleError, handleValidationError } from "../utils/errorResponse";
@@ -19,9 +19,14 @@ export const getPelangganById: Controller = async (req, res) => {
     return res.json(pelanggan);
 };
 
-export const getPelanggan: Controller = async (_, res) => {
+export const getPelanggan: Controller = async (req, res) => {
+    const { search } = req.query;
+
     const pelanggan = await pelangganRepository.find({
         relations: ["golongan"],
+        where: {
+            nama: ILike(`%${search}%`),
+        },
     });
 
     return res.json(pelanggan);

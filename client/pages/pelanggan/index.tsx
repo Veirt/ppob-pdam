@@ -1,7 +1,9 @@
 import {
+    Box,
     Button,
     Container,
     Flex,
+    Input,
     Table,
     Tbody,
     Td,
@@ -11,8 +13,8 @@ import {
     useToast,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { useEffect, useState } from "react";
-import { Customer } from "../../@types";
+import { ChangeEvent, useEffect, useState } from "react";
+import { Customer, Query } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
 import api from "../../utils/api";
 
@@ -20,15 +22,23 @@ const Pelanggan = () => {
     const toast = useToast();
 
     const [customers, setCustomers] = useState<Customer[]>([]);
+    const [query, setQuery] = useState<Query>({ search: "" });
 
     const fetchPelanggan = async () => {
-        const res = await api.get("/pelanggan");
+        const res = await api.get("/pelanggan", { params: query });
         setCustomers(res.data);
     };
 
     useEffect(() => {
         fetchPelanggan();
-    }, []);
+    }, [query]);
+
+    const handleChangeQuery = (e: ChangeEvent<HTMLInputElement>) => {
+        setQuery({
+            ...query,
+            [e.target.name]: e.target.value,
+        });
+    };
 
     const handleDelete = async (id: number) => {
         try {
@@ -51,6 +61,15 @@ const Pelanggan = () => {
     return (
         <>
             <Container maxW="container.md">
+                <Box m={3}>
+                    <Input
+                        name="search"
+                        value={query.search}
+                        onChange={handleChangeQuery}
+                        placeholder="Cari pelanggan"
+                    />
+                </Box>
+
                 <Table variant="simple">
                     <Thead>
                         <Tr>
