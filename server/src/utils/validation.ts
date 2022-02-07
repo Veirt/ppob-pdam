@@ -35,7 +35,12 @@ const petugasSchema = {
         max: 30,
     },
     password: { type: "string", min: 5, optional: true },
-    role: { type: "string", numeric: true },
+    role: {
+        type: "object",
+        props: {
+            id_role: "number",
+        },
+    },
 };
 
 export const validatePetugas = async (body: any, id?: string) => {
@@ -57,13 +62,17 @@ export const validatePetugas = async (body: any, id?: string) => {
         });
     }
 
-    const roleExist = await checkIfExist(roleRepository, "id_role", body.role);
+    const roleExist = await checkIfExist(
+        roleRepository,
+        "id_role",
+        body.role.id_role
+    );
     if (!roleExist) {
         result.push({
             type: "invalid",
             message: "Role doesn't exist",
             field: "role",
-            actual: body.role,
+            actual: body.role.id_role,
         });
     }
 

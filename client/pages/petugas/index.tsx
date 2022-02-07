@@ -14,23 +14,23 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
-import { Customer, Query } from "../../@types";
+import { Employee, Query } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
 import api from "../../utils/api";
 
-const Pelanggan = () => {
+const Petugas = () => {
     const toast = useToast();
 
-    const [customers, setCustomers] = useState<Customer[]>([]);
+    const [employees, setEmployees] = useState<Employee[]>([]);
     const [query, setQuery] = useState<Query>({ search: "" });
 
-    const fetchCustomer = async () => {
-        const res = await api.get("/pelanggan", { params: query });
-        setCustomers(res.data);
+    const fetchPetugas = async () => {
+        const res = await api.get("/petugas", { params: query });
+        setEmployees(res.data);
     };
 
     useEffect(() => {
-        fetchCustomer();
+        fetchPetugas();
     }, [query]);
 
     const handleChangeQuery = (e: ChangeEvent<HTMLInputElement>) => {
@@ -42,11 +42,11 @@ const Pelanggan = () => {
 
     const handleDelete = async (id: number) => {
         try {
-            await api.delete(`/pelanggan/${id}`);
+            await api.delete(`/petugas/${id}`);
             toast({
                 position: "top-right",
                 title: "Success",
-                description: "Berhasil menghapus pelanggan",
+                description: "Berhasil menghapus petugas",
                 status: "success",
                 duration: 3000,
                 isClosable: true,
@@ -54,7 +54,7 @@ const Pelanggan = () => {
         } catch (err) {
             console.error(err);
         } finally {
-            fetchCustomer();
+            fetchPetugas();
         }
     };
 
@@ -66,48 +66,48 @@ const Pelanggan = () => {
                         name="search"
                         value={query.search}
                         onChange={handleChangeQuery}
-                        placeholder="Cari pelanggan"
+                        placeholder="Cari petugas"
                     />
                 </Box>
 
                 <Table variant="simple">
                     <Thead>
                         <Tr>
-                            <Th>Id Pelanggan</Th>
+                            <Th>Id Petugas</Th>
                             <Th>Nama</Th>
-                            <Th>Alamat</Th>
-                            <Th>Golongan</Th>
+                            <Th>Username</Th>
+                            <Th>Role</Th>
                             <Th>Actions</Th>
                         </Tr>
                     </Thead>
                     <Tbody>
-                        {customers.map((customer) => {
+                        {employees.map((employee) => {
                             return (
-                                <Tr key={customer.id_pelanggan}>
-                                    <Td>{customer.id_pelanggan}</Td>
-                                    <Td>{customer.nama}</Td>
-                                    <Td>{customer.alamat}</Td>
-                                    <Td>{customer.golongan.nama_golongan}</Td>
+                                <Tr key={employee.id_petugas}>
+                                    <Td>{employee.id_petugas}</Td>
+                                    <Td>{employee.nama}</Td>
+                                    <Td>{employee.username}</Td>
+                                    <Td>{employee.role?.nama_role}</Td>
                                     <Td>
                                         <Flex>
                                             <NextLink
-                                                href={`/pelanggan/${customer.id_pelanggan}`}
+                                                href={`/petugas/${employee.id_petugas}`}
                                             >
                                                 <Button bgColor={"green.300"}>
                                                     Edit
                                                 </Button>
                                             </NextLink>
                                             <DeleteWithAlert
-                                                title="Delete Customer"
+                                                title="Delete Petugas"
                                                 onClick={() =>
                                                     handleDelete(
-                                                        customer.id_pelanggan
+                                                        employee.id_petugas
                                                     )
                                                 }
                                             >
                                                 Apakah anda yakin untuk
-                                                menghapus pelanggan bernama
-                                                {` ${customer.nama}`}?
+                                                menghapus petugas bernama
+                                                {` ${employee.nama}`}?
                                             </DeleteWithAlert>
                                         </Flex>
                                     </Td>
@@ -121,4 +121,4 @@ const Pelanggan = () => {
     );
 };
 
-export default Pelanggan;
+export default Petugas;

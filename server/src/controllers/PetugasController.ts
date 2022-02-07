@@ -1,5 +1,5 @@
 import * as argon2 from "argon2";
-import { getRepository } from "typeorm";
+import { getRepository, ILike } from "typeorm";
 import type { Controller } from "../../@types/express";
 import Petugas from "../entities/Petugas";
 import { handleError, handleValidationError } from "../utils/errorResponse";
@@ -15,8 +15,13 @@ export const getPetugasById: Controller = async (req, res) => {
     return res.json(petugas);
 };
 
-export const getPetugas: Controller = async (_, res) => {
-    const petugas = await petugasRepository.find({ relations: ["role"] });
+export const getPetugas: Controller = async (req, res) => {
+    const { search } = req.query;
+
+    const petugas = await petugasRepository.find({
+        relations: ["role"],
+        where: { nama: ILike(`%${search}%`) },
+    });
 
     return res.json(petugas);
 };

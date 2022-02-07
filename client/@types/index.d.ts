@@ -11,13 +11,18 @@ export interface Customer {
 }
 
 export interface User {
-    id_petugas?: number;
-    username?: string;
-    role?: {
-        id_role: number;
-        nama_role: string;
-    };
+    id_petugas: number;
+    username: string;
+    nama: string;
+    role: Role;
 }
+
+export interface Role {
+    id_role: number;
+    nama_role?: string;
+}
+
+export interface Employee extends User {}
 
 export interface ValidationError {
     type: string;
