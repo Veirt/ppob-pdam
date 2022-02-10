@@ -251,8 +251,12 @@ export const validateRole = async (body: any, id?: string) => {
 
 const pembayaranSchema = {
     biaya_admin: { type: "string", numeric: true },
-    petugas: { type: "string", numeric: true },
-    tagihan: { type: "string", numeric: true },
+    petugas: {
+        type: "object",
+        props: {
+            id_petugas: "number",
+        },
+    },
 };
 
 export const validatePembayaran = async (body: any) => {
@@ -264,7 +268,7 @@ export const validatePembayaran = async (body: any) => {
     const petugasExist = await checkIfExist(
         petugasRepository,
         "id_petugas",
-        body.petugas
+        body.petugas.id_petugas
     );
 
     if (!petugasExist) {

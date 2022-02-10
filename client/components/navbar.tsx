@@ -24,7 +24,7 @@ const NavBar = () => {
                 <Flex justifyContent={"space-between"} alignItems="center">
                     <Box padding={5}>
                         <Text fontSize={"lg"} as="b">
-                            PPOB
+                            <NextLink href="/">PPOB</NextLink>
                         </Text>
                     </Box>
 

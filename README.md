@@ -17,5 +17,6 @@
 -   [x] Denda
 -   [ ] Pembayaran
 
--   [ ] Search and filter
+-   [x] Search (pelanggan, petugas)
+-   [ ] Filter
 -   [ ] Dashboard (jml pelanggan, mengarah ke pelanggan yg blum bayar)

@@ -5,8 +5,8 @@ import {
     OneToOne,
     PrimaryGeneratedColumn,
 } from "typeorm";
+import PemakaianPelanggan from "./PemakaianPelanggan";
 import Petugas from "./Petugas";
-import TagihanPelanggan from "./TagihanPelanggan";
 
 @Entity({ name: "pembayaran_pelanggan" })
 class PembayaranPelanggan {
@@ -23,8 +23,8 @@ class PembayaranPelanggan {
     @JoinColumn({ name: "petugas" })
     petugas!: Petugas;
 
-    @OneToOne(() => TagihanPelanggan, (tagihan) => tagihan.pembayaran)
-    tagihan!: TagihanPelanggan;
+    @OneToOne(() => PemakaianPelanggan, (pemakaian) => pemakaian.pembayaran)
+    pemakaian!: PemakaianPelanggan;
 }
 
 export default PembayaranPelanggan;

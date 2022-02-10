@@ -7,7 +7,7 @@ import {
     PrimaryGeneratedColumn,
 } from "typeorm";
 import Pelanggan from "./Pelanggan";
-import TagihanPelanggan from "./TagihanPelanggan";
+import PembayaranPelanggan from "./PembayaranPelanggan";
 
 @Entity({ name: "pemakaian_pelanggan" })
 class PemakaianPelanggan {
@@ -27,13 +27,16 @@ class PemakaianPelanggan {
     @Column({ type: "date" })
     tanggal!: Date;
 
-    @OneToOne(() => TagihanPelanggan, {
+    @OneToOne(() => PembayaranPelanggan, (pembayaran) => pembayaran.pemakaian, {
         cascade: true,
         onUpdate: "CASCADE",
         onDelete: "CASCADE",
     })
-    @JoinColumn({ name: "tagihan" })
-    tagihan!: TagihanPelanggan;
+    @JoinColumn({ name: "pembayaran" })
+    pembayaran?: PembayaranPelanggan;
+
+    @Column({ type: "int", nullable: true })
+    denda?: number;
 }
 
 export default PemakaianPelanggan;

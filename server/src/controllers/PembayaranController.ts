@@ -1,12 +1,13 @@
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
+import PemakaianPelanggan from "../entities/PemakaianPelanggan";
 import PembayaranPelanggan from "../entities/PembayaranPelanggan";
-import TagihanPelanggan from "../entities/TagihanPelanggan";
+import Petugas from "../entities/Petugas";
 import { handleError, handleValidationError } from "../utils/errorResponse";
 import { validatePembayaran } from "../utils/validation";
 
 const pembayaranRepository = getRepository(PembayaranPelanggan);
-const tagihanRepository = getRepository(TagihanPelanggan);
+const pemakaianRepository = getRepository(PemakaianPelanggan);
 
 export const getPembayaranById: Controller = async (req, res) => {
     const pembayaran = await pembayaranRepository.findOne(req.params.id, {
@@ -18,7 +19,7 @@ export const getPembayaranById: Controller = async (req, res) => {
 
 export const getPembayaran: Controller = async (_, res) => {
     const pembayaran = await pembayaranRepository.find({
-        relations: ["petugas", "tagihan"],
+        relations: ["petugas"],
     });
 
     return res.json(pembayaran);
@@ -33,27 +34,17 @@ export const createPembayaran: Controller = async (req, res) => {
 
     const tanggal_bayar = new Date();
 
-    // TODO: cek denda
-    // relasi dengan pemakaian
-    const tagihan = await tagihanRepository.findOne(req.body.tagihan, {
-        relations: ["pembayaran"],
-    });
-
-    // temp
-    if (!tagihan) return;
-
     const pembayaran = {
-        biaya_admin: req.body.biaya_admin,
-        petugas: req.body.petugas,
+        biaya_admin: req.body.biaya_admin as number,
+        petugas: req.body.petugas as Petugas,
+        pemakaian: req.body.pemakaian,
         tanggal_bayar,
     };
 
-    tagihanRepository.update(tagihan, {
-        denda:
-            tanggal_bayar.getDate() > 20
-                ? tagihan.total_bayar * 0.1
-                : undefined,
-        pembayaran,
+    const newPembayaran = pembayaranRepository.create(pembayaran);
+    await pembayaranRepository.save(newPembayaran);
+    await pemakaianRepository.update(req.body.pemakaian.id_pemakaian, {
+        pembayaran: newPembayaran,
     });
 
     return res.status(204).json(pembayaran);

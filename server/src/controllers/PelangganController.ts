@@ -2,19 +2,38 @@ import { getRepository, ILike } from "typeorm";
 import type { Controller } from "../../@types/express";
 import Pelanggan from "../entities/Pelanggan";
 import { handleError, handleValidationError } from "../utils/errorResponse";
+import findTotal from "../utils/findTotal";
 import { validatePelanggan } from "../utils/validation";
 
 const pelangganRepository = getRepository(Pelanggan);
 
 export const getPelangganById: Controller = async (req, res) => {
     const pelanggan = await pelangganRepository.findOne(req.params.id, {
-        relations: [
-            "golongan",
-            "pemakaian",
-            "pemakaian.tagihan",
-            "pemakaian.tagihan.pembayaran",
-        ],
+        relations: ["golongan", "pemakaian", "pemakaian.pembayaran"],
     });
+
+    if (pelanggan) {
+        pelanggan.pemakaian = await Promise.all(
+            pelanggan?.pemakaian.map(async (eachPemakaian) => {
+                const { tarifPemakaian, totalPemakaian } = await findTotal(
+                    pelanggan.id_pelanggan,
+                    eachPemakaian.meter_awal,
+                    eachPemakaian.meter_akhir
+                );
+
+                if (tarifPemakaian) {
+                    Object.assign(eachPemakaian, {
+                        tagihan: {
+                            total_pemakaian: totalPemakaian,
+                            total_bayar: tarifPemakaian.tarif * totalPemakaian,
+                        },
+                    });
+                }
+
+                return eachPemakaian;
+            })
+        );
+    }
 
     return res.json(pelanggan);
 };

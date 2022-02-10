@@ -1,3 +1,4 @@
+import { useRouter } from "next/router";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import api, { isAxiosError } from "../utils/api";
 
@@ -7,7 +8,11 @@ function useFetch<T>(
 ): [T, Dispatch<SetStateAction<T>>] {
     const [state, setState] = useState<T>(defaultState);
 
+    const router = useRouter();
+
     useEffect(() => {
+        if (!router.isReady) return;
+
         const fetchApi = async () => {
             try {
                 const res = await api.get(url, { withCredentials: true });

@@ -1,15 +1,9 @@
-import {
-    background,
-    Box,
-    Button,
-    Container,
-    Flex,
-    Link,
-} from "@chakra-ui/react";
+import { Box, Container, Flex, Link } from "@chakra-ui/react";
 import type { NextPage } from "next";
-import NextLink from "next/link";
 import Head from "next/head";
-import { FC } from "react";
+import NextLink from "next/link";
+import { FC, useContext } from "react";
+import { UserContext } from "../components/providers/UserProvider";
 
 const DashboardItem: FC = ({ children }) => {
     return (
