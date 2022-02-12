@@ -11,7 +11,7 @@ const pemakaianRepository = getRepository(PemakaianPelanggan);
 
 export const getPemakaianById: Controller = async (req, res) => {
     const pemakaian = await pemakaianRepository.findOne(req.params.id, {
-        relations: ["pelanggan"],
+        relations: ["pelanggan", "pelanggan.golongan"],
     });
 
     if (!pemakaian) return handleError("notFound", res);

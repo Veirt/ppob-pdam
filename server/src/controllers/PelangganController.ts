@@ -42,10 +42,11 @@ export const getPelanggan: Controller = async (req, res) => {
     const { search } = req.query;
 
     const pelanggan = await pelangganRepository.find({
-        relations: ["golongan"],
+        relations: ["golongan", "pemakaian"],
         where: {
             nama: ILike(`%${search}%`),
         },
+        order: { id_pelanggan: "ASC" },
     });
 
     return res.json(pelanggan);

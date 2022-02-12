@@ -12,6 +12,8 @@ import { ChangeEvent, FC, FormEvent, useContext, useState } from "react";
 import type { Employee, Usage, ValidationError } from "../../@types";
 import { UserContext } from "../../components/providers/UserProvider";
 import api, { isAxiosError } from "../../utils/api";
+import toCurrency from "../../utils/toCurrency";
+import toPeriod from "../../utils/toPeriod";
 
 interface IPaymentState {
     pemakaian: Usage;
@@ -46,7 +48,9 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
                 { withCredentials: true }
             );
 
-            router.replace("/pembayaran");
+            router.replace(
+                `/pelanggan/${usage.pelanggan?.id_pelanggan}/pembayaran`
+            );
         } catch (err) {
             if (isAxiosError(err)) {
                 err.response!.data.forEach(
@@ -76,6 +80,66 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
             <Container>
                 <form onSubmit={handlePayment} action="POST">
                     <Box my={3}>
+                        <FormLabel>Nama Pelanggan</FormLabel>
+                        <Input
+                            type="text"
+                            value={payment.pemakaian.pelanggan?.nama || ""}
+                            disabled
+                        />
+                    </Box>
+
+                    <Box my={3}>
+                        <FormLabel>Golongan</FormLabel>
+                        <Input
+                            type="text"
+                            value={
+                                payment.pemakaian.pelanggan?.golongan
+                                    .nama_golongan || ""
+                            }
+                            disabled
+                        />
+                    </Box>
+
+                    <Box my={3}>
+                        <FormLabel>Meteran</FormLabel>
+                        <Input
+                            type="text"
+                            value={`${payment.pemakaian.meter_awal} - ${payment.pemakaian.meter_akhir}`}
+                            disabled
+                        />
+                    </Box>
+
+                    <Box my={3}>
+                        <FormLabel>Periode Pemakaian</FormLabel>
+                        <Input
+                            type="text"
+                            value={toPeriod(payment.pemakaian.tanggal)}
+                            disabled
+                        />
+                    </Box>
+
+                    <Box my={3}>
+                        <FormLabel>Total Pemakaian</FormLabel>
+                        <Input
+                            type="text"
+                            value={payment.pemakaian.tagihan.total_pemakaian}
+                            disabled
+                        />
+                    </Box>
+
+                    <Box my={3}>
+                        <FormLabel>Total Bayar</FormLabel>
+                        <Input
+                            type="text"
+                            value={toCurrency(
+                                payment.pemakaian.tagihan.total_bayar
+                            )}
+                            disabled
+                            required
+                        />
+                    </Box>
+
+                    <Box my={3}>
                         <FormLabel htmlFor="biaya_admin">Biaya Admin</FormLabel>
                         <Input
                             id="biaya_admin"
@@ -83,32 +147,6 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
                             type="number"
                             value={payment.biaya_admin || ""}
                             onChange={handleChange}
-                            required
-                        />
-                    </Box>
-
-                    <Box my={3}>
-                        <FormLabel htmlFor="total_pemakaian">
-                            Total Pemakaian
-                        </FormLabel>
-                        <Input
-                            id="total_pemakaian"
-                            type="text"
-                            value={
-                                payment.pemakaian.tagihan.total_pemakaian || ""
-                            }
-                            disabled
-                            required
-                        />
-                    </Box>
-
-                    <Box my={3}>
-                        <FormLabel htmlFor="total_bayar">Total Bayar</FormLabel>
-                        <Input
-                            id="total_bayar"
-                            type="text"
-                            value={payment.pemakaian.tagihan.total_bayar || ""}
-                            disabled
                             required
                         />
                     </Box>

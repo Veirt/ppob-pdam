@@ -19,6 +19,7 @@ import DeleteWithAlert from "../../components/alert";
 import api from "../../utils/api";
 
 const Pelanggan = () => {
+    const currentMonth = new Date().getMonth();
     const toast = useToast();
 
     const [customers, setCustomers] = useState<Customer[]>([]);
@@ -60,7 +61,15 @@ const Pelanggan = () => {
 
     return (
         <>
-            <Container maxW="container.md">
+            <Container maxW="container.lg">
+                <Box m={3}>
+                    <Button colorScheme="green">
+                        <NextLink href="/pelanggan/create">
+                            Tambah Pelanggan
+                        </NextLink>
+                    </Button>
+                </Box>
+
                 <Box m={3}>
                     <Input
                         name="search"
@@ -89,11 +98,29 @@ const Pelanggan = () => {
                                     <Td>{customer.alamat}</Td>
                                     <Td>{customer.golongan.nama_golongan}</Td>
                                     <Td>
-                                        <Flex>
+                                        <Flex justifyContent="space-evenly">
+                                            <NextLink
+                                                href={`/pelanggan/${customer.id_pelanggan}/pemakaian/create`}
+                                            >
+                                                <Button
+                                                    // disabled ketika sudah diinput bulan ini
+                                                    disabled={
+                                                        new Date(
+                                                            customer.pemakaian!.at(
+                                                                -1
+                                                            )!.tanggal
+                                                        ).getMonth() ===
+                                                        currentMonth
+                                                    }
+                                                    colorScheme={"blue"}
+                                                >
+                                                    Pemakaian
+                                                </Button>
+                                            </NextLink>
                                             <NextLink
                                                 href={`/pelanggan/${customer.id_pelanggan}`}
                                             >
-                                                <Button bgColor={"green.300"}>
+                                                <Button colorScheme={"green"}>
                                                     Edit
                                                 </Button>
                                             </NextLink>
@@ -101,7 +128,7 @@ const Pelanggan = () => {
                                                 title="Delete Customer"
                                                 onClick={() =>
                                                     handleDelete(
-                                                        customer.id_pelanggan
+                                                        customer.id_pelanggan as number
                                                     )
                                                 }
                                             >

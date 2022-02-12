@@ -19,6 +19,12 @@ export interface Usage {
     tagihan: Bill;
     denda: number | null;
     pembayaran: Payment | null;
+    pelanggan?: {
+        id_pelanggan: number | string;
+        nama: string;
+        alamat: string;
+        golongan: Golongan;
+    };
 }
 
 export interface Bill {

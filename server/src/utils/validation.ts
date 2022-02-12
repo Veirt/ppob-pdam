@@ -146,8 +146,7 @@ export const validateTarif = async (body: any) => {
 };
 
 const pemakaianSchema = {
-    pelanggan: { type: "string", numeric: true },
-    meter_awal: { type: "string", numeric: true, optional: true },
+    pelanggan: { type: "number" },
     meter_akhir: { type: "string", numeric: true },
 };
 

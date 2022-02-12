@@ -47,6 +47,11 @@ const Home: NextPage = () => {
                             <Link>Petugas</Link>
                         </NextLink>
                     </DashboardItem>
+                    <DashboardItem>
+                        <NextLink href="/pembayaran" passHref>
+                            <Link>Pembayaran</Link>
+                        </NextLink>
+                    </DashboardItem>
                 </Flex>
             </Container>
         </>

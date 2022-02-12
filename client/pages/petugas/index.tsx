@@ -62,6 +62,14 @@ const Petugas = () => {
         <>
             <Container maxW="container.md">
                 <Box m={3}>
+                    <Button colorScheme="green">
+                        <NextLink href="/petugas/create">
+                            Tambah Petugas
+                        </NextLink>
+                    </Button>
+                </Box>
+
+                <Box m={3}>
                     <Input
                         name="search"
                         value={query.search}
@@ -89,11 +97,11 @@ const Petugas = () => {
                                     <Td>{employee.username}</Td>
                                     <Td>{employee.role?.nama_role}</Td>
                                     <Td>
-                                        <Flex>
+                                        <Flex justifyContent="space-evenly">
                                             <NextLink
                                                 href={`/petugas/${employee.id_petugas}`}
                                             >
-                                                <Button bgColor={"green.300"}>
+                                                <Button bgColor="green.300">
                                                     Edit
                                                 </Button>
                                             </NextLink>
