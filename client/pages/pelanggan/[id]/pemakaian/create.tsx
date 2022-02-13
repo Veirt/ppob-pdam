@@ -1,11 +1,4 @@
-import {
-    Box,
-    Button,
-    Container,
-    FormLabel,
-    Input,
-    useToast,
-} from "@chakra-ui/react";
+import { Box, Button, Container, FormLabel, Input, useToast } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
@@ -42,18 +35,16 @@ const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
             router.replace("/pelanggan");
         } catch (err) {
             if (isAxiosError(err)) {
-                err.response!.data.forEach(
-                    (validationError: ValidationError) => {
-                        toast({
-                            position: "top-right",
-                            title: "Error",
-                            description: validationError.message,
-                            status: "error",
-                            duration: 3000,
-                            isClosable: true,
-                        });
-                    }
-                );
+                err.response!.data.forEach((validationError: ValidationError) => {
+                    toast({
+                        position: "top-right",
+                        title: "Error",
+                        description: validationError.message,
+                        status: "error",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                });
             }
         } finally {
             setLoading(false);
@@ -69,9 +60,7 @@ const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
             <Container>
                 <form onSubmit={handleSubmit}>
                     <Box my={3}>
-                        <FormLabel htmlFor="nama_pelanggan">
-                            Nama Pelanggan
-                        </FormLabel>
+                        <FormLabel htmlFor="nama_pelanggan">Nama Pelanggan</FormLabel>
                         <Input
                             id="nama_pelanggan"
                             type="text"
@@ -87,9 +76,7 @@ const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
                         <Input
                             id="meter_awal"
                             type="text"
-                            value={
-                                pelanggan.pemakaian?.at(-1)?.meter_akhir || 0
-                            }
+                            value={pelanggan.pemakaian?.at(-1)?.meter_akhir || 0}
                             disabled
                             onChange={handleChange}
                             required
@@ -108,12 +95,7 @@ const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
                         />
                     </Box>
 
-                    <Button
-                        isLoading={isLoading}
-                        type="submit"
-                        colorScheme="teal"
-                        size="md"
-                    >
+                    <Button isLoading={isLoading} type="submit" colorScheme="teal" size="md">
                         Submit
                     </Button>
                 </form>

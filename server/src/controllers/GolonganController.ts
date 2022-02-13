@@ -7,7 +7,7 @@ import { validateGolongan } from "../utils/validation";
 const golonganRepository = getRepository(Golongan);
 
 export const getGolonganById: Controller = async (req, res) => {
-    const golongan = await golonganRepository.findOne(req.params.id);
+    const golongan = await golonganRepository.findOne(req.params.id, { relations: ["tarif"] });
 
     return res.json(golongan);
 };
@@ -19,11 +19,8 @@ export const getGolongan: Controller = async (_, res) => {
 };
 
 export const createGolongan: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validateGolongan(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validateGolongan(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const newGolongan = golonganRepository.create({
         nama_golongan: req.body.nama_golongan,
@@ -34,11 +31,8 @@ export const createGolongan: Controller = async (req, res) => {
 };
 
 export const updateGolongan: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validateGolongan(req.body, req.params.id)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validateGolongan(req.body, req.params.id));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     console.log(validationResult);
 

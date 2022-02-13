@@ -23,11 +23,8 @@ export const getTarif: Controller = async (_, res) => {
 };
 
 export const createTarif: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validateTarif(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validateTarif(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const { kubik_awal, kubik_akhir, tarif, golongan } = req.body;
     const newTarif = tarifRepository.create({
@@ -43,11 +40,8 @@ export const createTarif: Controller = async (req, res) => {
 };
 
 export const updateTarif: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validateTarif(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validateTarif(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const tarif = await tarifRepository.findOne(req.params.id);
     if (!tarif) return handleError("notFound", res);

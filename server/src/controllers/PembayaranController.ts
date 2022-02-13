@@ -26,11 +26,8 @@ export const getPembayaran: Controller = async (_, res) => {
 };
 
 export const createPembayaran: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validatePembayaran(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validatePembayaran(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const tanggal_bayar = new Date();
 
@@ -51,11 +48,8 @@ export const createPembayaran: Controller = async (req, res) => {
 };
 
 export const updatePembayaran: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validatePembayaran(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validatePembayaran(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const pembayaran = await pembayaranRepository.findOne(req.params.id);
     if (!pembayaran) return handleError("notFound", res);

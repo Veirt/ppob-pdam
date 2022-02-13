@@ -39,19 +39,24 @@ export interface Payment {
     petugas: Petugas;
 }
 
-export interface User {
-    id_petugas: number;
-    username: string;
-    nama: string;
-    role: Role;
-}
-
 export interface Role {
     id_role: number;
     nama_role: string;
 }
 
-export interface Employee extends User {}
+export interface User {
+    id_petugas?: number;
+    username?: string;
+    nama?: string;
+    role?: Role;
+}
+
+export interface Employee {
+    id_petugas: number;
+    username: string;
+    nama: string;
+    role: Role;
+}
 
 export interface ValidationError {
     type: string;

@@ -1,11 +1,4 @@
-import {
-    Box,
-    Button,
-    Container,
-    Input,
-    InputGroup,
-    InputRightElement,
-} from "@chakra-ui/react";
+import { Box, Button, Container, Input, InputGroup, InputRightElement } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { FormEvent, useState } from "react";
 import { Customer } from "../../@types";
@@ -21,12 +14,12 @@ const Payment = () => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        router.replace(`/pelanggan/${customer.id_pelanggan}/pembayaran`);
+        router.replace(`/pelanggan/${customer.id_pelanggan}/tagihan`);
     };
 
     return (
         <>
-            <Container maxW="container.md">
+            <Container maxW="container.lg">
                 <form onSubmit={handleSubmit}>
                     <Box m={3}>
                         <InputGroup size="md">
@@ -42,11 +35,7 @@ const Payment = () => {
                                 placeholder="Masukkan ID Pelanggan"
                             />
                             <InputRightElement width="4.5rem">
-                                <Button
-                                    h="1.75rem"
-                                    size="sm"
-                                    onClick={handleSubmit}
-                                >
+                                <Button h="1.75rem" size="sm" onClick={handleSubmit}>
                                     Lanjut
                                 </Button>
                             </InputRightElement>

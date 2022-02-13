@@ -19,11 +19,8 @@ export const getRole: Controller = async (_, res) => {
 };
 
 export const createRole: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validateRole(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validateRole(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const newRole = roleRepository.create(req.body);
     const savedRole = await roleRepository.save(newRole);
@@ -32,11 +29,8 @@ export const createRole: Controller = async (req, res) => {
 };
 
 export const updateRole: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validateRole(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validateRole(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const role = await roleRepository.findOne(req.params.id);
     if (!role) return handleError("notFound", res);

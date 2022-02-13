@@ -1,11 +1,4 @@
-import {
-    Box,
-    Button,
-    Container,
-    FormLabel,
-    Input,
-    useToast,
-} from "@chakra-ui/react";
+import { Box, Button, Container, FormLabel, Input, useToast } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { ChangeEvent, FC, FormEvent, useContext, useState } from "react";
@@ -29,7 +22,7 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
     const [isLoading, setLoading] = useState(false);
 
     const [payment, setPayment] = useState<IPaymentState>({
-        petugas: user,
+        petugas: user as Employee,
         pemakaian: usage,
         biaya_admin: 0,
     });
@@ -48,23 +41,19 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
                 { withCredentials: true }
             );
 
-            router.replace(
-                `/pelanggan/${usage.pelanggan?.id_pelanggan}/pembayaran`
-            );
+            router.replace(`/pelanggan/${usage.pelanggan?.id_pelanggan}/tagihan`);
         } catch (err) {
             if (isAxiosError(err)) {
-                err.response!.data.forEach(
-                    (validationError: ValidationError) => {
-                        toast({
-                            position: "top-right",
-                            title: "Error",
-                            description: validationError.message,
-                            status: "error",
-                            duration: 3000,
-                            isClosable: true,
-                        });
-                    }
-                );
+                err.response!.data.forEach((validationError: ValidationError) => {
+                    toast({
+                        position: "top-right",
+                        title: "Error",
+                        description: validationError.message,
+                        status: "error",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                });
             }
         } finally {
             setLoading(false);
@@ -92,10 +81,7 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
                         <FormLabel>Golongan</FormLabel>
                         <Input
                             type="text"
-                            value={
-                                payment.pemakaian.pelanggan?.golongan
-                                    .nama_golongan || ""
-                            }
+                            value={payment.pemakaian.pelanggan?.golongan.nama_golongan || ""}
                             disabled
                         />
                     </Box>
@@ -111,11 +97,7 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
 
                     <Box my={3}>
                         <FormLabel>Periode Pemakaian</FormLabel>
-                        <Input
-                            type="text"
-                            value={toPeriod(payment.pemakaian.tanggal)}
-                            disabled
-                        />
+                        <Input type="text" value={toPeriod(payment.pemakaian.tanggal)} disabled />
                     </Box>
 
                     <Box my={3}>
@@ -131,9 +113,17 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
                         <FormLabel>Total Bayar</FormLabel>
                         <Input
                             type="text"
-                            value={toCurrency(
-                                payment.pemakaian.tagihan.total_bayar
-                            )}
+                            value={toCurrency(payment.pemakaian.tagihan.total_bayar)}
+                            disabled
+                            required
+                        />
+                    </Box>
+
+                    <Box my={3}>
+                        <FormLabel>Denda</FormLabel>
+                        <Input
+                            type="text"
+                            value={toCurrency(payment.pemakaian.denda || 0)}
                             disabled
                             required
                         />
@@ -151,12 +141,7 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
                         />
                     </Box>
 
-                    <Button
-                        isLoading={isLoading}
-                        type="submit"
-                        colorScheme="teal"
-                        size="md"
-                    >
+                    <Button isLoading={isLoading} type="submit" colorScheme="teal" size="md">
                         Submit
                     </Button>
                 </form>

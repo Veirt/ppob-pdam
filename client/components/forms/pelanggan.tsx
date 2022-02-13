@@ -1,18 +1,11 @@
-import {
-    Box,
-    Button,
-    Container,
-    FormControl,
-    FormLabel,
-    Input,
-} from "@chakra-ui/react";
+import { Box, Button, Container, FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction } from "react";
 import { Golongan } from "../../@types";
 import useFetch from "../../hooks/useFetch";
 import toOptions from "../../utils/toOptions";
 
-export interface ICustomerState {
+export interface CustomerState {
     nama: string;
     alamat: string;
     golongan: Golongan;
@@ -21,18 +14,12 @@ export interface ICustomerState {
 interface IProps {
     handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
     handleSubmit: (e: FormEvent) => void;
-    state: ICustomerState;
-    setState: Dispatch<SetStateAction<ICustomerState>>;
+    state: CustomerState;
+    setState: Dispatch<SetStateAction<CustomerState>>;
     isLoading: boolean;
 }
 
-const CustomerForm: FC<IProps> = ({
-    handleChange,
-    handleSubmit,
-    state,
-    setState,
-    isLoading,
-}) => {
+const CustomerForm: FC<IProps> = ({ handleChange, handleSubmit, state, setState, isLoading }) => {
     const [golongan] = useFetch<Golongan[]>("/golongan", []);
     const golonganOptions = toOptions(golongan, "id_golongan", "nama_golongan");
 
@@ -80,23 +67,15 @@ const CustomerForm: FC<IProps> = ({
                                     setState({
                                         ...state,
                                         golongan: {
-                                            id_golongan: golongan!
-                                                .value as number,
-                                            nama_golongan: golongan!
-                                                .label as string,
+                                            id_golongan: golongan!.value as number,
+                                            nama_golongan: golongan!.label as string,
                                         },
                                     });
-                                }}
-                            ></Select>
+                                }}></Select>
                         </Box>
                     </FormControl>
 
-                    <Button
-                        isLoading={isLoading}
-                        type="submit"
-                        colorScheme="teal"
-                        size="md"
-                    >
+                    <Button isLoading={isLoading} type="submit" colorScheme="teal" size="md">
                         Submit
                     </Button>
                 </form>

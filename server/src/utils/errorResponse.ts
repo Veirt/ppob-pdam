@@ -1,10 +1,6 @@
 import type { Response } from "express";
 
-export const handleError = (
-    type: string,
-    res: Response,
-    data?: any
-): Response<any> => {
+export const handleError = (type: string, res: Response, data?: any): Response<any> => {
     let statusCode = 500;
 
     switch (type) {
@@ -19,9 +15,7 @@ export const handleError = (
     return res.status(statusCode).json(data);
 };
 
-export const handleValidationError = (
-    validationResult: any[]
-): any[] | false => {
+export const handleValidationError = (validationResult: any[]): any[] | false => {
     if (validationResult.length > 0) {
         return validationResult;
     }

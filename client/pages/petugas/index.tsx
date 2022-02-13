@@ -60,12 +60,10 @@ const Petugas = () => {
 
     return (
         <>
-            <Container maxW="container.md">
+            <Container maxW="container.lg">
                 <Box m={3}>
                     <Button colorScheme="green">
-                        <NextLink href="/petugas/create">
-                            Tambah Petugas
-                        </NextLink>
+                        <NextLink href="/petugas/create">Tambah Petugas</NextLink>
                     </Button>
                 </Box>
 
@@ -98,23 +96,13 @@ const Petugas = () => {
                                     <Td>{employee.role?.nama_role}</Td>
                                     <Td>
                                         <Flex justifyContent="space-evenly">
-                                            <NextLink
-                                                href={`/petugas/${employee.id_petugas}`}
-                                            >
-                                                <Button bgColor="green.300">
-                                                    Edit
-                                                </Button>
+                                            <NextLink href={`/petugas/${employee.id_petugas}`}>
+                                                <Button bgColor="green.300">Edit</Button>
                                             </NextLink>
                                             <DeleteWithAlert
                                                 title="Delete Petugas"
-                                                onClick={() =>
-                                                    handleDelete(
-                                                        employee.id_petugas
-                                                    )
-                                                }
-                                            >
-                                                Apakah anda yakin untuk
-                                                menghapus petugas bernama
+                                                onClick={() => handleDelete(employee.id_petugas)}>
+                                                Apakah anda yakin untuk menghapus petugas bernama
                                                 {` ${employee.nama}`}?
                                             </DeleteWithAlert>
                                         </Flex>

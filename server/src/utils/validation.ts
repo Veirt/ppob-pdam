@@ -12,11 +12,7 @@ const pemakaianRepository = getRepository(PemakaianPelanggan);
 const golonganRepository = getRepository(GolonganPelanggan);
 const roleRepository = getRepository(RolePetugas);
 
-const checkIfExist = async <T, U>(
-    repository: Repository<T>,
-    key: keyof T,
-    value: U
-) => {
+const checkIfExist = async <T, U>(repository: Repository<T>, key: keyof T, value: U) => {
     try {
         await repository.findOneOrFail({ [key]: value });
         return true;
@@ -27,23 +23,23 @@ const checkIfExist = async <T, U>(
 
 const v = new Validator();
 
-const petugasSchema = {
-    nama: { type: "string", max: 255 },
-    username: {
-        type: "string",
-        min: 3,
-        max: 30,
-    },
-    password: { type: "string", min: 5, optional: true },
-    role: {
-        type: "object",
-        props: {
-            id_role: "number",
-        },
-    },
-};
-
 export const validatePetugas = async (body: any, id?: string) => {
+    const petugasSchema = {
+        nama: { type: "string", max: 255 },
+        username: {
+            type: "string",
+            min: 3,
+            max: 30,
+        },
+        password: { type: "string", min: 5, optional: true },
+        role: {
+            type: "object",
+            props: {
+                id_role: "number",
+            },
+        },
+    };
+
     let result = await v.compile(petugasSchema)(body);
     if (result === true) {
         result = [];
@@ -62,11 +58,7 @@ export const validatePetugas = async (body: any, id?: string) => {
         });
     }
 
-    const roleExist = await checkIfExist(
-        roleRepository,
-        "id_role",
-        body.role.id_role
-    );
+    const roleExist = await checkIfExist(roleRepository, "id_role", body.role.id_role);
     if (!roleExist) {
         result.push({
             type: "invalid",
@@ -79,20 +71,20 @@ export const validatePetugas = async (body: any, id?: string) => {
     return result;
 };
 
-const pelangganSchema = {
-    nama: { type: "string", max: 255 },
-    alamat: {
-        type: "string",
-    },
-    golongan: {
-        type: "object",
-        props: {
-            id_golongan: "number",
-        },
-    },
-};
-
 export const validatePelanggan = async (body: any) => {
+    const pelangganSchema = {
+        nama: { type: "string", max: 255 },
+        alamat: {
+            type: "string",
+        },
+        golongan: {
+            type: "object",
+            props: {
+                id_golongan: "number",
+            },
+        },
+    };
+
     let result = await v.compile(pelangganSchema)(body);
     if (result === true) {
         result = [];
@@ -115,14 +107,14 @@ export const validatePelanggan = async (body: any) => {
     return result;
 };
 
-const tarifSchema = {
-    kubik_awal: { type: "string", numeric: true },
-    kubik_akhir: { type: "string", numeric: true },
-    tarif: { type: "string", numeric: true },
-    golongan: { type: "string", numeric: true },
-};
-
 export const validateTarif = async (body: any) => {
+    const tarifSchema = {
+        kubik_awal: { type: "string", numeric: true },
+        kubik_akhir: { type: "string", numeric: true },
+        tarif: { type: "string", numeric: true },
+        golongan: { type: "string", numeric: true },
+    };
+
     let result = await v.compile(tarifSchema)(body);
     if (result === true) {
         result = [];
@@ -145,12 +137,12 @@ export const validateTarif = async (body: any) => {
     return result;
 };
 
-const pemakaianSchema = {
-    pelanggan: { type: "number" },
-    meter_akhir: { type: "string", numeric: true },
-};
-
 export const validatePemakaian = async (body: any) => {
+    const pemakaianSchema = {
+        pelanggan: { type: "number" },
+        meter_akhir: { type: "string", numeric: true },
+    };
+
     let result = await v.compile(pemakaianSchema)(body);
     if (result === true) {
         result = [];
@@ -179,7 +171,7 @@ export const validatePemakaian = async (body: any) => {
         .getOne();
 
     if (pemakaian) {
-        (result as Array<any>).push({
+        result.push({
             type: "invalid",
             message: "Pelanggan sudah punya pemakaian bulan ini.",
             field: "pelanggan",
@@ -190,11 +182,11 @@ export const validatePemakaian = async (body: any) => {
     return result;
 };
 
-const golonganSchema = {
-    nama_golongan: { type: "string", max: 255 },
-};
-
 export const validateGolongan = async (body: any, id?: string) => {
+    const golonganSchema = {
+        nama_golongan: { type: "string", max: 255 },
+    };
+
     let result = await v.compile(golonganSchema)(body);
     if (result === true) {
         result = [];
@@ -219,11 +211,11 @@ export const validateGolongan = async (body: any, id?: string) => {
     return result;
 };
 
-const roleSchema = {
-    nama_role: { type: "string", max: 30 },
-};
-
 export const validateRole = async (body: any, id?: string) => {
+    const roleSchema = {
+        nama_role: { type: "string", max: 30 },
+    };
+
     let result = await v.compile(roleSchema)(body);
     if (result === true) {
         result = [];
@@ -248,17 +240,17 @@ export const validateRole = async (body: any, id?: string) => {
     return result;
 };
 
-const pembayaranSchema = {
-    biaya_admin: { type: "string", numeric: true },
-    petugas: {
-        type: "object",
-        props: {
-            id_petugas: "number",
-        },
-    },
-};
-
 export const validatePembayaran = async (body: any) => {
+    const pembayaranSchema = {
+        biaya_admin: { type: "string", numeric: true },
+        petugas: {
+            type: "object",
+            props: {
+                id_petugas: "number",
+            },
+        },
+    };
+
     let result = await v.compile(pembayaranSchema)(body);
     if (result === true) {
         result = [];

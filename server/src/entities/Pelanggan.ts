@@ -1,11 +1,4 @@
-import {
-    Column,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    OneToMany,
-    PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import GolonganPelanggan from "./GolonganPelanggan";
 import PemakaianPelanggan from "./PemakaianPelanggan";
 

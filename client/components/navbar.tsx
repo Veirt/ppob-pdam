@@ -3,11 +3,11 @@ import { FC, useContext } from "react";
 import { UserContext } from "./providers/UserProvider";
 import NextLink from "next/link";
 
-interface IProps {
+interface Props {
     href: string;
 }
 
-const LinkItem: FC<IProps> = ({ href, children }) => {
+const LinkItem: FC<Props> = ({ href, children }) => {
     return (
         <NextLink href={href} passHref>
             <Link>{children}</Link>

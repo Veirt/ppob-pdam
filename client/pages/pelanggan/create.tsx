@@ -2,7 +2,7 @@ import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { ValidationError } from "../../@types";
-import CustomerForm, { ICustomerState } from "../../components/forms/pelanggan";
+import CustomerForm, { CustomerState } from "../../components/forms/pelanggan";
 import api, { isAxiosError } from "../../utils/api";
 
 const CreateCustomer = () => {
@@ -11,7 +11,7 @@ const CreateCustomer = () => {
 
     const [isLoading, setLoading] = useState(false);
 
-    const [customer, setCustomer] = useState<ICustomerState>({
+    const [customer, setCustomer] = useState<CustomerState>({
         nama: "",
         alamat: "",
         golongan: {
@@ -28,27 +28,21 @@ const CreateCustomer = () => {
         setLoading(true);
 
         try {
-            await api.post(
-                "/pelanggan",
-                { ...customer },
-                { withCredentials: true }
-            );
+            await api.post("/pelanggan", { ...customer }, { withCredentials: true });
 
             router.replace("/pelanggan");
         } catch (err) {
             if (isAxiosError(err)) {
-                err.response!.data.forEach(
-                    (validationError: ValidationError) => {
-                        toast({
-                            position: "top-right",
-                            title: "Error",
-                            description: validationError.message,
-                            status: "error",
-                            duration: 3000,
-                            isClosable: true,
-                        });
-                    }
-                );
+                err.response!.data.forEach((validationError: ValidationError) => {
+                    toast({
+                        position: "top-right",
+                        title: "Error",
+                        description: validationError.message,
+                        status: "error",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                });
             }
         } finally {
             setLoading(false);

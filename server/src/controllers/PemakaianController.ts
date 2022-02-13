@@ -44,11 +44,8 @@ export const getPemakaian: Controller = async (_, res) => {
 
 export const createPemakaian: Controller = async (req, res) => {
     // TODO: cek tunggakan
-    const validationResult = handleValidationError(
-        await validatePemakaian(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validatePemakaian(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const meter_akhir = Number(req.body.meter_akhir);
 
@@ -64,11 +61,7 @@ export const createPemakaian: Controller = async (req, res) => {
     }
 
     try {
-        const { tarifPemakaian } = await findTotal(
-            req.body.pelanggan,
-            meter_awal,
-            meter_akhir
-        );
+        const { tarifPemakaian } = await findTotal(req.body.pelanggan, meter_awal, meter_akhir);
 
         if (!tarifPemakaian) {
             return res.status(400).json([
@@ -104,11 +97,8 @@ export const createPemakaian: Controller = async (req, res) => {
 };
 
 export const updatePemakaian: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validatePemakaian(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validatePemakaian(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const pemakaian = await pemakaianRepository.findOne(req.params.id);
     if (!pemakaian) return handleError("notFound", res);

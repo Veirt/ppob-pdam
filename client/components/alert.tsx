@@ -9,12 +9,12 @@ import {
 } from "@chakra-ui/react";
 import { FC, useRef, useState } from "react";
 
-interface IProps {
+interface Props {
     title: string;
     onClick: Function;
 }
 
-const DeleteWithAlert: FC<IProps> = ({ title, onClick, children }) => {
+const DeleteWithAlert: FC<Props> = ({ title, onClick, children }) => {
     const [isOpen, setIsOpen] = useState(false);
     const cancelRef = useRef(null);
 
@@ -27,8 +27,7 @@ const DeleteWithAlert: FC<IProps> = ({ title, onClick, children }) => {
             <AlertDialog
                 isOpen={isOpen}
                 leastDestructiveRef={cancelRef}
-                onClose={() => setIsOpen(false)}
-            >
+                onClose={() => setIsOpen(false)}>
                 <AlertDialogOverlay>
                     <AlertDialogContent>
                         <AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -38,10 +37,7 @@ const DeleteWithAlert: FC<IProps> = ({ title, onClick, children }) => {
                         <AlertDialogBody>{children}</AlertDialogBody>
 
                         <AlertDialogFooter>
-                            <Button
-                                ref={cancelRef}
-                                onClick={() => setIsOpen(false)}
-                            >
+                            <Button ref={cancelRef} onClick={() => setIsOpen(false)}>
                                 Cancel
                             </Button>
                             <Button
@@ -50,8 +46,7 @@ const DeleteWithAlert: FC<IProps> = ({ title, onClick, children }) => {
                                     onClick();
                                     setIsOpen(false);
                                 }}
-                                ml={3}
-                            >
+                                ml={3}>
                                 Delete
                             </Button>
                         </AlertDialogFooter>

@@ -64,9 +64,7 @@ const Pelanggan = () => {
             <Container maxW="container.lg">
                 <Box m={3}>
                     <Button colorScheme="green">
-                        <NextLink href="/pelanggan/create">
-                            Tambah Pelanggan
-                        </NextLink>
+                        <NextLink href="/pelanggan/create">Tambah Pelanggan</NextLink>
                     </Button>
                 </Box>
 
@@ -100,40 +98,29 @@ const Pelanggan = () => {
                                     <Td>
                                         <Flex justifyContent="space-evenly">
                                             <NextLink
-                                                href={`/pelanggan/${customer.id_pelanggan}/pemakaian/create`}
-                                            >
+                                                href={`/pelanggan/${customer.id_pelanggan}/pemakaian/create`}>
                                                 <Button
                                                     // disabled ketika sudah diinput bulan ini
                                                     disabled={
-                                                        new Date(
-                                                            customer.pemakaian!.at(
-                                                                -1
-                                                            )!.tanggal
-                                                        ).getMonth() ===
-                                                        currentMonth
+                                                        customer.pemakaian?.length
+                                                            ? new Date(
+                                                                  customer.pemakaian.at(-1)!.tanggal
+                                                              ).getMonth() === currentMonth
+                                                            : false
                                                     }
-                                                    colorScheme={"blue"}
-                                                >
+                                                    colorScheme={"blue"}>
                                                     Pemakaian
                                                 </Button>
                                             </NextLink>
-                                            <NextLink
-                                                href={`/pelanggan/${customer.id_pelanggan}`}
-                                            >
-                                                <Button colorScheme={"green"}>
-                                                    Edit
-                                                </Button>
+                                            <NextLink href={`/pelanggan/${customer.id_pelanggan}`}>
+                                                <Button colorScheme={"green"}>Edit</Button>
                                             </NextLink>
                                             <DeleteWithAlert
                                                 title="Delete Customer"
                                                 onClick={() =>
-                                                    handleDelete(
-                                                        customer.id_pelanggan as number
-                                                    )
-                                                }
-                                            >
-                                                Apakah anda yakin untuk
-                                                menghapus pelanggan bernama
+                                                    handleDelete(customer.id_pelanggan as number)
+                                                }>
+                                                Apakah anda yakin untuk menghapus pelanggan bernama
                                                 {` ${customer.nama}`}?
                                             </DeleteWithAlert>
                                         </Flex>

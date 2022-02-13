@@ -2,11 +2,13 @@ import { CheckIcon, CloseIcon } from "@chakra-ui/icons";
 import {
     Box,
     Button,
+    Center,
     Container,
     Input,
     InputGroup,
     InputRightElement,
     Link,
+    Spinner,
     Table,
     Tbody,
     Td,
@@ -35,12 +37,12 @@ const Payment = () => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
-        router.replace(`/pelanggan/${customer.id_pelanggan}/pembayaran`);
+        router.replace(`/pelanggan/${customer.id_pelanggan}/tagihan`);
     };
 
     return (
         <>
-            <Container maxW="container.md">
+            <Container maxW="container.lg">
                 <form onSubmit={handleSubmit}>
                     <Box m={3}>
                         <InputGroup size="md">
@@ -56,11 +58,7 @@ const Payment = () => {
                                 placeholder="Masukkan ID Pelanggan"
                             />
                             <InputRightElement width="4.5rem">
-                                <Button
-                                    h="1.75rem"
-                                    size="sm"
-                                    onClick={handleSubmit}
-                                >
+                                <Button h="1.75rem" size="sm" onClick={handleSubmit}>
                                     Lanjut
                                 </Button>
                             </InputRightElement>
@@ -68,8 +66,8 @@ const Payment = () => {
                     </Box>
                 </form>
             </Container>
-            {customer.pemakaian && (
-                <Container maxW="container.lg">
+            <Container maxW="container.lg">
+                {customer.pemakaian ? (
                     <Table>
                         <Thead>
                             <Tr>
@@ -92,29 +90,18 @@ const Payment = () => {
                                         <Td>{pemakaian.meter_awal}</Td>
                                         <Td>{pemakaian.meter_akhir}</Td>
                                         <Td>{toPeriod(pemakaian.tanggal)}</Td>
-                                        <Td>
-                                            {toCurrency(
-                                                pemakaian.tagihan.total_bayar
-                                            )}
-                                        </Td>
-                                        <Td>
-                                            {pemakaian.tagihan.total_pemakaian}
-                                        </Td>
+                                        <Td>{toCurrency(pemakaian.tagihan.total_bayar)}</Td>
+                                        <Td>{pemakaian.tagihan.total_pemakaian}</Td>
                                         <Td>{toCurrency(pemakaian.denda)}</Td>
                                         <Td>
-                                            {pemakaian.pembayaran ? (
-                                                <CheckIcon />
-                                            ) : (
-                                                <CloseIcon />
-                                            )}
+                                            {pemakaian.pembayaran ? <CheckIcon /> : <CloseIcon />}
                                         </Td>
                                         <Td>
                                             {!pemakaian.pembayaran && (
                                                 <Button>
                                                     <NextLink
                                                         href={`/pemakaian/${pemakaian.id_pemakaian}`}
-                                                        passHref
-                                                    >
+                                                        passHref>
                                                         <Link>Bayar</Link>
                                                     </NextLink>
                                                 </Button>
@@ -125,8 +112,12 @@ const Payment = () => {
                             })}
                         </Tbody>
                     </Table>
-                </Container>
-            )}
+                ) : (
+                    <Center>
+                        <Spinner />
+                    </Center>
+                )}
+            </Container>
         </>
     );
 };

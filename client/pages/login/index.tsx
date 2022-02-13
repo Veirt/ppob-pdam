@@ -1,11 +1,4 @@
-import {
-    Box,
-    Button,
-    Container,
-    FormLabel,
-    Input,
-    useToast,
-} from "@chakra-ui/react";
+import { Box, Button, Container, FormLabel, Input, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useContext, useState } from "react";
 import { UserContext } from "../../components/providers/UserProvider";
@@ -88,12 +81,7 @@ const Login = () => {
                     />
                 </Box>
 
-                <Button
-                    isLoading={isLoading}
-                    type="submit"
-                    colorScheme="teal"
-                    size="md"
-                >
+                <Button isLoading={isLoading} type="submit" colorScheme="teal" size="md">
                     Submit
                 </Button>
             </form>

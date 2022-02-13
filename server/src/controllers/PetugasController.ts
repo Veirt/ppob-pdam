@@ -27,11 +27,8 @@ export const getPetugas: Controller = async (req, res) => {
 };
 
 export const createPetugas: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validatePetugas(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validatePetugas(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const newPetugas = petugasRepository.create({
         nama: req.body.nama,
@@ -50,11 +47,8 @@ export const createPetugas: Controller = async (req, res) => {
 };
 
 export const updatePetugas: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validatePetugas(req.body, req.params.id)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validatePetugas(req.body, req.params.id));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const petugas = await petugasRepository.findOne(req.params.id, {
         relations: ["role"],

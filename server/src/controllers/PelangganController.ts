@@ -1,11 +1,13 @@
 import { getRepository, ILike } from "typeorm";
 import type { Controller } from "../../@types/express";
 import Pelanggan from "../entities/Pelanggan";
+import PemakaianPelanggan from "../entities/PemakaianPelanggan";
 import { handleError, handleValidationError } from "../utils/errorResponse";
 import findTotal from "../utils/findTotal";
 import { validatePelanggan } from "../utils/validation";
 
 const pelangganRepository = getRepository(Pelanggan);
+const pemakaianRepository = getRepository(PemakaianPelanggan);
 
 export const getPelangganById: Controller = async (req, res) => {
     const pelanggan = await pelangganRepository.findOne(req.params.id, {
@@ -28,6 +30,15 @@ export const getPelangganById: Controller = async (req, res) => {
                             total_bayar: tarifPemakaian.tarif * totalPemakaian,
                         },
                     });
+
+                    // denda
+                    if (
+                        !eachPemakaian.pembayaran &&
+                        new Date(eachPemakaian.tanggal).getDate() >= 20
+                    ) {
+                        eachPemakaian.denda = tarifPemakaian.tarif * totalPemakaian * 0.1;
+                        await pemakaianRepository.save(eachPemakaian);
+                    }
                 }
 
                 return eachPemakaian;
@@ -53,11 +64,8 @@ export const getPelanggan: Controller = async (req, res) => {
 };
 
 export const createPelanggan: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validatePelanggan(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validatePelanggan(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const newPelanggan = pelangganRepository.create({
         nama: req.body.nama,
@@ -70,11 +78,8 @@ export const createPelanggan: Controller = async (req, res) => {
 };
 
 export const updatePelanggan: Controller = async (req, res) => {
-    const validationResult = handleValidationError(
-        await validatePelanggan(req.body)
-    );
-    if (validationResult)
-        return handleError("validation", res, validationResult);
+    const validationResult = handleValidationError(await validatePelanggan(req.body));
+    if (validationResult) return handleError("validation", res, validationResult);
 
     const pelanggan = await pelangganRepository.findOne(req.params.id, {
         relations: ["golongan"],

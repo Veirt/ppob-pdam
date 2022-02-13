@@ -1,39 +1,26 @@
-import {
-    Box,
-    Button,
-    Container,
-    FormControl,
-    FormLabel,
-    Input,
-} from "@chakra-ui/react";
+import { Box, Button, Container, FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
 import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction } from "react";
 import { Role } from "../../@types";
 import useFetch from "../../hooks/useFetch";
 import toOptions from "../../utils/toOptions";
 
-export interface IEmployeeState {
+export interface EmployeeState {
     nama: string;
     username: string;
     password: string;
     role: Role;
 }
 
-interface IProps {
+interface Props {
     handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
     handleSubmit: (e: FormEvent) => void;
-    state: IEmployeeState;
-    setState: Dispatch<SetStateAction<IEmployeeState>>;
+    state: EmployeeState;
+    setState: Dispatch<SetStateAction<EmployeeState>>;
     isLoading: boolean;
 }
 
-const PetugasForm: FC<IProps> = ({
-    handleChange,
-    handleSubmit,
-    state,
-    setState,
-    isLoading,
-}) => {
+const PetugasForm: FC<Props> = ({ handleChange, handleSubmit, state, setState, isLoading }) => {
     const [golongan] = useFetch<Role[]>("/petugas/role", []);
     const golonganOptions = toOptions(golongan, "id_role", "nama_role");
 
@@ -97,17 +84,11 @@ const PetugasForm: FC<IProps> = ({
                                             nama_role: role!.label as string,
                                         },
                                     });
-                                }}
-                            ></Select>
+                                }}></Select>
                         </Box>
                     </FormControl>
 
-                    <Button
-                        isLoading={isLoading}
-                        type="submit"
-                        colorScheme="teal"
-                        size="md"
-                    >
+                    <Button isLoading={isLoading} type="submit" colorScheme="teal" size="md">
                         Submit
                     </Button>
                 </form>

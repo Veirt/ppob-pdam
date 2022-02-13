@@ -2,7 +2,7 @@ import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { ValidationError } from "../../@types";
-import CustomerForm, { ICustomerState } from "../../components/forms/pelanggan";
+import CustomerForm, { CustomerState } from "../../components/forms/pelanggan";
 import useFetch from "../../hooks/useFetch";
 import api, { isAxiosError } from "../../utils/api";
 
@@ -13,14 +13,11 @@ const EditCustomer = () => {
     const [isLoading, setLoading] = useState(false);
 
     const { id } = router.query;
-    const [customer, setCustomer] = useFetch<ICustomerState>(
-        `/pelanggan/${id}`,
-        {
-            nama: "",
-            alamat: "",
-            golongan: { id_golongan: 0, nama_golongan: "" },
-        }
-    );
+    const [customer, setCustomer] = useFetch<CustomerState>(`/pelanggan/${id}`, {
+        nama: "",
+        alamat: "",
+        golongan: { id_golongan: 0, nama_golongan: "" },
+    });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setCustomer({ ...customer, [e.target.name]: e.target.value });
@@ -31,27 +28,21 @@ const EditCustomer = () => {
         setLoading(true);
 
         try {
-            await api.patch(
-                `/pelanggan/${id}`,
-                { ...customer },
-                { withCredentials: true }
-            );
+            await api.patch(`/pelanggan/${id}`, { ...customer }, { withCredentials: true });
 
             router.replace("/pelanggan");
         } catch (err) {
             if (isAxiosError(err)) {
-                err.response!.data.forEach(
-                    (validationError: ValidationError) => {
-                        toast({
-                            position: "top-right",
-                            title: "Error",
-                            description: validationError.message,
-                            status: "error",
-                            duration: 3000,
-                            isClosable: true,
-                        });
-                    }
-                );
+                err.response!.data.forEach((validationError: ValidationError) => {
+                    toast({
+                        position: "top-right",
+                        title: "Error",
+                        description: validationError.message,
+                        status: "error",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                });
             }
         } finally {
             setLoading(false);

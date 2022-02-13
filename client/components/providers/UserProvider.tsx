@@ -1,20 +1,13 @@
 import axios from "axios";
-import {
-    createContext,
-    Dispatch,
-    FC,
-    SetStateAction,
-    useEffect,
-    useState,
-} from "react";
+import { createContext, Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { User } from "../../@types";
 
-interface IContext {
+interface Context {
     user: User;
     setUser: Dispatch<SetStateAction<User>>;
 }
 
-export const UserContext = createContext<IContext | null>(null);
+export const UserContext = createContext<Context | null>(null);
 
 export const UserProvider: FC = ({ children }) => {
     const [user, setUser] = useState<User>({});
@@ -22,18 +15,15 @@ export const UserProvider: FC = ({ children }) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const res = await axios.get(
-                    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/@me`,
-                    { withCredentials: true }
-                );
+                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/@me`, {
+                    withCredentials: true,
+                });
 
                 setUser(res.data);
             } catch (err) {
                 if (axios.isAxiosError(err)) {
                     if (err.response?.status !== 401) {
-                        console.error(
-                            `Unexpected error when logging in: ${err}`
-                        );
+                        console.error(`Unexpected error when logging in: ${err}`);
                     }
                 }
             }
@@ -41,9 +31,5 @@ export const UserProvider: FC = ({ children }) => {
 
         fetchUser();
     }, []);
-    return (
-        <UserContext.Provider value={{ user, setUser }}>
-            {children}
-        </UserContext.Provider>
-    );
+    return <UserContext.Provider value={{ user, setUser }}>{children}</UserContext.Provider>;
 };
