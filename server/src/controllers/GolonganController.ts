@@ -47,12 +47,42 @@ export const updateGolongan: Controller = async (req, res) => {
     const validationResult = handleValidationError(await validateGolongan(req.body, req.params.id));
     if (validationResult) return handleError("validation", res, validationResult);
 
-    console.log(validationResult);
-
     const golongan = await golonganRepository.findOne(req.params.id);
     if (!golongan) return handleError("notFound", res);
 
-    await golonganRepository.update(golongan, req.body);
+    await golonganRepository.update(golongan, { nama_golongan: req.body.nama_golongan });
+
+    const prevTarif = await tarifRepository.find({ where: { golongan: req.params.id } });
+    const newTarifList = req.body.tarif.map((t: TarifPemakaian) => t.id_tarif);
+
+    const deletedList = prevTarif.reduce((acc, curr) => {
+        if (!newTarifList.includes(curr.id_tarif)) {
+            acc.push(curr.id_tarif);
+        }
+
+        return acc;
+    }, [] as number[]);
+
+    // mass create, update and delete tarif
+    req.body.tarif.forEach(async (t: TarifPemakaian) => {
+        const tarif = {
+            kubik_awal: t.kubik_awal,
+            kubik_akhir: t.kubik_akhir,
+            tarif: t.tarif,
+        };
+
+        if (t.id_tarif) {
+            await tarifRepository.update(t.id_tarif, tarif);
+        } else {
+            await tarifRepository.save({
+                ...tarif,
+                golongan: { id_golongan: Number(req.params.id) },
+            });
+        }
+    });
+    deletedList.forEach(async (dt) => {
+        await tarifRepository.delete(dt);
+    });
 
     return res.status(204).json();
 };

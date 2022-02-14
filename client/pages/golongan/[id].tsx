@@ -2,15 +2,17 @@ import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Tarif } from "../../@types";
 import GolonganForm, { GolonganState } from "../../components/forms/golongan";
+import useFetch from "../../hooks/useFetch";
 import api from "../../utils/api";
 
-const CreateGolongan = () => {
+const EditGolongan = () => {
     const router = useRouter();
+    const { id } = router.query;
     const [isLoading, setLoading] = useState(false);
 
-    const [golongan, setGolongan] = useState<GolonganState>({
+    const [golongan, setGolongan] = useFetch<GolonganState>(`/golongan/${id}`, {
         nama_golongan: "",
-        tarif: [{ kubik_awal: 0, kubik_akhir: null, tarif: 0 }],
+        tarif: [],
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,8 +31,7 @@ const CreateGolongan = () => {
         setLoading(true);
 
         try {
-            console.log(golongan);
-            await api.post("/golongan", { ...golongan }, { withCredentials: true });
+            await api.patch(`/golongan/${id}`, { ...golongan }, { withCredentials: true });
             router.replace("/golongan");
         } catch (err) {
         } finally {
@@ -51,4 +52,4 @@ const CreateGolongan = () => {
     );
 };
 
-export default CreateGolongan;
+export default EditGolongan;

@@ -13,7 +13,10 @@ class GolonganPelanggan {
     @OneToMany(() => Pelanggan, (pelanggan) => pelanggan.golongan)
     pelanggan!: Pelanggan[];
 
-    @OneToMany(() => TarifPemakaian, (tarif) => tarif.golongan)
+    @OneToMany(() => TarifPemakaian, (tarif) => tarif.golongan, {
+        onDelete: "CASCADE",
+        onUpdate: "CASCADE",
+    })
     tarif!: TarifPemakaian[];
 }
 

@@ -63,8 +63,12 @@ const Pelanggan = () => {
         <>
             <Container maxW="container.lg">
                 <Box m={3}>
-                    <Button colorScheme="green">
+                    <Button mr={"3"} colorScheme="green">
                         <NextLink href="/pelanggan/create">Tambah Pelanggan</NextLink>
+                    </Button>
+
+                    <Button colorScheme="green">
+                        <NextLink href="/golongan/create">Tambah Golongan</NextLink>
                     </Button>
                 </Box>
 

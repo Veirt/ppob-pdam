@@ -13,7 +13,6 @@ interface Props {
     handleSubmit: (e: FormEvent) => void;
     state: GolonganState;
     setState: Dispatch<SetStateAction<GolonganState>>;
-    setTarif: Dispatch<SetStateAction<Tarif[]>>;
     isLoading: boolean;
 }
 
