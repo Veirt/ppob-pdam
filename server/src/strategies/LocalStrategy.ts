@@ -11,7 +11,7 @@ passport.use(
             const petugas = await petugasRepository.findOne(
                 { username },
                 {
-                    select: ["id_petugas", "username", "password", "role"],
+                    select: ["id_petugas", "nama", "username", "password", "role"],
                     relations: ["role"],
                 }
             );

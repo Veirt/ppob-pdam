@@ -56,6 +56,7 @@ export interface User {
     username?: string;
     nama?: string;
     role?: Role;
+    isAuthenticated?: boolean;
 }
 
 export interface Employee {

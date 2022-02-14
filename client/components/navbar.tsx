@@ -1,7 +1,20 @@
-import { Box, Flex, Text, Link } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+import {
+    Avatar,
+    Box,
+    Flex,
+    IconButton,
+    Link,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuList,
+    Text,
+} from "@chakra-ui/react";
+import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { FC, useContext } from "react";
 import { UserContext } from "./providers/UserProvider";
-import NextLink from "next/link";
 
 interface Props {
     href: string;
@@ -10,12 +23,14 @@ interface Props {
 const LinkItem: FC<Props> = ({ href, children }) => {
     return (
         <NextLink href={href} passHref>
-            <Link>{children}</Link>
+            <Link mx="3">{children}</Link>
         </NextLink>
     );
 };
 
 const NavBar = () => {
+    const router = useRouter();
+
     const { user } = useContext(UserContext)!;
 
     return (
@@ -35,9 +50,24 @@ const NavBar = () => {
                                     <LinkItem href="/login">Login</LinkItem>
                                 </>
                             ) : (
-                                <>
-                                    <LinkItem href="/logout">Logout</LinkItem>
-                                </>
+                                <Flex alignItems={"center"}>
+                                    {/* <LinkItem href="/logout">Logout</LinkItem> */}
+                                    <Text mx="3">{user.nama}</Text>
+                                    <Avatar bg="teal.500" size={"sm"} />
+                                    <Menu>
+                                        <MenuButton
+                                            mx="3"
+                                            as={IconButton}
+                                            aria-label="Options"
+                                            icon={<ChevronDownIcon />}
+                                        />
+                                        <MenuList>
+                                            <MenuItem onClick={() => router.replace("/logout")}>
+                                                Log out
+                                            </MenuItem>
+                                        </MenuList>
+                                    </Menu>
+                                </Flex>
                             )}
                         </Flex>
                     </Box>

@@ -13,13 +13,16 @@ import {
     useToast,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { Golongan, Query } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
+import { UserContext } from "../../components/providers/UserProvider";
 import api from "../../utils/api";
 
 const Golongan = () => {
     const toast = useToast();
+
+    const { loadingUser } = useContext(UserContext)!;
 
     const [categories, setCategory] = useState<Golongan[]>([]);
     const [query, setQuery] = useState<Query>({ search: "" });
@@ -60,59 +63,63 @@ const Golongan = () => {
 
     return (
         <>
-            <Container maxW="container.lg">
-                <Box m={3}>
-                    <Button colorScheme="green">
-                        <NextLink href="/golongan/create">Tambah Golongan</NextLink>
-                    </Button>
-                </Box>
+            {!loadingUser && (
+                <Container maxW="container.lg">
+                    <Box m={3}>
+                        <Button colorScheme="green">
+                            <NextLink href="/golongan/create">Tambah Golongan</NextLink>
+                        </Button>
+                    </Box>
 
-                <Box m={3}>
-                    <Input
-                        name="search"
-                        value={query.search}
-                        onChange={handleChangeQuery}
-                        placeholder="Cari pelanggan"
-                    />
-                </Box>
+                    <Box m={3}>
+                        <Input
+                            name="search"
+                            value={query.search}
+                            onChange={handleChangeQuery}
+                            placeholder="Cari pelanggan"
+                        />
+                    </Box>
 
-                <Table variant="simple">
-                    <Thead>
-                        <Tr>
-                            <Th>Id Golongan</Th>
-                            <Th>Nama Golongan</Th>
-                            <Th>Tarif</Th>
-                            <Th>Actions</Th>
-                        </Tr>
-                    </Thead>
-                    <Tbody>
-                        {categories.map((category) => {
-                            return (
-                                <Tr key={category.id_golongan}>
-                                    <Td>{category.id_golongan}</Td>
-                                    <Td>{category.nama_golongan}</Td>
-                                    <Td>Tarif</Td>
-                                    <Td>
-                                        <Flex justifyContent="space-evenly">
-                                            <NextLink href={`/golongan/${category.id_golongan}`}>
-                                                <Button colorScheme={"green"}>Edit</Button>
-                                            </NextLink>
-                                            <DeleteWithAlert
-                                                title="Delete Golongan"
-                                                onClick={() =>
-                                                    handleDelete(category.id_golongan as number)
-                                                }>
-                                                Apakah anda yakin untuk menghapus golongan bernama
-                                                {` ${category.nama_golongan}`}?
-                                            </DeleteWithAlert>
-                                        </Flex>
-                                    </Td>
-                                </Tr>
-                            );
-                        })}
-                    </Tbody>
-                </Table>
-            </Container>
+                    <Table variant="simple">
+                        <Thead>
+                            <Tr>
+                                <Th>Id Golongan</Th>
+                                <Th>Nama Golongan</Th>
+                                <Th>Tarif</Th>
+                                <Th>Actions</Th>
+                            </Tr>
+                        </Thead>
+                        <Tbody>
+                            {categories.map((category) => {
+                                return (
+                                    <Tr key={category.id_golongan}>
+                                        <Td>{category.id_golongan}</Td>
+                                        <Td>{category.nama_golongan}</Td>
+                                        <Td>Tarif</Td>
+                                        <Td>
+                                            <Flex justifyContent="space-evenly">
+                                                <NextLink
+                                                    href={`/golongan/${category.id_golongan}`}>
+                                                    <Button colorScheme={"green"}>Edit</Button>
+                                                </NextLink>
+                                                <DeleteWithAlert
+                                                    title="Delete Golongan"
+                                                    onClick={() =>
+                                                        handleDelete(category.id_golongan as number)
+                                                    }>
+                                                    Apakah anda yakin untuk menghapus golongan
+                                                    bernama
+                                                    {` ${category.nama_golongan}`}?
+                                                </DeleteWithAlert>
+                                            </Flex>
+                                        </Td>
+                                    </Tr>
+                                );
+                            })}
+                        </Tbody>
+                    </Table>
+                </Container>
+            )}
         </>
     );
 };

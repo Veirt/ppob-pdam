@@ -56,7 +56,6 @@ const PetugasForm: FC<Props> = ({ handleChange, handleSubmit, state, setState, i
                         <Box my={3}>
                             <FormLabel htmlFor="password">Password</FormLabel>
                             <Input
-                                placeholder="Masukkan hanya ketika ingin mengganti"
                                 id="password"
                                 name="password"
                                 type="password"

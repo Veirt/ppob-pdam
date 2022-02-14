@@ -12,6 +12,7 @@ import {
     Table,
     Tbody,
     Td,
+    Text,
     Th,
     Thead,
     Tr,
@@ -55,6 +56,7 @@ const Payment = () => {
                                         id_pelanggan: e.target.value,
                                     });
                                 }}
+                                value={id || ""}
                                 placeholder="Masukkan ID Pelanggan"
                             />
                             <InputRightElement width="4.5rem">
@@ -67,6 +69,7 @@ const Payment = () => {
                 </form>
             </Container>
             <Container maxW="container.lg">
+                <Text>Nama Pelanggan: {customer.nama}</Text>
                 {customer.pemakaian ? (
                     <Table>
                         <Thead>

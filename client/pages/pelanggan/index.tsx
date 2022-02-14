@@ -61,7 +61,7 @@ const Pelanggan = () => {
 
     return (
         <>
-            <Container maxW="container.lg">
+            <Container maxW="container.xl">
                 <Box m={3}>
                     <Button mr={"3"} colorScheme="green">
                         <NextLink href="/pelanggan/create">Tambah Pelanggan</NextLink>
@@ -115,6 +115,10 @@ const Pelanggan = () => {
                                                     colorScheme={"blue"}>
                                                     Pemakaian
                                                 </Button>
+                                            </NextLink>
+                                            <NextLink
+                                                href={`/pelanggan/${customer.id_pelanggan}/tagihan`}>
+                                                <Button colorScheme={"blue"}>Tagihan</Button>
                                             </NextLink>
                                             <NextLink href={`/pelanggan/${customer.id_pelanggan}`}>
                                                 <Button colorScheme={"green"}>Edit</Button>

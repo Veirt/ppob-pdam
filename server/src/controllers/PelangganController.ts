@@ -14,37 +14,34 @@ export const getPelangganById: Controller = async (req, res) => {
         relations: ["golongan", "pemakaian", "pemakaian.pembayaran"],
     });
 
-    if (pelanggan) {
-        pelanggan.pemakaian = await Promise.all(
-            pelanggan?.pemakaian.map(async (eachPemakaian) => {
-                const { tarifPemakaian, totalPemakaian } = await findTotal(
-                    pelanggan.id_pelanggan,
-                    eachPemakaian.meter_awal,
-                    eachPemakaian.meter_akhir
-                );
+    if (!pelanggan) return handleError("notFound", res);
 
-                if (tarifPemakaian) {
-                    Object.assign(eachPemakaian, {
-                        tagihan: {
-                            total_pemakaian: totalPemakaian,
-                            total_bayar: tarifPemakaian.tarif * totalPemakaian,
-                        },
-                    });
+    pelanggan.pemakaian = await Promise.all(
+        pelanggan?.pemakaian.map(async (eachPemakaian) => {
+            const { tarifPemakaian, totalPemakaian } = await findTotal(
+                pelanggan.id_pelanggan,
+                eachPemakaian.meter_awal,
+                eachPemakaian.meter_akhir
+            );
 
-                    // denda
-                    if (
-                        !eachPemakaian.pembayaran &&
-                        new Date(eachPemakaian.tanggal).getDate() >= 20
-                    ) {
-                        eachPemakaian.denda = tarifPemakaian.tarif * totalPemakaian * 0.1;
-                        await pemakaianRepository.save(eachPemakaian);
-                    }
+            if (tarifPemakaian) {
+                Object.assign(eachPemakaian, {
+                    tagihan: {
+                        total_pemakaian: totalPemakaian,
+                        total_bayar: tarifPemakaian.tarif * totalPemakaian,
+                    },
+                });
+
+                // denda
+                if (!eachPemakaian.pembayaran && new Date(eachPemakaian.tanggal).getDate() >= 20) {
+                    eachPemakaian.denda = tarifPemakaian.tarif * totalPemakaian * 0.1;
+                    await pemakaianRepository.save(eachPemakaian);
                 }
+            }
 
-                return eachPemakaian;
-            })
-        );
-    }
+            return eachPemakaian;
+        })
+    );
 
     return res.json(pelanggan);
 };

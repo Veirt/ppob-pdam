@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { getRepository, ILike } from "typeorm";
 import type { Controller } from "../../@types/express";
 import RolePetugas from "../entities/RolePetugas";
 import { handleError, handleValidationError } from "../utils/errorResponse";
@@ -12,8 +12,15 @@ export const getRoleById: Controller = async (req, res) => {
     return res.json(role);
 };
 
-export const getRole: Controller = async (_, res) => {
-    const role = await roleRepository.find();
+export const getRole: Controller = async (req, res) => {
+    const { search } = req.query;
+
+    const role = await roleRepository.find({
+        where: {
+            nama_role: ILike(`%${search}%`),
+        },
+        order: { id_role: "ASC" },
+    });
 
     return res.json(role);
 };

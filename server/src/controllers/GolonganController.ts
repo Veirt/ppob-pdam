@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { getRepository, ILike } from "typeorm";
 import type { Controller } from "../../@types/express";
 import Golongan from "../entities/GolonganPelanggan";
 import TarifPemakaian from "../entities/TarifPemakaian";
@@ -14,8 +14,15 @@ export const getGolonganById: Controller = async (req, res) => {
     return res.json(golongan);
 };
 
-export const getGolongan: Controller = async (_, res) => {
-    const golongan = await golonganRepository.find();
+export const getGolongan: Controller = async (req, res) => {
+    const { search } = req.query;
+
+    const golongan = await golonganRepository.find({
+        where: {
+            nama_golongan: ILike(`%${search}%`),
+        },
+        order: { id_golongan: "ASC" },
+    });
 
     return res.json(golongan);
 };

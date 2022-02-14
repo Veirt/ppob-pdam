@@ -5,6 +5,9 @@ import session from "express-session";
 import passport from "passport";
 import connectDatabase from "./config/typeorm";
 
+import Redis from "ioredis";
+import connectRedis from "connect-redis";
+
 dotenv.config();
 
 connectDatabase().then(async () => {
@@ -13,8 +16,12 @@ connectDatabase().then(async () => {
     app.use(express.urlencoded({ extended: true }));
     app.use(cors({ credentials: true, origin: process.env.CLIENT_ENDPOINT }));
 
+    const RedisStore = connectRedis(session); //Configure redis client
+    const redisClient = new Redis();
+
     app.use(
         session({
+            store: new RedisStore({ client: redisClient }),
             saveUninitialized: true,
             resave: true,
             secret: process.env.SESSION_SECRET!,
@@ -26,10 +33,10 @@ connectDatabase().then(async () => {
 
     import("./routes").then((router) => app.use(router.default));
 
-    // handle uncaught error
-    process.on("uncaughtException", (err) => {
-        console.error(`Unexpected error: ${err}`);
-    });
+    // // handle uncaught error
+    // process.on("uncaughtException", (err) => {
+    //     console.error(`Unexpected error: ${err}`);
+    // });
 
     app.listen(8080, () => console.log("Listening on http://localhost:8080"));
 });

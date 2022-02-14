@@ -18,7 +18,9 @@ export const login: Controller = async (req, res, next) => {
             return res.json({
                 id_petugas: user.id_petugas,
                 username: user.username,
+                nama: user.nama,
                 role: user.role,
+                isAuthenticated: true,
             });
         });
     })(req, res, next);
