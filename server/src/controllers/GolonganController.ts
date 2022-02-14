@@ -1,10 +1,12 @@
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
 import Golongan from "../entities/GolonganPelanggan";
+import TarifPemakaian from "../entities/TarifPemakaian";
 import { handleError, handleValidationError } from "../utils/errorResponse";
 import { validateGolongan } from "../utils/validation";
 
 const golonganRepository = getRepository(Golongan);
+const tarifRepository = getRepository(TarifPemakaian);
 
 export const getGolonganById: Controller = async (req, res) => {
     const golongan = await golonganRepository.findOne(req.params.id, { relations: ["tarif"] });
@@ -25,7 +27,18 @@ export const createGolongan: Controller = async (req, res) => {
     const newGolongan = golonganRepository.create({
         nama_golongan: req.body.nama_golongan,
     });
+
     const savedGolongan = await golonganRepository.save(newGolongan);
+    req.body.tarif.forEach(async (t: TarifPemakaian) => {
+        const newTarif = tarifRepository.create({
+            golongan: savedGolongan,
+            kubik_awal: t.kubik_awal,
+            kubik_akhir: t.kubik_akhir,
+            tarif: t.tarif,
+        });
+
+        await tarifRepository.save(newTarif);
+    });
 
     return res.json(savedGolongan);
 };

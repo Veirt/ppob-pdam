@@ -3,6 +3,13 @@ export interface Golongan {
     nama_golongan?: string;
 }
 
+export interface Tarif {
+    id_tarif?: number;
+    kubik_awal: number;
+    kubik_akhir: number | null;
+    tarif: number;
+}
+
 export interface Customer {
     id_pelanggan: number | string;
     nama: string;
