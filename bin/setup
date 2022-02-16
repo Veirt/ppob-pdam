@@ -1,0 +1,29 @@
+#!/usr/bin/env sh
+
+if [ "$EUID" -ne 0 ]; then
+    echo "Run as root, fag"
+    exit 1
+fi
+
+if [ "$1" = "start" ]; then
+    systemctl start mariadb
+    systemctl start nginx
+    systemctl start redis
+    systemctl start php-fpm
+
+elif [ "$1" = "restart" ]; then
+    systemctl restart mariadb
+    systemctl restart nginx
+    systemctl restart redis
+    systemctl restart php-fpm
+
+elif [ "$1" = "stop" ]; then
+    systemctl stop mariadb
+    systemctl stop nginx
+    systemctl stop redis
+    systemctl stop php-fpm
+
+else
+    echo "start, stop, restart?"
+    exit 1
+fi
