@@ -1,5 +1,13 @@
 import axios from "axios";
-import { createContext, Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import {
+    createContext,
+    Dispatch,
+    FC,
+    SetStateAction,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import { User } from "../../@types";
 
 interface Context {
@@ -8,7 +16,7 @@ interface Context {
     loadingUser: boolean;
 }
 
-export const UserContext = createContext<Context | null>(null);
+const UserContext = createContext<Context | null>(null);
 
 export const UserProvider: FC = ({ children }) => {
     const [loadingUser, setLoading] = useState(false);
@@ -44,3 +52,5 @@ export const UserProvider: FC = ({ children }) => {
         </UserContext.Provider>
     );
 };
+
+export const useAuth = () => useContext(UserContext)!;

@@ -1,12 +1,12 @@
 import { Box, Button, Container, FormLabel, Input, useToast } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { ChangeEvent, FC, FormEvent, useContext, useState } from "react";
-import type { Employee, Usage, ValidationError } from "../../@types";
-import { UserContext } from "../../components/providers/UserProvider";
-import api, { isAxiosError } from "../../utils/api";
-import toCurrency from "../../utils/toCurrency";
-import toPeriod from "../../utils/toPeriod";
+import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { Employee, Usage, ValidationError } from "../../../@types";
+import { useAuth } from "../../../components/providers/UserProvider";
+import api, { isAxiosError } from "../../../utils/api";
+import toCurrency from "../../../utils/toCurrency";
+import toPeriod from "../../../utils/toPeriod";
 
 interface IPaymentState {
     pemakaian: Usage;
@@ -17,7 +17,8 @@ interface IPaymentState {
 const Usage: FC<{ usage: Usage }> = ({ usage }) => {
     const router = useRouter();
     const toast = useToast();
-    const { user } = useContext(UserContext)!;
+
+    const { user } = useAuth();
 
     const [isLoading, setLoading] = useState(false);
 
@@ -41,7 +42,7 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
                 { withCredentials: true }
             );
 
-            router.replace(`/pelanggan/${usage.pelanggan?.id_pelanggan}/tagihan`);
+            router.back();
         } catch (err) {
             if (isAxiosError(err)) {
                 err.response!.data.forEach((validationError: ValidationError) => {

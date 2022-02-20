@@ -97,7 +97,7 @@ const Petugas = () => {
                                     <Td>
                                         <Flex justifyContent="space-evenly">
                                             <NextLink href={`/petugas/${employee.id_petugas}`}>
-                                                <Button bgColor="green.300">Edit</Button>
+                                                <Button colorScheme="green">Edit</Button>
                                             </NextLink>
                                             <DeleteWithAlert
                                                 title="Delete Petugas"

@@ -13,16 +13,16 @@ import {
     useToast,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Golongan, Query } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
-import { UserContext } from "../../components/providers/UserProvider";
+import { useAuth } from "../../components/providers/UserProvider";
 import api from "../../utils/api";
 
 const Golongan = () => {
     const toast = useToast();
 
-    const { loadingUser } = useContext(UserContext)!;
+    const { loadingUser } = useAuth();
 
     const [categories, setCategory] = useState<Golongan[]>([]);
     const [query, setQuery] = useState<Query>({ search: "" });

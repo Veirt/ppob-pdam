@@ -17,7 +17,7 @@ export const getRole: Controller = async (req, res) => {
 
     const role = await roleRepository.find({
         where: {
-            nama_role: ILike(`%${search}%`),
+            nama_role: ILike(`%${search ?? ""}%`),
         },
         order: { id_role: "ASC" },
     });

@@ -5,8 +5,10 @@ import {
     Entity,
     JoinColumn,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from "typeorm";
+import PembayaranPelanggan from "./PembayaranPelanggan";
 import RolePetugas from "./RolePetugas";
 
 @Entity()
@@ -28,6 +30,9 @@ class Petugas {
     @ManyToOne(() => RolePetugas, (role) => role.petugas)
     @JoinColumn({ name: "role" })
     role!: RolePetugas;
+
+    @OneToMany(() => PembayaranPelanggan, (pembayaran) => pembayaran.petugas)
+    pembayaran!: PembayaranPelanggan;
 
     async verifyPassword(rawPassword: string) {
         const verified = await argon2.verify(this.password, rawPassword);

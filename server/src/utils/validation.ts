@@ -137,10 +137,9 @@ export const validateTarif = async (body: any) => {
     return result;
 };
 
-export const validatePemakaian = async (body: any) => {
+export const validatePemakaian = async (body: any, id?: string) => {
     const pemakaianSchema = {
         pelanggan: { type: "number" },
-        meter_akhir: { type: "string", numeric: true },
     };
 
     let result = await v.compile(pemakaianSchema)(body);
@@ -163,10 +162,12 @@ export const validatePemakaian = async (body: any) => {
     const pemakaian = await pemakaianRepository
         .createQueryBuilder()
         .where("pelanggan = :pelanggan")
+        .andWhere("id_pemakaian <> :id_pemakaian")
         .andWhere("MONTH(tanggal) = MONTH(CURRENT_DATE())")
         .andWhere("YEAR(tanggal) = YEAR(CURRENT_DATE())")
         .setParameters({
             pelanggan: pelanggan?.id_pelanggan,
+            id_pemakaian: id,
         })
         .getOne();
 

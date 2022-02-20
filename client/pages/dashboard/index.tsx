@@ -1,59 +1,38 @@
-// import { Box, Container, Flex } from "@chakra-ui/react";
-// import { FC } from "react";
-//
-// const DashboardItem: FC = ({ children }) => {
-//     return (
-//         <Box
-//             display={"flex"}
-//             my={"3"}
-//             justifyContent="center"
-//             alignItems="center"
-//             maxW="sm"
-//             minW={"sm"}
-//             borderWidth="1px"
-//             borderRadius="lg">
-//             {children}
-//         </Box>
-//     );
-// };
-//
-// const Dashboard: FC = () => {
-//     return (
-//         <>
-//             <Container maxW="container.xl" my={"5"}>
-//                 <Flex wrap={"wrap"} justifyContent={"space-evenly"} minHeight={"32"}>
-//                     <DashboardItem>Test</DashboardItem>
-//                     <DashboardItem>Test</DashboardItem>
-//                     <DashboardItem>Test</DashboardItem>
-//                 </Flex>
-//             </Container>
-//         </>
-//     );
-// };
-//
-// export default Dashboard;
-
 import { Box, Container, Flex, Link } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
 import { FC } from "react";
+import { useAuth } from "../../components/providers/UserProvider";
 
-const DashboardItem: FC = ({ children }) => {
-    return (
-        <Box
-            mx={"5"}
-            padding={"3"}
-            border={"1px"}
-            borderColor={"whiteAlpha.50"}
-            borderRadius="sm"
-            background={"whitesmoke"}
-            width={"48"}
-            height={"55"}
-            _hover={{ borderColor: "teal.200" }}>
-            {children}
-        </Box>
-    );
+interface Props {
+    roles: string[];
+}
+
+const DashboardItem: FC<Props> = ({ children, roles }) => {
+    const { user } = useAuth();
+
+    if (
+        roles.includes(user.role!.nama_role.toLowerCase()) ||
+        user.role!.nama_role.toLowerCase() === "admin"
+    ) {
+        return (
+            <Box
+                mx={"5"}
+                padding={"3"}
+                border={"1px"}
+                borderColor={"whiteAlpha.50"}
+                borderRadius="sm"
+                background={"whitesmoke"}
+                width={"48"}
+                height={"55"}
+                _hover={{ borderColor: "teal.200" }}>
+                {children}
+            </Box>
+        );
+    }
+
+    return null;
 };
 
 const Home: NextPage = () => {
@@ -67,31 +46,46 @@ const Home: NextPage = () => {
 
             <Container maxW={"container.xl"} my="5">
                 <Flex>
-                    <DashboardItem>
+                    <DashboardItem roles={["admin"]}>
                         <NextLink href="/golongan" passHref>
                             <Link>Golongan</Link>
                         </NextLink>
                     </DashboardItem>
-                    <DashboardItem>
+
+                    <DashboardItem roles={["petugas meteran", "petugas loket"]}>
                         <NextLink href="/pelanggan" passHref>
                             <Link>Pelanggan</Link>
                         </NextLink>
                     </DashboardItem>
-                    <DashboardItem>
+
+                    <DashboardItem roles={["admin"]}>
                         <NextLink href="/petugas" passHref>
                             <Link>Petugas</Link>
                         </NextLink>
                     </DashboardItem>
-                    <DashboardItem>
+
+                    <DashboardItem roles={["admin"]}>
                         <NextLink href="/role" passHref>
                             <Link>Role</Link>
                         </NextLink>
                     </DashboardItem>
-                    <DashboardItem>
-                        <NextLink href="/pembayaran" passHref>
-                            <Link>Pembayaran</Link>
+
+                    <DashboardItem roles={["petugas meteran"]}>
+                        <NextLink href="/pemakaian" passHref>
+                            <Link>Pemakaian</Link>
                         </NextLink>
                     </DashboardItem>
+
+                    <DashboardItem roles={["petugas loket"]}>
+                        <NextLink href="/pelanggan/tagihan" passHref>
+                            <Link>Tagihan</Link>
+                        </NextLink>
+                    </DashboardItem>
+
+                    {/* <p>Tagihan yang belum dibayar</p> */}
+                    {/* http://localhost:3000/pelanggan/tagihan?sudah_dibayar=0 */}
+
+                    {/* Pelanggan yang belum punya pemakaian periode ini */}
                 </Flex>
             </Container>
         </>

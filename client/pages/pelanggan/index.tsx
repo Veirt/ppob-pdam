@@ -13,21 +13,33 @@ import {
     useToast,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
+import { useRouter } from "next/router";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Customer, Query } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
-import api from "../../utils/api";
+import Authorization from "../../components/authorization";
+import unauthorizedToast from "../../lib/toast/unauthorized";
+import api, { isAxiosError } from "../../utils/api";
 
 const Pelanggan = () => {
     const currentMonth = new Date().getMonth();
+    const router = useRouter();
     const toast = useToast();
 
     const [customers, setCustomers] = useState<Customer[]>([]);
-    const [query, setQuery] = useState<Query>({ search: "" });
+    const [query, setQuery] = useState<Query>({
+        search: (router.query.search as string) ?? "",
+    });
 
     const fetchCustomer = async () => {
-        const res = await api.get("/pelanggan", { params: query });
-        setCustomers(res.data);
+        try {
+            const res = await api.get("/pelanggan", { params: query });
+            setCustomers(res.data);
+        } catch (err) {
+            if (isAxiosError(err)) {
+                if (err.response?.status === 401) unauthorizedToast(toast);
+            }
+        }
     };
 
     useEffect(() => {
@@ -63,13 +75,11 @@ const Pelanggan = () => {
         <>
             <Container maxW="container.xl">
                 <Box m={3}>
-                    <Button mr={"3"} colorScheme="green">
-                        <NextLink href="/pelanggan/create">Tambah Pelanggan</NextLink>
-                    </Button>
-
-                    <Button colorScheme="green">
-                        <NextLink href="/golongan/create">Tambah Golongan</NextLink>
-                    </Button>
+                    <Authorization roles={["admin"]}>
+                        <Button mr={"3"} colorScheme="green">
+                            <NextLink href="/pelanggan/create">Tambah Pelanggan</NextLink>
+                        </Button>
+                    </Authorization>
                 </Box>
 
                 <Box m={3}>
@@ -101,36 +111,60 @@ const Pelanggan = () => {
                                     <Td>{customer.golongan.nama_golongan}</Td>
                                     <Td>
                                         <Flex justifyContent="space-evenly">
-                                            <NextLink
-                                                href={`/pelanggan/${customer.id_pelanggan}/pemakaian/create`}>
-                                                <Button
-                                                    // disabled ketika sudah diinput bulan ini
-                                                    disabled={
-                                                        customer.pemakaian?.length
-                                                            ? new Date(
-                                                                  customer.pemakaian.at(-1)!.tanggal
-                                                              ).getMonth() === currentMonth
-                                                            : false
-                                                    }
-                                                    colorScheme={"blue"}>
-                                                    Pemakaian
-                                                </Button>
-                                            </NextLink>
-                                            <NextLink
-                                                href={`/pelanggan/${customer.id_pelanggan}/tagihan`}>
-                                                <Button colorScheme={"blue"}>Tagihan</Button>
-                                            </NextLink>
-                                            <NextLink href={`/pelanggan/${customer.id_pelanggan}`}>
-                                                <Button colorScheme={"green"}>Edit</Button>
-                                            </NextLink>
-                                            <DeleteWithAlert
-                                                title="Delete Customer"
-                                                onClick={() =>
-                                                    handleDelete(customer.id_pelanggan as number)
-                                                }>
-                                                Apakah anda yakin untuk menghapus pelanggan bernama
-                                                {` ${customer.nama}`}?
-                                            </DeleteWithAlert>
+                                            <Authorization roles={["petugas meteran"]}>
+                                                <NextLink
+                                                    href={`/pelanggan/${customer.id_pelanggan}/pemakaian/create`}>
+                                                    <Button
+                                                        // disabled ketika sudah diinput bulan ini
+                                                        disabled={
+                                                            customer.pemakaian?.length
+                                                                ? new Date(
+                                                                      customer.pemakaian.at(
+                                                                          -1
+                                                                      )!.tanggal
+                                                                  ).getMonth() === currentMonth
+                                                                : false
+                                                        }
+                                                        colorScheme={"blue"}>
+                                                        Tambah Pemakaian
+                                                    </Button>
+                                                </NextLink>
+                                            </Authorization>
+
+                                            <Authorization roles={["petugas meteran"]}>
+                                                <NextLink
+                                                    href={`/pemakaian?id_pelanggan=${customer.id_pelanggan}`}>
+                                                    <Button colorScheme={"blue"}>Pemakaian</Button>
+                                                </NextLink>
+                                            </Authorization>
+
+                                            <Authorization roles={["petugas loket"]}>
+                                                <NextLink
+                                                    href={`/pelanggan/tagihan?id_pelanggan=${customer.id_pelanggan}`}>
+                                                    <Button colorScheme={"blue"}>Tagihan</Button>
+                                                </NextLink>
+                                            </Authorization>
+
+                                            <Authorization roles={["admin"]}>
+                                                <NextLink
+                                                    href={`/pelanggan/${customer.id_pelanggan}`}>
+                                                    <Button colorScheme={"green"}>Edit</Button>
+                                                </NextLink>
+                                            </Authorization>
+
+                                            <Authorization roles={["admin"]}>
+                                                <DeleteWithAlert
+                                                    title="Delete Customer"
+                                                    onClick={() =>
+                                                        handleDelete(
+                                                            customer.id_pelanggan as number
+                                                        )
+                                                    }>
+                                                    Apakah anda yakin untuk menghapus pelanggan
+                                                    bernama
+                                                    {` ${customer.nama}`}?
+                                                </DeleteWithAlert>
+                                            </Authorization>
                                         </Flex>
                                     </Td>
                                 </Tr>

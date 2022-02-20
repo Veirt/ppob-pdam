@@ -13,8 +13,8 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { FC, useContext } from "react";
-import { UserContext } from "./providers/UserProvider";
+import { FC } from "react";
+import { useAuth } from "./providers/UserProvider";
 
 interface Props {
     href: string;
@@ -31,7 +31,7 @@ const LinkItem: FC<Props> = ({ href, children }) => {
 const NavBar = () => {
     const router = useRouter();
 
-    const { user } = useContext(UserContext)!;
+    const { user } = useAuth();
 
     return (
         <>
@@ -47,7 +47,7 @@ const NavBar = () => {
                         <Flex>
                             {!user.id_petugas ? (
                                 <>
-                                    <LinkItem href="/login">Login</LinkItem>
+                                    <LinkItem href="/">Login</LinkItem>
                                 </>
                             ) : (
                                 <Flex alignItems={"center"}>

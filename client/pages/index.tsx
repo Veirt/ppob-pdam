@@ -1,9 +1,8 @@
 import { Box, Button, Container, FormLabel, Input, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { ChangeEvent, FormEvent, useContext, useState } from "react";
-import { UserContext } from "../components/providers/UserProvider";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { useAuth } from "../components/providers/UserProvider";
 import api, { isAxiosError } from "../utils/api";
-
 interface State {
     username: string;
     password: string;
@@ -13,12 +12,10 @@ const Login = () => {
     const router = useRouter();
     const toast = useToast();
 
-    const { loadingUser } = useContext(UserContext)!;
+    const { loadingUser, setUser } = useAuth();
 
     const [state, setState] = useState<State>({ username: "", password: "" });
     const [isLoading, setLoading] = useState(false);
-
-    const { setUser } = useContext(UserContext)!;
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         setState({ ...state, [e.target.name]: e.target.value });
@@ -35,10 +32,9 @@ const Login = () => {
                 { withCredentials: true }
             );
 
-            console.log(res.data);
             setUser(res.data);
 
-            router.replace("/");
+            router.replace("/dashboard");
         } catch (err) {
             if (isAxiosError(err)) {
                 toast({
@@ -59,7 +55,7 @@ const Login = () => {
 
     return (
         <>
-            {loadingUser && (
+            {!loadingUser && (
                 <Container>
                     <form onSubmit={handleSubmit}>
                         <Box my={3}>

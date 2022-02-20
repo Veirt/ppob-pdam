@@ -31,12 +31,6 @@ export const getPelangganById: Controller = async (req, res) => {
                         total_bayar: tarifPemakaian.tarif * totalPemakaian,
                     },
                 });
-
-                // denda
-                if (!eachPemakaian.pembayaran && new Date(eachPemakaian.tanggal).getDate() >= 20) {
-                    eachPemakaian.denda = tarifPemakaian.tarif * totalPemakaian * 0.1;
-                    await pemakaianRepository.save(eachPemakaian);
-                }
             }
 
             return eachPemakaian;
@@ -52,7 +46,7 @@ export const getPelanggan: Controller = async (req, res) => {
     const pelanggan = await pelangganRepository.find({
         relations: ["golongan", "pemakaian"],
         where: {
-            nama: ILike(`%${search}%`),
+            nama: ILike(`%${search ?? ""}%`),
         },
         order: { id_pelanggan: "ASC" },
     });

@@ -3,21 +3,26 @@ import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { Customer, ValidationError } from "../../../../@types";
+import useFetch from "../../../../hooks/useFetch";
 import api, { isAxiosError } from "../../../../utils/api";
 
 interface IUsageState {
     pelanggan: Customer;
+    meter_awal: number;
     meter_akhir: number;
 }
 
-const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
+const EditUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
     const router = useRouter();
     const toast = useToast();
 
+    const { id_pemakaian, id: id_pelanggan } = router.query;
+
     const [isLoading, setLoading] = useState(false);
 
-    const [usage, setUsage] = useState<IUsageState>({
+    const [usage, setUsage] = useFetch<IUsageState>(`/pelanggan/pemakaian/${id_pemakaian}`, {
         pelanggan: pelanggan,
+        meter_awal: 0,
         meter_akhir: 0,
     });
 
@@ -26,13 +31,13 @@ const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
         e.preventDefault();
 
         try {
-            await api.post(
-                "/pelanggan/pemakaian",
+            await api.patch(
+                `/pelanggan/pemakaian/${id_pemakaian}`,
                 { ...usage, pelanggan: usage.pelanggan.id_pelanggan },
                 { withCredentials: true }
             );
 
-            router.replace("/pelanggan");
+            router.back();
         } catch (err) {
             if (isAxiosError(err)) {
                 err.response!.data.forEach((validationError: ValidationError) => {
@@ -76,7 +81,7 @@ const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
                         <Input
                             id="meter_awal"
                             type="text"
-                            value={pelanggan.pemakaian?.at(-1)?.meter_akhir || 0}
+                            value={usage.meter_awal ?? 0}
                             disabled
                             onChange={handleChange}
                             required
@@ -89,7 +94,7 @@ const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
                             id="meter_akhir"
                             name="meter_akhir"
                             type="number"
-                            value={usage.meter_akhir}
+                            value={usage.meter_akhir || ""}
                             onChange={handleChange}
                             required
                         />
@@ -114,4 +119,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
 };
 
-export default CreateUsage;
+export default EditUsage;

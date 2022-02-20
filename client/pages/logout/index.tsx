@@ -1,11 +1,11 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useContext, useEffect } from "react";
-import { UserContext } from "../../components/providers/UserProvider";
+import { useEffect } from "react";
+import { useAuth } from "../../components/providers/UserProvider";
 
 const Logout = () => {
     const router = useRouter();
-    const { setUser } = useContext(UserContext)!;
+    const { setUser } = useAuth();
 
     useEffect(() => {
         const logOut = async () => {
@@ -20,7 +20,7 @@ const Logout = () => {
             } catch (err) {
                 console.error(err);
             } finally {
-                router.replace("/login");
+                router.replace("/");
             }
         };
 

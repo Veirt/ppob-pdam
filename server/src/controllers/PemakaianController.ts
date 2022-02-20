@@ -29,21 +29,64 @@ export const getPemakaianById: Controller = async (req, res) => {
                 total_bayar: tarifPemakaian.tarif * totalPemakaian,
             },
         });
+
+        // denda
+        if (!pemakaian.pembayaran && new Date(pemakaian.tanggal).getDate() >= 20) {
+            pemakaian.denda = tarifPemakaian.tarif * totalPemakaian * 0.1;
+            await pemakaianRepository.save(pemakaian);
+        }
     }
 
     return res.json(pemakaian);
 };
 
-export const getPemakaian: Controller = async (_, res) => {
-    const pemakaian = await pemakaianRepository.find({
-        relations: ["pelanggan"],
-    });
+export const getPemakaian: Controller = async (req, res) => {
+    const { sudah_dibayar, id_pelanggan } = req.query;
+
+    let pemakaian: any = pemakaianRepository
+        .createQueryBuilder("pemakaian")
+        .innerJoinAndSelect("pemakaian.pelanggan", "pelanggan")
+        .leftJoinAndSelect("pemakaian.pembayaran", "pembayaran");
+
+    if (id_pelanggan) {
+        pemakaian = pemakaian.andWhere("pemakaian.pelanggan = :pelanggan", {
+            pelanggan: id_pelanggan,
+        });
+    }
+
+    if (sudah_dibayar === "1") {
+        pemakaian = pemakaian.andWhere("pemakaian.pembayaran IS NOT NULL");
+    } else if (sudah_dibayar === "0") {
+        pemakaian = pemakaian.andWhere("pemakaian.pembayaran IS NULL");
+    }
+
+    pemakaian = await pemakaian.getMany();
+
+    pemakaian = await Promise.all(
+        pemakaian.map(async (eachPemakaian: PemakaianPelanggan) => {
+            const { tarifPemakaian, totalPemakaian } = await findTotal(
+                eachPemakaian.pelanggan.id_pelanggan,
+                eachPemakaian.meter_awal,
+                eachPemakaian.meter_akhir
+            );
+
+            if (tarifPemakaian) {
+                Object.assign(eachPemakaian, {
+                    tagihan: {
+                        total_pemakaian: totalPemakaian,
+                        total_bayar: tarifPemakaian.tarif * totalPemakaian,
+                    },
+                });
+            }
+
+            return eachPemakaian;
+        })
+    );
 
     return res.json(pemakaian);
 };
 
 export const createPemakaian: Controller = async (req, res) => {
-    // TODO: cek tunggakan
     const validationResult = handleValidationError(await validatePemakaian(req.body));
     if (validationResult) return handleError("validation", res, validationResult);
 
@@ -73,8 +116,6 @@ export const createPemakaian: Controller = async (req, res) => {
             ]);
         }
 
-        // const total_bayar = tarifPemakaian.tarif * totalPemakaian;
-
         const newPemakaian = pemakaianRepository.create({
             pelanggan: req.body.pelanggan,
             meter_awal,
@@ -97,13 +138,18 @@ export const createPemakaian: Controller = async (req, res) => {
 };
 
 export const updatePemakaian: Controller = async (req, res) => {
-    const validationResult = handleValidationError(await validatePemakaian(req.body));
+    const validationResult = handleValidationError(
+        await validatePemakaian(req.body, req.params.id)
+    );
     if (validationResult) return handleError("validation", res, validationResult);
 
     const pemakaian = await pemakaianRepository.findOne(req.params.id);
     if (!pemakaian) return handleError("notFound", res);
 
-    await pemakaianRepository.update(pemakaian, req.body);
+    await pemakaianRepository.update(pemakaian, {
+        meter_akhir: req.body.meter_akhir,
+        tanggal: new Date(),
+    });
 
     return res.status(204).json();
 };

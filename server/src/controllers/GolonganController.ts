@@ -11,6 +11,9 @@ const tarifRepository = getRepository(TarifPemakaian);
 export const getGolonganById: Controller = async (req, res) => {
     const golongan = await golonganRepository.findOne(req.params.id, { relations: ["tarif"] });
 
+    //@ts-ignore
+    if (golongan) golongan.tarif.sort((a, b) => parseFloat(a.tarif) - parseFloat(b.tarif));
+
     return res.json(golongan);
 };
 
@@ -19,7 +22,7 @@ export const getGolongan: Controller = async (req, res) => {
 
     const golongan = await golonganRepository.find({
         where: {
-            nama_golongan: ILike(`%${search}%`),
+            nama_golongan: ILike(`%${search ?? ""}%`),
         },
         order: { id_golongan: "ASC" },
     });
@@ -36,7 +39,8 @@ export const createGolongan: Controller = async (req, res) => {
     });
 
     const savedGolongan = await golonganRepository.save(newGolongan);
-    req.body.tarif.forEach(async (t: TarifPemakaian) => {
+
+    for await (const t of req.body.tarif) {
         const newTarif = tarifRepository.create({
             golongan: savedGolongan,
             kubik_awal: t.kubik_awal,
@@ -45,7 +49,7 @@ export const createGolongan: Controller = async (req, res) => {
         });
 
         await tarifRepository.save(newTarif);
-    });
+    }
 
     return res.json(savedGolongan);
 };
@@ -71,7 +75,7 @@ export const updateGolongan: Controller = async (req, res) => {
     }, [] as number[]);
 
     // mass create, update and delete tarif
-    req.body.tarif.forEach(async (t: TarifPemakaian) => {
+    for await (const t of req.body.tarif) {
         const tarif = {
             kubik_awal: t.kubik_awal,
             kubik_akhir: t.kubik_akhir,
@@ -86,7 +90,8 @@ export const updateGolongan: Controller = async (req, res) => {
                 golongan: { id_golongan: Number(req.params.id) },
             });
         }
-    });
+    }
+
     deletedList.forEach(async (dt) => {
         await tarifRepository.delete(dt);
     });

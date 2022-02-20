@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import PemakaianPelanggan from "./PemakaianPelanggan";
 import Petugas from "./Petugas";
 
@@ -13,7 +13,7 @@ class PembayaranPelanggan {
     @Column({ type: "int" })
     biaya_admin!: number;
 
-    @OneToOne(() => Petugas)
+    @ManyToOne(() => Petugas, (petugas) => petugas.pembayaran)
     @JoinColumn({ name: "petugas" })
     petugas!: Petugas;
 
