@@ -16,7 +16,7 @@ const EditUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
     const router = useRouter();
     const toast = useToast();
 
-    const { id_pemakaian, id: id_pelanggan } = router.query;
+    const { id_pemakaian } = router.query;
 
     const [isLoading, setLoading] = useState(false);
 
@@ -31,11 +31,10 @@ const EditUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
         e.preventDefault();
 
         try {
-            await api.patch(
-                `/pelanggan/pemakaian/${id_pemakaian}`,
-                { ...usage, pelanggan: usage.pelanggan.id_pelanggan },
-                { withCredentials: true }
-            );
+            await api.patch(`/pelanggan/pemakaian/${id_pemakaian}`, {
+                ...usage,
+                pelanggan: usage.pelanggan.id_pelanggan,
+            });
 
             router.back();
         } catch (err) {
@@ -110,7 +109,8 @@ const EditUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const res = await api.get(`/pelanggan/${context.params!.id}`);
+    const headers = { Cookie: `connect.sid=${context.req.cookies["connect.sid"]}` };
+    const res = await api.get(`/pelanggan/${context.params!.id}`, { headers });
 
     return {
         props: {

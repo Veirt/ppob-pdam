@@ -18,10 +18,24 @@ export const isAdmin: Middleware = (req, res, next) => {
     return next();
 };
 
+export const isMeteranOrLoket: Middleware = (req, res, next) => {
+    if (!req.user) return res.status(401).json({ msg: "Not authenticated" });
+
+    if (
+        req.user.role.id_role !== 1 &&
+        req.user.role.id_role !== 2 &&
+        req.user.role.nama_role.toLowerCase() !== "admin"
+    ) {
+        return res.status(401).json({ msg: "Not authorized" });
+    }
+
+    return next();
+};
+
 export const isPetugasMeteran: Middleware = (req, res, next) => {
     if (!req.user) return res.status(401).json({ msg: "Not authenticated" });
 
-    if (req.user.role.id_role !== 2) {
+    if (req.user.role.id_role !== 1 && req.user.role.nama_role.toLowerCase() !== "admin") {
         return res.status(401).json({ msg: "Not authorized" });
     }
 
@@ -31,7 +45,7 @@ export const isPetugasMeteran: Middleware = (req, res, next) => {
 export const isPetugasLoket: Middleware = (req, res, next) => {
     if (!req.user) return res.status(401).json({ msg: "Not authenticated" });
 
-    if (req.user.role.id_role !== 1) {
+    if (req.user.role.id_role !== 2 && req.user.role.nama_role.toLowerCase() !== "admin") {
         return res.status(401).json({ msg: "Not authorized" });
     }
 

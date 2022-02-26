@@ -6,8 +6,11 @@ import {
     getPetugasById,
     updatePetugas,
 } from "../controllers/PetugasController";
+import { isAdmin, isAuthenticated } from "../middlewares/AuthMiddleware";
 
 const PetugasRouter = Router();
+PetugasRouter.use(isAuthenticated);
+PetugasRouter.use(isAdmin);
 
 PetugasRouter.get("/", getPetugas);
 PetugasRouter.get("/:id", getPetugasById);

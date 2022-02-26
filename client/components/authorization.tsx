@@ -1,19 +1,28 @@
 import { FC } from "react";
+import { User } from "../@types";
 import { useAuth } from "./providers/UserProvider";
 
 interface Props {
-    roles: string[];
+    roles?: string[];
+    userProp?: User;
 }
 
-const Authorization: FC<Props> = ({ children, roles }) => {
-    const { user } = useAuth();
+const Authorization: FC<Props> = ({ children, roles, userProp }) => {
+    const { user: userContext } = useAuth();
+
+    const user = userContext.role ? userContext : userProp;
+
+    if (!roles && user?.id_petugas) {
+        return children as JSX.Element;
+    }
 
     if (
-        roles.includes(user.role!.nama_role.toLowerCase()) ||
-        user.role!.nama_role.toLowerCase() === "admin"
+        (user?.role && roles?.includes(user.role?.nama_role.toLowerCase())) ||
+        user?.role?.nama_role.toLowerCase() === "admin"
     ) {
         return children as JSX.Element;
     }
+
     return null;
 };
 

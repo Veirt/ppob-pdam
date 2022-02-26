@@ -28,7 +28,7 @@ const EditCustomer = () => {
         setLoading(true);
 
         try {
-            await api.patch(`/pelanggan/${id}`, { ...customer }, { withCredentials: true });
+            await api.patch(`/pelanggan/${id}`, { ...customer });
 
             router.replace("/pelanggan");
         } catch (err) {

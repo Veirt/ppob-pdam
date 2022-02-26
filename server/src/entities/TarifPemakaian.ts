@@ -9,10 +9,10 @@ class TarifPemakaian {
     id_tarif!: number;
 
     @Column({ type: "int" })
-    kubik_awal!: number;
+    meter_kubik_awal!: number;
 
     @Column({ type: "int", nullable: true })
-    kubik_akhir!: number;
+    meter_kubik_akhir!: number;
 
     @Column({ type: "bigint" })
     tarif!: number;

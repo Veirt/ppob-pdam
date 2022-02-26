@@ -26,7 +26,7 @@ const CreateCustomer = () => {
         setLoading(true);
 
         try {
-            await api.post("/pelanggan", { ...customer }, { withCredentials: true });
+            await api.post("/pelanggan", { ...customer });
 
             router.replace("/pelanggan");
         } catch (err) {

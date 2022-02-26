@@ -15,10 +15,11 @@ const EditRole = () => {
     const { id } = router.query;
     const [role, setRole] = useFetch<RoleState>(`/petugas/role/${id}`, {
         nama_role: "",
+        login: false,
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setRole({ ...role, [e.target.name]: e.target.value });
+        setRole({ ...role, [e.target.name]: e.target.value ? e.target.value : e.target.checked });
     };
 
     const handleSubmit = async (e: FormEvent) => {
@@ -26,7 +27,7 @@ const EditRole = () => {
         setLoading(true);
 
         try {
-            await api.patch(`/petugas/role/${id}`, { ...role }, { withCredentials: true });
+            await api.patch(`/petugas/role/${id}`, { ...role });
 
             router.replace("/role");
         } catch (err) {

@@ -20,6 +20,10 @@ passport.use(
                 throw Error(`Username '${username}' tidak ditemukan.`);
             }
 
+            if (!petugas.role.login) {
+                throw Error(`Role Petugas tidak bisa login.`);
+            }
+
             if (!(await petugas.verifyPassword(password))) {
                 throw Error("Password salah");
             }

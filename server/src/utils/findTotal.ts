@@ -15,7 +15,7 @@ export default async (pelangganId: number, meter_awal: number, meter_akhir: numb
         .createQueryBuilder()
         .where("golongan = :golongan")
         .andWhere(
-            "IF(kubik_akhir IS NULL, :total_pemakaian > kubik_awal, :total_pemakaian BETWEEN kubik_awal AND kubik_akhir)"
+            "IF(meter_kubik_akhir IS NULL, :total_pemakaian > meter_kubik_awal, :total_pemakaian BETWEEN meter_kubik_awal AND meter_kubik_akhir)"
         )
         .setParameters({
             golongan: pelanggan.golongan.id_golongan,

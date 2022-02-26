@@ -47,7 +47,11 @@ const GolonganForm: FC<Props> = ({
                                     ...state,
                                     tarif: [
                                         ...state.tarif,
-                                        { kubik_awal: 0, kubik_akhir: null, tarif: 0 },
+                                        {
+                                            meter_kubik_awal: 0,
+                                            meter_kubik_akhir: null,
+                                            tarif: 0,
+                                        },
                                     ],
                                 });
                             }}
@@ -62,9 +66,9 @@ const GolonganForm: FC<Props> = ({
                                 <Box m={3}>
                                     <FormLabel>Kubik Awal</FormLabel>
                                     <Input
-                                        name="kubik_awal"
+                                        name="meter_kubik_awal"
                                         type="number"
-                                        value={t.kubik_awal ?? ""}
+                                        value={t.meter_kubik_awal ?? ""}
                                         onChange={(e) => handleTarifChange(e, idx)}
                                         required
                                     />
@@ -73,11 +77,12 @@ const GolonganForm: FC<Props> = ({
                                 <Box m={3}>
                                     <FormLabel>Kubik Akhir</FormLabel>
                                     <Input
-                                        name="kubik_akhir"
+                                        name="meter_kubik_akhir"
                                         type="number"
-                                        value={t.kubik_akhir ?? ""}
+                                        value={t.meter_kubik_akhir ?? ""}
                                         disabled={
-                                            t.kubik_akhir === null && idx + 1 === state.tarif.length
+                                            t.meter_kubik_akhir === null &&
+                                            idx + 1 === state.tarif.length
                                         }
                                         onChange={(e) => handleTarifChange(e, idx)}
                                         required
@@ -99,7 +104,7 @@ const GolonganForm: FC<Props> = ({
                                     hidden={!(state.tarif.length > 1)}
                                     onClick={() => {
                                         const tarif = state.tarif.filter((_, i) => i !== idx);
-                                        tarif.at(-1)!.kubik_akhir = null;
+                                        tarif.at(-1)!.meter_kubik_akhir = null;
 
                                         setState({
                                             ...state,

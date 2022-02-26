@@ -7,7 +7,9 @@ class PemakaianPelanggan {
     @PrimaryGeneratedColumn()
     id_pemakaian!: number;
 
-    @ManyToOne(() => Pelanggan, (pelanggan) => pelanggan.pemakaian)
+    @ManyToOne(() => Pelanggan, (pelanggan) => pelanggan.pemakaian, {
+        onDelete: "CASCADE",
+    })
     @JoinColumn({ name: "pelanggan" })
     pelanggan!: Pelanggan;
 
@@ -23,7 +25,7 @@ class PemakaianPelanggan {
     @OneToOne(() => PembayaranPelanggan, (pembayaran) => pembayaran.pemakaian, {
         cascade: true,
         onUpdate: "CASCADE",
-        onDelete: "CASCADE",
+        onDelete: "SET NULL",
     })
     @JoinColumn({ name: "pembayaran" })
     pembayaran?: PembayaranPelanggan;

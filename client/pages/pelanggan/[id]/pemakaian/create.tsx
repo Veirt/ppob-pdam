@@ -26,11 +26,10 @@ const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
         e.preventDefault();
 
         try {
-            await api.post(
-                "/pelanggan/pemakaian",
-                { ...usage, pelanggan: usage.pelanggan.id_pelanggan },
-                { withCredentials: true }
-            );
+            await api.post("/pelanggan/pemakaian", {
+                ...usage,
+                pelanggan: usage.pelanggan.id_pelanggan,
+            });
 
             router.replace("/pelanggan");
         } catch (err) {
@@ -105,7 +104,8 @@ const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const res = await api.get(`/pelanggan/${context.params!.id}`);
+    const headers = { Cookie: `connect.sid=${context.req.cookies["connect.sid"]}` };
+    const res = await api.get(`/pelanggan/${context.params!.id}`, { headers });
 
     return {
         props: {

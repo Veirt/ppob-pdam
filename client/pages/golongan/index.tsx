@@ -13,23 +13,41 @@ import {
     useToast,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
-import { ChangeEvent, useEffect, useState } from "react";
+import { GetServerSideProps } from "next/types";
+import { ParsedUrlQuery } from "querystring";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { Golongan, Query } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
+import Pagination from "../../components/pagination";
 import { useAuth } from "../../components/providers/UserProvider";
 import api from "../../utils/api";
 
-const Golongan = () => {
+interface Props {
+    routerQuery: ParsedUrlQuery;
+}
+
+const Golongan: FC<Props> = ({ routerQuery }) => {
     const toast = useToast();
 
     const { loadingUser } = useAuth();
 
     const [categories, setCategory] = useState<Golongan[]>([]);
-    const [query, setQuery] = useState<Query>({ search: "" });
+    const [query, setQuery] = useState<Query>({ search: "", take: 10, skip: 0, ...routerQuery });
+    const [count, setCount] = useState(0);
+    const [isLoading, setLoading] = useState(false);
 
     const fetchGolongan = async () => {
-        const res = await api.get("/golongan", { params: query });
-        setCategory(res.data);
+        setLoading(true);
+
+        try {
+            const res = await api.get("/golongan", { params: query });
+            setCategory(res.data.result);
+            setCount(res.data.count);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -76,7 +94,7 @@ const Golongan = () => {
                             name="search"
                             value={query.search}
                             onChange={handleChangeQuery}
-                            placeholder="Cari pelanggan"
+                            placeholder="Cari golongan..."
                         />
                     </Box>
 
@@ -85,7 +103,6 @@ const Golongan = () => {
                             <Tr>
                                 <Th>Id Golongan</Th>
                                 <Th>Nama Golongan</Th>
-                                <Th>Tarif</Th>
                                 <Th>Actions</Th>
                             </Tr>
                         </Thead>
@@ -95,7 +112,6 @@ const Golongan = () => {
                                     <Tr key={category.id_golongan}>
                                         <Td>{category.id_golongan}</Td>
                                         <Td>{category.nama_golongan}</Td>
-                                        <Td>Tarif</Td>
                                         <Td>
                                             <Flex justifyContent="space-evenly">
                                                 <NextLink
@@ -118,10 +134,24 @@ const Golongan = () => {
                             })}
                         </Tbody>
                     </Table>
+                    <Pagination
+                        isLoading={isLoading}
+                        query={query}
+                        setQuery={setQuery}
+                        count={count}
+                    />
                 </Container>
             )}
         </>
     );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    return {
+        props: {
+            routerQuery: context.query,
+        },
+    };
 };
 
 export default Golongan;

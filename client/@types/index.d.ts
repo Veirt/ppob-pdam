@@ -5,8 +5,8 @@ export interface Golongan {
 
 export interface Tarif {
     id_tarif?: number;
-    kubik_awal: number;
-    kubik_akhir: number | null;
+    meter_kubik_awal: number;
+    meter_kubik_akhir: number | null;
     tarif: number;
 }
 
@@ -16,6 +16,7 @@ export interface Customer {
     alamat: string;
     golongan: Golongan;
     pemakaian?: Usage[];
+    sudah_dicatat?: boolean;
 }
 
 export interface Usage {
@@ -49,6 +50,7 @@ export interface Payment {
 export interface Role {
     id_role: number;
     nama_role: string;
+    login?: boolean;
 }
 
 export interface User {
@@ -74,5 +76,7 @@ export interface ValidationError {
 }
 
 export interface Query {
-    search: string;
+    search?: string;
+    take: number;
+    skip: number;
 }

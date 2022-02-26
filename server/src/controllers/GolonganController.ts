@@ -20,14 +20,20 @@ export const getGolonganById: Controller = async (req, res) => {
 export const getGolongan: Controller = async (req, res) => {
     const { search } = req.query;
 
-    const golongan = await golonganRepository.find({
+    const take = Number(req.query.take) || 25;
+    const skip = Number(req.query.skip) || 0;
+
+    const [result, count] = await golonganRepository.findAndCount({
+        take,
+        skip,
         where: {
             nama_golongan: ILike(`%${search ?? ""}%`),
         },
         order: { id_golongan: "ASC" },
+        relations: ["tarif"],
     });
 
-    return res.json(golongan);
+    return res.json({ result, count });
 };
 
 export const createGolongan: Controller = async (req, res) => {
@@ -43,8 +49,8 @@ export const createGolongan: Controller = async (req, res) => {
     for await (const t of req.body.tarif) {
         const newTarif = tarifRepository.create({
             golongan: savedGolongan,
-            kubik_awal: t.kubik_awal,
-            kubik_akhir: t.kubik_akhir,
+            meter_kubik_awal: t.meter_kubik_awal,
+            meter_kubik_akhir: t.meter_kubik_akhir,
             tarif: t.tarif,
         });
 
@@ -77,8 +83,8 @@ export const updateGolongan: Controller = async (req, res) => {
     // mass create, update and delete tarif
     for await (const t of req.body.tarif) {
         const tarif = {
-            kubik_awal: t.kubik_awal,
-            kubik_akhir: t.kubik_akhir,
+            meter_kubik_awal: t.meter_kubik_awal,
+            meter_kubik_akhir: t.meter_kubik_akhir,
             tarif: t.tarif,
         };
 

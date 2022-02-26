@@ -11,10 +11,10 @@ const EditRole = () => {
 
     const [isLoading, setLoading] = useState(false);
 
-    const [role, setRole] = useState<RoleState>({ nama_role: "" });
+    const [role, setRole] = useState<RoleState>({ nama_role: "", login: false });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setRole({ ...role, [e.target.name]: e.target.value });
+        setRole({ ...role, [e.target.name]: e.target.value ? e.target.value : e.target.checked });
     };
 
     const handleSubmit = async (e: FormEvent) => {
@@ -22,7 +22,7 @@ const EditRole = () => {
         setLoading(true);
 
         try {
-            await api.post("/petugas/role", { ...role }, { withCredentials: true });
+            await api.post("/petugas/role", { ...role });
 
             router.replace("/role");
         } catch (err) {

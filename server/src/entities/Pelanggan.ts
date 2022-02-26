@@ -1,10 +1,19 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import {
+    BeforeInsert,
+    Column,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    OneToMany,
+    PrimaryColumn,
+    PrimaryGeneratedColumn,
+} from "typeorm";
 import GolonganPelanggan from "./GolonganPelanggan";
 import PemakaianPelanggan from "./PemakaianPelanggan";
 
 @Entity()
 class Pelanggan {
-    @PrimaryGeneratedColumn()
+    @PrimaryColumn({ type: "bigint" })
     id_pelanggan!: number;
 
     @Column({ type: "varchar", length: 255 })
@@ -17,7 +26,11 @@ class Pelanggan {
     @JoinColumn({ name: "golongan" })
     golongan!: GolonganPelanggan;
 
-    @OneToMany(() => PemakaianPelanggan, (pemakaian) => pemakaian.pelanggan)
+    @OneToMany(() => PemakaianPelanggan, (pemakaian) => pemakaian.pelanggan, {
+        onDelete: "CASCADE",
+    })
     pemakaian!: PemakaianPelanggan[];
+
+    sudah_dicatat?: boolean;
 }
 export default Pelanggan;

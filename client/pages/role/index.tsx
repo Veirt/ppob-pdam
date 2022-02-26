@@ -16,17 +16,28 @@ import NextLink from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Query, Role } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
+import Pagination from "../../components/pagination";
 import api from "../../utils/api";
 
 const RoleTable = () => {
     const toast = useToast();
+    const [isLoading, setLoading] = useState(false);
 
     const [roles, setRoles] = useState<Role[]>([]);
-    const [query, setQuery] = useState<Query>({ search: "" });
+    const [query, setQuery] = useState<Query>({ search: "", take: 10, skip: 0 });
+    const [count, setCount] = useState(0);
 
     const fetchRole = async () => {
-        const res = await api.get("/petugas/role", { params: query });
-        setRoles(res.data);
+        setLoading(true);
+
+        try {
+            const res = await api.get("/petugas/role", { params: query });
+            setRoles(res.data);
+        } catch (err) {
+            console.error(`Error when fetching role: ${err}`);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -93,7 +104,7 @@ const RoleTable = () => {
                                     <Td>
                                         <Flex justifyContent="space-evenly">
                                             <NextLink href={`/role/${role.id_role}`}>
-                                                <Button bgColor="green.300">Edit</Button>
+                                                <Button colorScheme="green">Edit</Button>
                                             </NextLink>
                                             <DeleteWithAlert
                                                 title="Delete Role"
@@ -108,6 +119,7 @@ const RoleTable = () => {
                         })}
                     </Tbody>
                 </Table>
+                <Pagination isLoading={isLoading} query={query} setQuery={setQuery} count={count} />
             </Container>
         </>
     );

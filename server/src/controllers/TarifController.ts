@@ -28,8 +28,8 @@ export const createTarif: Controller = async (req, res) => {
 
     const { kubik_awal, kubik_akhir, tarif, golongan } = req.body;
     const newTarif = tarifRepository.create({
-        kubik_awal,
-        kubik_akhir,
+        meter_kubik_awal: kubik_awal,
+        meter_kubik_akhir: kubik_akhir,
         tarif,
         golongan,
     });

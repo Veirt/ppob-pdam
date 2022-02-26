@@ -18,12 +18,17 @@ export const getPetugasById: Controller = async (req, res) => {
 export const getPetugas: Controller = async (req, res) => {
     const { search } = req.query;
 
-    const petugas = await petugasRepository.find({
+    const take = Number(req.query.take) || 25;
+    const skip = Number(req.query.skip) || 0;
+
+    const [result, count] = await petugasRepository.findAndCount({
+        take,
+        skip,
         relations: ["role"],
-        where: { nama: ILike(`%${search}%`) },
+        where: { nama: ILike(`%${search ?? ""}%`) },
     });
 
-    return res.json(petugas);
+    return res.json({ result, count });
 };
 
 export const createPetugas: Controller = async (req, res) => {

@@ -17,7 +17,7 @@ const EditEmployee = () => {
         nama: "",
         username: "",
         password: "",
-        role: { id_role: 0, nama_role: "" },
+        role: { id_role: 0, nama_role: "", login: false },
     });
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -29,7 +29,7 @@ const EditEmployee = () => {
         setLoading(true);
 
         try {
-            await api.patch(`/petugas/${id}`, { ...employee }, { withCredentials: true });
+            await api.patch(`/petugas/${id}`, { ...employee });
 
             router.replace("/petugas");
         } catch (err) {

@@ -1,41 +1,44 @@
-import { Box, Container, Flex, Link } from "@chakra-ui/react";
-import type { NextPage } from "next";
+import { Box, Button, Container, Flex } from "@chakra-ui/react";
+import type { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
 import { FC } from "react";
-import { useAuth } from "../../components/providers/UserProvider";
+import Authorization from "../../components/authorization";
+import api from "../../utils/api";
 
-interface Props {
-    roles: string[];
+interface InfoProps {
+    href: string;
 }
 
-const DashboardItem: FC<Props> = ({ children, roles }) => {
-    const { user } = useAuth();
-
-    if (
-        roles.includes(user.role!.nama_role.toLowerCase()) ||
-        user.role!.nama_role.toLowerCase() === "admin"
-    ) {
-        return (
-            <Box
-                mx={"5"}
-                padding={"3"}
-                border={"1px"}
-                borderColor={"whiteAlpha.50"}
-                borderRadius="sm"
-                background={"whitesmoke"}
-                width={"48"}
-                height={"55"}
-                _hover={{ borderColor: "teal.200" }}>
+const InfoItem: FC<InfoProps> = ({ children, href }) => {
+    return (
+        <NextLink href={href}>
+            <Button
+                colorScheme={"green"}
+                mx="3"
+                my="3"
+                borderRadius={"none"}
+                minWidth={"72"}
+                minHeight={"16"}>
                 {children}
-            </Box>
-        );
-    }
-
-    return null;
+            </Button>
+        </NextLink>
+    );
 };
 
-const Home: NextPage = () => {
+const DashboardItem: FC = ({ children }) => {
+    return (
+        <Box mx={"5"} padding={"3"}>
+            {children}
+        </Box>
+    );
+};
+
+interface Props {
+    serverProps: { [key: string]: any };
+}
+
+const Home: NextPage<Props> = ({ serverProps }) => {
     return (
         <>
             <Head>
@@ -44,52 +47,151 @@ const Home: NextPage = () => {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
+            <Container my="5" maxW={"container.xl"}>
+                <Flex justifyContent="center" wrap="wrap">
+                    <Authorization>
+                        <InfoItem href="/pelanggan">
+                            Jumlah Pelanggan
+                            <br />
+                            {serverProps.customerCount}
+                        </InfoItem>
+                    </Authorization>
+
+                    <Authorization roles={["admin"]}>
+                        <InfoItem href="/petugas">
+                            Jumlah Petugas
+                            <br />
+                            {serverProps.employeeCount}
+                        </InfoItem>
+                    </Authorization>
+
+                    <Authorization roles={["petugas loket"]}>
+                        <InfoItem href="/pelanggan/tagihan?sudah_dibayar=0">
+                            Jumlah Tagihan Belum Dibayar
+                            <br />
+                            {serverProps.paidOffCount}
+                        </InfoItem>
+                    </Authorization>
+
+                    <Authorization roles={["petugas loket"]}>
+                        <InfoItem href="/pelanggan/tagihan?sudah_dibayar=1">
+                            Jumlah Tagihan Sudah Dibayar
+                            <br />
+                            {serverProps.paidCount}
+                        </InfoItem>
+                    </Authorization>
+
+                    <Authorization roles={["petugas meteran"]}>
+                        <InfoItem href="/pelanggan?sudah_dicatat=0">
+                            Jumlah Pemakaian Belum Dicatat
+                            <br />
+                            {serverProps.customerNotCheckedCount}
+                        </InfoItem>
+                    </Authorization>
+                </Flex>
+
+                {/* Pelanggan yang belum punya pemakaian periode ini */}
+            </Container>
+
             <Container maxW={"container.xl"} my="5">
-                <Flex>
-                    <DashboardItem roles={["admin"]}>
-                        <NextLink href="/golongan" passHref>
-                            <Link>Golongan</Link>
-                        </NextLink>
-                    </DashboardItem>
+                <Flex wrap={"wrap"} justifyContent="center">
+                    <Authorization roles={["admin"]}>
+                        <DashboardItem>
+                            <NextLink href="/golongan">
+                                <Button minWidth={"40"} minHeight={"16"}>
+                                    Golongan
+                                </Button>
+                            </NextLink>
+                        </DashboardItem>
+                    </Authorization>
 
-                    <DashboardItem roles={["petugas meteran", "petugas loket"]}>
-                        <NextLink href="/pelanggan" passHref>
-                            <Link>Pelanggan</Link>
-                        </NextLink>
-                    </DashboardItem>
+                    <Authorization roles={["petugas meteran", "petugas loket"]}>
+                        <DashboardItem>
+                            <NextLink href="/pelanggan">
+                                <Button minWidth={"40"} minHeight={"16"}>
+                                    Pelanggan
+                                </Button>
+                            </NextLink>
+                        </DashboardItem>
+                    </Authorization>
 
-                    <DashboardItem roles={["admin"]}>
-                        <NextLink href="/petugas" passHref>
-                            <Link>Petugas</Link>
-                        </NextLink>
-                    </DashboardItem>
+                    <Authorization roles={["admin"]}>
+                        <DashboardItem>
+                            <NextLink href="/petugas" passHref>
+                                <Button minWidth={"40"} minHeight={"16"}>
+                                    Petugas
+                                </Button>
+                            </NextLink>
+                        </DashboardItem>
+                    </Authorization>
 
-                    <DashboardItem roles={["admin"]}>
-                        <NextLink href="/role" passHref>
-                            <Link>Role</Link>
-                        </NextLink>
-                    </DashboardItem>
+                    <Authorization roles={["admin"]}>
+                        <DashboardItem>
+                            <NextLink href="/role" passHref>
+                                <Button minWidth={"40"} minHeight={"16"}>
+                                    Role
+                                </Button>
+                            </NextLink>
+                        </DashboardItem>
+                    </Authorization>
 
-                    <DashboardItem roles={["petugas meteran"]}>
-                        <NextLink href="/pemakaian" passHref>
-                            <Link>Pemakaian</Link>
-                        </NextLink>
-                    </DashboardItem>
+                    <Authorization roles={["petugas meteran"]}>
+                        <DashboardItem>
+                            <NextLink href="/pemakaian" passHref>
+                                <Button minWidth={"40"} minHeight={"16"}>
+                                    Pemakaian
+                                </Button>
+                            </NextLink>
+                        </DashboardItem>
+                    </Authorization>
 
-                    <DashboardItem roles={["petugas loket"]}>
-                        <NextLink href="/pelanggan/tagihan" passHref>
-                            <Link>Tagihan</Link>
-                        </NextLink>
-                    </DashboardItem>
-
-                    {/* <p>Tagihan yang belum dibayar</p> */}
-                    {/* http://localhost:3000/pelanggan/tagihan?sudah_dibayar=0 */}
-
-                    {/* Pelanggan yang belum punya pemakaian periode ini */}
+                    <Authorization roles={["petugas loket"]}>
+                        <DashboardItem>
+                            <NextLink href="/pelanggan/tagihan" passHref>
+                                <Button minWidth={"40"} minHeight={"16"}>
+                                    Tagihan
+                                </Button>
+                            </NextLink>
+                        </DashboardItem>
+                    </Authorization>
                 </Flex>
             </Container>
         </>
     );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    const headers = { Cookie: `connect.sid=${context.req.cookies["connect.sid"]}` };
+
+    const belum_dibayar = await api
+        .get("/pelanggan/pemakaian?search=&sudah_dibayar=0&id_pelanggan=", { headers })
+        .catch(() => ({ data: { result: [] } }));
+
+    const sudah_dibayar = await api
+        .get("/pelanggan/pemakaian?search=&sudah_dibayar=1&id_pelanggan=", { headers })
+        .catch(() => ({ data: { result: [] } }));
+
+    const pelanggan = await api
+        .get("/pelanggan", { headers })
+        .catch(() => ({ data: { result: [] } }));
+
+    const petugas = await api.get("/petugas", { headers }).catch(() => ({ data: { result: [] } }));
+
+    return {
+        props: {
+            serverProps: {
+                paidCount: sudah_dibayar.data.result.length,
+                paidOffCount: belum_dibayar.data.result.length,
+                customerCount: pelanggan.data.result.length,
+                employeeCount: petugas.data.result.length,
+                customerNotCheckedCount: pelanggan.data.result.filter(
+                    (p: { sudah_dicatat: boolean }) => {
+                        if (!p.sudah_dicatat) return p;
+                    }
+                ).length,
+            },
+        },
+    };
 };
 
 export default Home;

@@ -14,22 +14,28 @@ import {
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { FC } from "react";
+import Authorization from "./authorization";
 import { useAuth } from "./providers/UserProvider";
 
 interface Props {
     href: string;
+    path?: string;
 }
 
-const LinkItem: FC<Props> = ({ href, children }) => {
+const LinkItem: FC<Props> = ({ href, path, children }) => {
+    const active = href === path;
     return (
         <NextLink href={href} passHref>
-            <Link mx="3">{children}</Link>
+            <Link as="b" mx="3" color={active ? "teal.400" : "black"}>
+                {children}
+            </Link>
         </NextLink>
     );
 };
 
 const NavBar = () => {
     const router = useRouter();
+    const path = router.asPath;
 
     const { user } = useAuth();
 
@@ -38,9 +44,41 @@ const NavBar = () => {
             <Box bg="gray.50">
                 <Flex justifyContent={"space-between"} alignItems="center">
                     <Box padding={5}>
-                        <Text fontSize={"lg"} as="b">
-                            <NextLink href="/">PPOB</NextLink>
-                        </Text>
+                        <Flex alignItems={"center"}>
+                            <Text fontSize={"2xl"} color="teal" mr="5" as="b">
+                                <NextLink href="/">PPOB</NextLink>
+                            </Text>
+
+                            <Authorization>
+                                <LinkItem path={path} href="/dashboard">
+                                    Dashboard
+                                </LinkItem>
+                                <LinkItem path={path} href="/pelanggan">
+                                    Pelanggan
+                                </LinkItem>
+                            </Authorization>
+
+                            <Authorization roles={["petugas loket"]}>
+                                <LinkItem path={path} href="/pelanggan/tagihan">
+                                    Tagihan
+                                </LinkItem>
+                            </Authorization>
+
+                            <Authorization roles={["petugas meteran"]}>
+                                <LinkItem path={path} href="/pemakaian">
+                                    Pemakaian
+                                </LinkItem>
+                            </Authorization>
+
+                            <Authorization roles={["admin"]}>
+                                <LinkItem path={path} href="/golongan">
+                                    Golongan
+                                </LinkItem>
+                                <LinkItem path={path} href="/role">
+                                    Role
+                                </LinkItem>
+                            </Authorization>
+                        </Flex>
                     </Box>
 
                     <Box padding={5}>
@@ -51,7 +89,6 @@ const NavBar = () => {
                                 </>
                             ) : (
                                 <Flex alignItems={"center"}>
-                                    {/* <LinkItem href="/logout">Logout</LinkItem> */}
                                     <Text mx="3">{user.nama}</Text>
                                     <Avatar bg="teal.500" size={"sm"} />
                                     <Menu>

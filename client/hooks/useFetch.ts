@@ -14,9 +14,13 @@ function useFetch<T>(url: string, defaultState: T): [T, Dispatch<SetStateAction<
 
         const fetchApi = async () => {
             try {
-                const res = await api.get(url, { withCredentials: true });
+                const res = await api.get(url);
 
-                setState(res.data);
+                if (res.data.result) {
+                    setState(res.data.result);
+                } else {
+                    setState(res.data);
+                }
             } catch (err) {
                 if (isAxiosError(err)) {
                     console.error(`Something went wrong when fetching ${url}: ${err}`);

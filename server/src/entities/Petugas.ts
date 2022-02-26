@@ -19,10 +19,10 @@ class Petugas {
     @Column({ type: "varchar", length: 255 })
     nama!: string;
 
-    @Column({ type: "varchar", length: 30 })
+    @Column({ type: "varchar", length: 30, nullable: true })
     username!: string;
 
-    @Column({ type: "varchar", length: 255, select: false })
+    @Column({ type: "varchar", length: 255, select: false, nullable: true })
     password!: string;
 
     // Role bisa punya banyak petugas
@@ -36,6 +36,7 @@ class Petugas {
 
     async verifyPassword(rawPassword: string) {
         const verified = await argon2.verify(this.password, rawPassword);
+
         return verified;
     }
 

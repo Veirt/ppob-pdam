@@ -30,7 +30,7 @@ const CreateEmployee = () => {
         setLoading(true);
 
         try {
-            await api.post("/petugas", { ...employee }, { withCredentials: true });
+            await api.post("/petugas", { ...employee });
 
             router.replace("/petugas");
         } catch (err) {

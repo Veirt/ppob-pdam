@@ -26,11 +26,9 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const res = await api.post(
-                `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`,
-                { ...state },
-                { withCredentials: true }
-            );
+            const res = await api.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`, {
+                ...state,
+            });
 
             setUser(res.data);
 

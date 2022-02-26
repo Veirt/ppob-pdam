@@ -22,6 +22,14 @@ export const getPemakaianById: Controller = async (req, res) => {
         pemakaian.meter_akhir
     );
 
+    const [lastPemakaian, lastPemakaianCount] = await pemakaianRepository
+        .createQueryBuilder("pemakaian")
+        .where("pemakaian.pembayaran IS NULL")
+        .andWhere("pemakaian.pelanggan = :pelanggan", {
+            pelanggan: pemakaian.pelanggan.id_pelanggan,
+        })
+        .getManyAndCount();
+
     if (tarifPemakaian) {
         Object.assign(pemakaian, {
             tagihan: {
@@ -30,8 +38,30 @@ export const getPemakaianById: Controller = async (req, res) => {
             },
         });
 
+        const usageDate = new Date(pemakaian.tanggal);
+        const currDate = new Date();
+
+        const currYear = currDate.getFullYear();
+        const currMonth = currDate.getMonth();
+
+        const usageYear = usageDate.getFullYear();
+        const usageMonth = usageDate.getMonth();
+
+        // pemakaian bulan januari 1
+        // skrg tanggal lebih dari 20
+
+        // cek bulan dan tanggal skrg bandingkan
+
         // denda
-        if (!pemakaian.pembayaran && new Date(pemakaian.tanggal).getDate() >= 20) {
+        if (
+            (!pemakaian.pembayaran && currDate.getDate() >= 20 && usageDate.getDate() < 20) || // handle ketika pemakaian diinput lebih dari tanggal 20
+            (!pemakaian.pembayaran &&
+                usageYear <= currYear &&
+                usageMonth < currMonth &&
+                currDate.getDate() > 20) ||
+            (lastPemakaianCount > 1 &&
+                lastPemakaian.at(-1)?.id_pemakaian !== pemakaian.id_pemakaian) // handle denda bukan untuk pemakaian paling terbaru
+        ) {
             pemakaian.denda = tarifPemakaian.tarif * totalPemakaian * 0.1;
             await pemakaianRepository.save(pemakaian);
         }
@@ -43,8 +73,13 @@ export const getPemakaianById: Controller = async (req, res) => {
 export const getPemakaian: Controller = async (req, res) => {
     const { sudah_dibayar, id_pelanggan } = req.query;
 
+    const take = Number(req.query.take) || 25;
+    const skip = Number(req.query.skip) || 0;
+
     let pemakaian: any = pemakaianRepository
         .createQueryBuilder("pemakaian")
+        .take(take)
+        .skip(skip)
         .innerJoinAndSelect("pemakaian.pelanggan", "pelanggan")
         .leftJoinAndSelect("pemakaian.pembayaran", "pembayaran");
 
@@ -58,6 +93,14 @@ export const getPemakaian: Controller = async (req, res) => {
         pemakaian = pemakaian.andWhere("pemakaian.pembayaran IS NOT NULL");
     } else if (sudah_dibayar === "0") {
         pemakaian = pemakaian.andWhere("pemakaian.pembayaran IS NULL");
+    }
+
+    if (req.query.periode) {
+        const [year, month] = (req.query.periode as string).split("-");
+        pemakaian = pemakaian.andWhere(
+            "MONTH(pemakaian.tanggal) = :month AND YEAR(pemakaian.tanggal) = :year",
+            { month, year }
+        );
     }
 
     pemakaian = await pemakaian.getMany();
@@ -83,7 +126,7 @@ export const getPemakaian: Controller = async (req, res) => {
         })
     );
 
-    return res.json(pemakaian);
+    return res.json({ result: pemakaian, count: pemakaian.length });
 };
 
 export const createPemakaian: Controller = async (req, res) => {
@@ -143,6 +186,19 @@ export const updatePemakaian: Controller = async (req, res) => {
     );
     if (validationResult) return handleError("validation", res, validationResult);
 
+    const meter_akhir = Number(req.body.meter_akhir);
+
+    const meter_awal = await findPrevUsage(req.body.pelanggan);
+    if (meter_akhir < meter_awal) {
+        return res.status(400).json([
+            {
+                type: "invalid",
+                field: "meter_akhir",
+                message: "Meter akhir kurang dari meter awal",
+            } as ValidationError,
+        ]);
+    }
+
     const pemakaian = await pemakaianRepository.findOne(req.params.id);
     if (!pemakaian) return handleError("notFound", res);
 
@@ -162,4 +218,13 @@ export const deletePemakaian: Controller = async (req, res) => {
     const deletedPemakaian = await pemakaianRepository.delete(req.params.id);
 
     return res.json(deletedPemakaian);
+};
+
+export const getPeriodePemakaian: Controller = async (_, res) => {
+    const periode = await pemakaianRepository
+        .createQueryBuilder("pemakaian")
+        .select("DISTINCT YEAR(tanggal) AS year, MONTH(tanggal) AS month")
+        .getRawMany();
+
+    res.json(periode);
 };

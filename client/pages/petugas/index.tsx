@@ -12,21 +12,39 @@ import {
     Tr,
     useToast,
 } from "@chakra-ui/react";
+import { GetServerSideProps } from "next";
 import NextLink from "next/link";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ParsedUrlQuery } from "querystring";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { Employee, Query } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
+import Pagination from "../../components/pagination";
 import api from "../../utils/api";
 
-const Petugas = () => {
+interface Props {
+    routerQuery: ParsedUrlQuery;
+}
+
+const Petugas: FC<Props> = ({ routerQuery }) => {
     const toast = useToast();
+    const [isLoading, setLoading] = useState(false);
 
     const [employees, setEmployees] = useState<Employee[]>([]);
-    const [query, setQuery] = useState<Query>({ search: "" });
+    const [query, setQuery] = useState<Query>({ search: "", take: 10, skip: 0, ...routerQuery });
+    const [count, setCount] = useState(0);
 
     const fetchPetugas = async () => {
-        const res = await api.get("/petugas", { params: query });
-        setEmployees(res.data);
+        setLoading(true);
+
+        try {
+            const res = await api.get("/petugas", { params: query });
+            setEmployees(res.data.result);
+            setCount(res.data.count);
+        } catch (err) {
+            console.error(`Error when fetching petugas: ${err}`);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -112,9 +130,18 @@ const Petugas = () => {
                         })}
                     </Tbody>
                 </Table>
+                <Pagination isLoading={isLoading} query={query} setQuery={setQuery} count={count} />
             </Container>
         </>
     );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    return {
+        props: {
+            routerQuery: context.query,
+        },
+    };
 };
 
 export default Petugas;

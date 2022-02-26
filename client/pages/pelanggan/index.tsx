@@ -4,6 +4,7 @@ import {
     Container,
     Flex,
     Input,
+    Select,
     Table,
     Tbody,
     Td,
@@ -12,33 +13,52 @@ import {
     Tr,
     useToast,
 } from "@chakra-ui/react";
+import { GetServerSideProps, NextPage } from "next";
 import NextLink from "next/link";
-import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Customer, Query } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
 import Authorization from "../../components/authorization";
+import Pagination from "../../components/pagination";
 import unauthorizedToast from "../../lib/toast/unauthorized";
 import api, { isAxiosError } from "../../utils/api";
 
-const Pelanggan = () => {
-    const currentMonth = new Date().getMonth();
-    const router = useRouter();
+interface CustomerQuery extends Query {
+    sudah_dicatat: "0" | "1" | "";
+}
+
+interface Props {
+    routerQuery: ParsedUrlQuery;
+}
+
+const Pelanggan: NextPage<Props> = ({ routerQuery }) => {
     const toast = useToast();
+    const [isLoading, setLoading] = useState(false);
 
     const [customers, setCustomers] = useState<Customer[]>([]);
-    const [query, setQuery] = useState<Query>({
-        search: (router.query.search as string) ?? "",
+    const [query, setQuery] = useState<CustomerQuery>({
+        search: "",
+        sudah_dicatat: "",
+        take: 10,
+        skip: 0,
+        ...routerQuery,
     });
+    const [count, setCount] = useState(0);
 
     const fetchCustomer = async () => {
+        setLoading(true);
+
         try {
             const res = await api.get("/pelanggan", { params: query });
-            setCustomers(res.data);
+            setCustomers(res.data.result);
+            setCount(res.data.count);
         } catch (err) {
             if (isAxiosError(err)) {
                 if (err.response?.status === 401) unauthorizedToast(toast);
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -46,7 +66,7 @@ const Pelanggan = () => {
         fetchCustomer();
     }, [query]);
 
-    const handleChangeQuery = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChangeQuery = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setQuery({
             ...query,
             [e.target.name]: e.target.value,
@@ -83,12 +103,23 @@ const Pelanggan = () => {
                 </Box>
 
                 <Box m={3}>
-                    <Input
-                        name="search"
-                        value={query.search}
-                        onChange={handleChangeQuery}
-                        placeholder="Cari pelanggan"
-                    />
+                    <Flex>
+                        <Input
+                            flexGrow={1}
+                            name="search"
+                            value={query.search}
+                            onChange={handleChangeQuery}
+                            placeholder="Cari pelanggan"
+                        />
+                        <Select
+                            name="sudah_dicatat"
+                            onChange={handleChangeQuery}
+                            value={query.sudah_dicatat}>
+                            <option value="">Semua</option>
+                            <option value="0">Belum Dicatat bulan ini</option>
+                            <option value="1">Sudah dicatat bulan ini</option>
+                        </Select>
+                    </Flex>
                 </Box>
 
                 <Table variant="simple">
@@ -116,15 +147,7 @@ const Pelanggan = () => {
                                                     href={`/pelanggan/${customer.id_pelanggan}/pemakaian/create`}>
                                                     <Button
                                                         // disabled ketika sudah diinput bulan ini
-                                                        disabled={
-                                                            customer.pemakaian?.length
-                                                                ? new Date(
-                                                                      customer.pemakaian.at(
-                                                                          -1
-                                                                      )!.tanggal
-                                                                  ).getMonth() === currentMonth
-                                                                : false
-                                                        }
+                                                        disabled={customer.sudah_dicatat}
                                                         colorScheme={"blue"}>
                                                         Tambah Pemakaian
                                                     </Button>
@@ -172,9 +195,18 @@ const Pelanggan = () => {
                         })}
                     </Tbody>
                 </Table>
+                <Pagination isLoading={isLoading} query={query} setQuery={setQuery} count={count} />
             </Container>
         </>
     );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    return {
+        props: {
+            routerQuery: context.query,
+        },
+    };
 };
 
 export default Pelanggan;

@@ -9,6 +9,9 @@ class RolePetugas {
     @Column({ type: "varchar", length: 30 })
     nama_role!: string;
 
+    @Column({ type: "boolean" })
+    login!: boolean;
+
     @OneToMany(() => Petugas, (petugas) => petugas.role)
     petugas!: Petugas[];
 }

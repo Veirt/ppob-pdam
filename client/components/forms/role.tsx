@@ -1,8 +1,9 @@
-import { Box, Button, Container, FormLabel, Input } from "@chakra-ui/react";
+import { Box, Button, Container, FormLabel, Input, Switch } from "@chakra-ui/react";
 import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction } from "react";
 
 export interface RoleState {
     nama_role: string;
+    login: boolean;
 }
 
 interface Props {
@@ -29,6 +30,17 @@ const RoleForm: FC<Props> = ({ handleChange, handleSubmit, state, isLoading }) =
                             required
                         />
                     </Box>
+
+                    <Box my={3}>
+                        <FormLabel htmlFor="login">Login</FormLabel>
+                        <Switch
+                            isChecked={state.login}
+                            id="login"
+                            name="login"
+                            onChange={handleChange}
+                        />
+                    </Box>
+                    <p>{state.login}</p>
 
                     <Button isLoading={isLoading} type="submit" colorScheme="teal" size="md">
                         Submit

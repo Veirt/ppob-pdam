@@ -1,6 +1,6 @@
 import { Box, Button, Container, FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { Select } from "chakra-react-select";
-import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction, useState } from "react";
 import { Role } from "../../@types";
 import useFetch from "../../hooks/useFetch";
 import toOptions from "../../utils/toOptions";
@@ -21,8 +21,9 @@ interface Props {
 }
 
 const PetugasForm: FC<Props> = ({ handleChange, handleSubmit, state, setState, isLoading }) => {
-    const [golongan] = useFetch<Role[]>("/petugas/role", []);
-    const golonganOptions = toOptions(golongan, "id_role", "nama_role");
+    const [roles] = useFetch<Role[]>("/petugas/role", []);
+    const roleOptions = toOptions(roles, "id_role", "nama_role");
+    console.log(roles);
 
     return (
         <>
@@ -42,49 +43,72 @@ const PetugasForm: FC<Props> = ({ handleChange, handleSubmit, state, setState, i
                         </Box>
 
                         <Box my={3}>
-                            <FormLabel htmlFor="username">Username</FormLabel>
-                            <Input
-                                id="username"
-                                name="username"
-                                type="text"
-                                value={state.username || ""}
-                                onChange={handleChange}
-                                required
-                            />
-                        </Box>
-
-                        <Box my={3}>
-                            <FormLabel htmlFor="password">Password</FormLabel>
-                            <Input
-                                id="password"
-                                name="password"
-                                type="password"
-                                value={state.password || ""}
-                                onChange={handleChange}
-                            />
-                        </Box>
-
-                        <Box my={3}>
                             <FormLabel htmlFor="role">Role</FormLabel>
                             <Select
                                 id="role"
                                 instanceId="role-select"
                                 name="role"
-                                options={golonganOptions}
+                                options={roleOptions}
                                 value={{
                                     value: state.role?.id_role || 0,
                                     label: state.role?.nama_role || "",
                                 }}
                                 onChange={(role) => {
+                                    const selectedRole = roles.find(
+                                        (r) => r.id_role === (role!.value as number)
+                                    );
+
                                     setState({
                                         ...state,
                                         role: {
                                             id_role: role!.value as number,
                                             nama_role: role!.label as string,
+                                            login: selectedRole?.login,
                                         },
                                     });
-                                }}></Select>
+
+                                    // if (selectedRole?.login) {
+                                    //     // show username password
+                                    //     setState({
+                                    //         ...state,
+                                    //         role: { ...state.role, login: true },
+                                    //     });
+                                    // } else {
+                                    //     setState({
+                                    //         ...state,
+                                    //         role: { ...state.role, login: false },
+                                    //     });
+                                    // }
+                                }}
+                            />
                         </Box>
+
+                        {state.role.login && (
+                            <>
+                                <Box my={3}>
+                                    <FormLabel htmlFor="username">Username</FormLabel>
+                                    <Input
+                                        id="username"
+                                        name="username"
+                                        type="text"
+                                        value={state.username || ""}
+                                        onChange={handleChange}
+                                        required
+                                    />
+                                </Box>
+
+                                <Box my={3}>
+                                    <FormLabel htmlFor="password">Password</FormLabel>
+                                    <Input
+                                        id="password"
+                                        name="password"
+                                        type="password"
+                                        value={state.password || ""}
+                                        onChange={handleChange}
+                                    />
+                                </Box>
+                            </>
+                        )}
                     </FormControl>
 
                     <Button isLoading={isLoading} type="submit" colorScheme="teal" size="md">

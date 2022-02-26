@@ -1,13 +1,12 @@
 import { getRepository } from "typeorm";
 import type { Controller } from "../../@types/express";
-import PemakaianPelanggan from "../entities/PemakaianPelanggan";
 import PembayaranPelanggan from "../entities/PembayaranPelanggan";
 import Petugas from "../entities/Petugas";
+import createReceipt from "../services/ReceiptService";
 import { handleError, handleValidationError } from "../utils/errorResponse";
 import { validatePembayaran } from "../utils/validation";
 
 const pembayaranRepository = getRepository(PembayaranPelanggan);
-const pemakaianRepository = getRepository(PemakaianPelanggan);
 
 export const getPembayaranById: Controller = async (req, res) => {
     const pembayaran = await pembayaranRepository.findOne(req.params.id, {
@@ -32,7 +31,7 @@ export const createPembayaran: Controller = async (req, res) => {
     const tanggal_bayar = new Date();
 
     const pembayaran = {
-        biaya_admin: req.body.biaya_admin as number,
+        biaya_admin: 2500,
         petugas: req.body.petugas as Petugas,
         pemakaian: req.body.pemakaian,
         tanggal_bayar,
@@ -40,11 +39,11 @@ export const createPembayaran: Controller = async (req, res) => {
 
     const newPembayaran = pembayaranRepository.create(pembayaran);
     await pembayaranRepository.save(newPembayaran);
-    await pemakaianRepository.update(req.body.pemakaian.id_pemakaian, {
-        pembayaran: newPembayaran,
-    });
 
-    return res.status(204).json(pembayaran);
+    const { writeStream, filePath } = createReceipt(req.body, tanggal_bayar);
+    writeStream.on("finish", () => {
+        return res.sendFile(filePath);
+    });
 };
 
 export const updatePembayaran: Controller = async (req, res) => {

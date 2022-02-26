@@ -1,11 +1,13 @@
+import { useToast } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Tarif } from "../../@types";
 import GolonganForm, { GolonganState } from "../../components/forms/golongan";
 import useFetch from "../../hooks/useFetch";
-import api from "../../utils/api";
+import api, { isAxiosError } from "../../utils/api";
 
 const EditGolongan = () => {
+    const toast = useToast();
     const router = useRouter();
     const { id } = router.query;
     const [isLoading, setLoading] = useState(false);
@@ -23,6 +25,10 @@ const EditGolongan = () => {
         const newTarif = golongan.tarif.slice();
         newTarif[i][e.target.name as keyof Tarif] = Number(e.target.value);
 
+        if (newTarif.length > 1 && e.target.name === "meter_kubik_akhir") {
+            (newTarif as any)[i + 1]["meter_kubik_awal"] = Number(e.target.value) + 1;
+        }
+
         setGolongan({ ...golongan, tarif: newTarif });
     };
 
@@ -31,9 +37,21 @@ const EditGolongan = () => {
         setLoading(true);
 
         try {
-            await api.patch(`/golongan/${id}`, { ...golongan }, { withCredentials: true });
+            await api.patch(`/golongan/${id}`, { ...golongan });
             router.replace("/golongan");
         } catch (err) {
+            if (isAxiosError(err)) {
+                if (err.response!.status === 400) {
+                    toast({
+                        position: "top-right",
+                        title: "Error",
+                        description: err.response?.data[0].message,
+                        status: "error",
+                        duration: 3000,
+                        isClosable: true,
+                    });
+                }
+            }
         } finally {
             setLoading(false);
         }

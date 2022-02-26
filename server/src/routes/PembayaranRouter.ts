@@ -6,8 +6,11 @@ import {
     getPembayaranById,
     updatePembayaran,
 } from "../controllers/PembayaranController";
+import { isAuthenticated, isPetugasLoket } from "../middlewares/AuthMiddleware";
 
 const PembayaranRouter = Router();
+PembayaranRouter.use(isAuthenticated);
+PembayaranRouter.use(isPetugasLoket);
 
 PembayaranRouter.get("/", getPembayaran);
 PembayaranRouter.get("/:id", getPembayaranById);
