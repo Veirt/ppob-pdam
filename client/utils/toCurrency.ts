@@ -1,4 +1,4 @@
-export default (num: number | null) => {
+export default (num?: number | null) => {
     return new Intl.NumberFormat("id-ID", {
         style: "currency",
         currency: "idr",

@@ -1,12 +1,10 @@
 import {
-    BeforeInsert,
     Column,
     Entity,
     JoinColumn,
     ManyToOne,
     OneToMany,
-    PrimaryColumn,
-    PrimaryGeneratedColumn,
+    PrimaryColumn
 } from "typeorm";
 import GolonganPelanggan from "./GolonganPelanggan";
 import PemakaianPelanggan from "./PemakaianPelanggan";

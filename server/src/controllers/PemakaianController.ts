@@ -11,7 +11,7 @@ const pemakaianRepository = getRepository(PemakaianPelanggan);
 
 export const getPemakaianById: Controller = async (req, res) => {
     const pemakaian = await pemakaianRepository.findOne(req.params.id, {
-        relations: ["pelanggan", "pelanggan.golongan"],
+        relations: ["pelanggan", "pelanggan.golongan", "pembayaran"],
     });
 
     if (!pemakaian) return handleError("notFound", res);
@@ -188,8 +188,10 @@ export const updatePemakaian: Controller = async (req, res) => {
 
     const meter_akhir = Number(req.body.meter_akhir);
 
-    const meter_awal = await findPrevUsage(req.body.pelanggan);
-    if (meter_akhir < meter_awal) {
+    const pemakaian = await pemakaianRepository.findOne(req.params.id);
+    if (!pemakaian) return handleError("notFound", res);
+
+    if (meter_akhir < pemakaian.meter_awal) {
         return res.status(400).json([
             {
                 type: "invalid",
@@ -198,9 +200,6 @@ export const updatePemakaian: Controller = async (req, res) => {
             } as ValidationError,
         ]);
     }
-
-    const pemakaian = await pemakaianRepository.findOne(req.params.id);
-    if (!pemakaian) return handleError("notFound", res);
 
     await pemakaianRepository.update(pemakaian, {
         meter_akhir: req.body.meter_akhir,

@@ -358,6 +358,15 @@ export const validatePembayaran = async (body: any) => {
         result = [];
     }
 
+    if (body.pemakaian.pembayaran) {
+        result.push({
+            type: "invalid",
+            message: "Sudah dibayar",
+            field: "pembayaran",
+            actual: body.pemakaian,
+        });
+    }
+
     const petugasExist = await checkIfExist(
         petugasRepository,
         "id_petugas",

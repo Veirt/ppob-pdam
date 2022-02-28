@@ -51,7 +51,6 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
 
     const handlePayment = async () => {
         onAlertClose();
-        onOpen();
         setLoading(true);
 
         try {
@@ -74,18 +73,28 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
                 base64: `data:application/pdf;base64,${Buffer.from(res.data).toString("base64")}`,
                 blob: blobUrl,
             });
+
+            onOpen();
         } catch (err) {
             if (isAxiosError(err)) {
-                err.response!.data.forEach((validationError: ValidationError) => {
-                    toast({
-                        position: "top-right",
-                        title: "Error",
-                        description: validationError.message,
-                        status: "error",
-                        duration: 3000,
-                        isClosable: true,
-                    });
-                });
+                if (err.response) {
+                    const enc = new TextDecoder("utf-8");
+
+                    JSON.parse(enc.decode(err.response.data)).forEach(
+                        (validationError: ValidationError) => {
+                            toast({
+                                position: "top-right",
+                                title: "Error",
+                                description: validationError.message,
+                                status: "error",
+                                duration: 3000,
+                                isClosable: true,
+                            });
+                        }
+                    );
+                } else {
+                    console.error(err);
+                }
             }
         } finally {
             setLoading(false);
@@ -184,7 +193,11 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
                         />
                     </Box>
 
-                    <Button type="submit" colorScheme="teal" size="md">
+                    <Button
+                        disabled={!!payment.pemakaian.pembayaran}
+                        type="submit"
+                        colorScheme="teal"
+                        size="md">
                         Bayar
                     </Button>
 

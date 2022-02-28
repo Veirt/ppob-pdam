@@ -44,7 +44,8 @@ export interface Payment {
     id_pembayaran: number;
     tanggal_bayar: Date;
     biaya_admin: number;
-    petugas: Petugas;
+    petugas: Employee;
+    pemakaian?: Usage;
 }
 
 export interface Role {

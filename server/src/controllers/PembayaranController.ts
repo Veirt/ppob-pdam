@@ -16,12 +16,17 @@ export const getPembayaranById: Controller = async (req, res) => {
     return res.json(pembayaran);
 };
 
-export const getPembayaran: Controller = async (_, res) => {
-    const pembayaran = await pembayaranRepository.find({
-        relations: ["petugas"],
+export const getPembayaran: Controller = async (req, res) => {
+    const take = Number(req.query.take) || 25;
+    const skip = Number(req.query.skip) || 0;
+
+    const [result, count] = await pembayaranRepository.findAndCount({
+        skip,
+        take,
+        relations: ["petugas", "pemakaian"],
     });
 
-    return res.json(pembayaran);
+    return res.json({ result, count });
 };
 
 export const createPembayaran: Controller = async (req, res) => {
