@@ -14,7 +14,6 @@ class GolonganPelanggan {
     pelanggan!: Pelanggan[];
 
     @OneToMany(() => TarifPemakaian, (tarif) => tarif.golongan, {
-        cascade: ["remove"],
         onDelete: "CASCADE",
         onUpdate: "CASCADE",
     })

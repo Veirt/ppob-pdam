@@ -17,7 +17,7 @@ import { ChangeEvent, useEffect, useState } from "react";
 import { Query, Role } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
 import Pagination from "../../components/pagination";
-import api from "../../utils/api";
+import api, { isAxiosError } from "../../utils/api";
 
 const RoleTable = () => {
     const toast = useToast();
@@ -63,7 +63,16 @@ const RoleTable = () => {
                 isClosable: true,
             });
         } catch (err) {
-            console.error(err);
+            if (isAxiosError(err)) {
+                toast({
+                    position: "top-right",
+                    title: "Error",
+                    description: err.response!.data.message,
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
         } finally {
             fetchRole();
         }

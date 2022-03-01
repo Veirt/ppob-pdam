@@ -1,4 +1,4 @@
-import { getRepository, ILike } from "typeorm";
+import { getRepository, ILike, QueryFailedError } from "typeorm";
 import type { Controller } from "../../@types/express";
 import Golongan from "../entities/GolonganPelanggan";
 import TarifPemakaian from "../entities/TarifPemakaian";
@@ -109,7 +109,15 @@ export const deleteGolongan: Controller = async (req, res) => {
     const golongan = await golonganRepository.findOne(req.params.id);
     if (!golongan) return handleError("notFound", res);
 
-    const deletedGolongan = await golonganRepository.delete(req.params.id);
+    try {
+        const deletedGolongan = await golonganRepository.delete(req.params.id);
 
-    return res.json(deletedGolongan);
+        return res.json(deletedGolongan);
+    } catch (err) {
+        if (err instanceof QueryFailedError) {
+            return res.status(400).json({
+                message: "Pelanggan sudah mempunyai golongan yang ingin di delete.",
+            });
+        }
+    }
 };

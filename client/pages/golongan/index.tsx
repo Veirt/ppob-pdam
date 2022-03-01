@@ -20,7 +20,7 @@ import { Golongan, Query } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
 import Pagination from "../../components/pagination";
 import { useAuth } from "../../components/providers/UserProvider";
-import api from "../../utils/api";
+import api, { isAxiosError } from "../../utils/api";
 
 interface Props {
     routerQuery: ParsedUrlQuery;
@@ -73,7 +73,16 @@ const Golongan: FC<Props> = ({ routerQuery }) => {
                 isClosable: true,
             });
         } catch (err) {
-            console.error(err);
+            if (isAxiosError(err)) {
+                toast({
+                    position: "top-right",
+                    title: "Error",
+                    description: err.response!.data.message,
+                    status: "error",
+                    duration: 3000,
+                    isClosable: true,
+                });
+            }
         } finally {
             fetchGolongan();
         }

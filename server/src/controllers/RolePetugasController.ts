@@ -1,4 +1,4 @@
-import { getRepository, ILike } from "typeorm";
+import { getRepository, ILike, QueryFailedError } from "typeorm";
 import type { Controller } from "../../@types/express";
 import RolePetugas from "../entities/RolePetugas";
 import { handleError, handleValidationError } from "../utils/errorResponse";
@@ -51,7 +51,15 @@ export const deleteRole: Controller = async (req, res) => {
     const role = await roleRepository.findOne(req.params.id);
     if (!role) return handleError("notFound", res);
 
-    const deletedRole = await roleRepository.delete(req.params.id);
+    try {
+        const deletedRole = await roleRepository.delete(req.params.id);
 
-    return res.json(deletedRole);
+        return res.json(deletedRole);
+    } catch (err) {
+        if (err instanceof QueryFailedError) {
+            return res.status(400).json({
+                message: "Petugas sudah mempunyai role yang ingin di delete.",
+            });
+        }
+    }
 };
