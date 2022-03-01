@@ -6,5 +6,5 @@
     "password": "",
     "database": "ppob",
     "synchronize": false,
-    "entities": ["src/entities/*.ts"]
+    "entities": ["src/entities/*.ts", "entities/*.js"]
 }
