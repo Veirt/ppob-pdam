@@ -1,6 +1,7 @@
 import { Box, Button, Container, FormLabel, Input, useToast } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
+import { ParsedUrlQuery } from "querystring";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
 import { Customer, ValidationError } from "../../../../@types";
 import useFetch from "../../../../hooks/useFetch";
@@ -12,7 +13,9 @@ interface IUsageState {
     meter_akhir: number;
 }
 
-const EditUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
+const EditUsage: FC<{ routerParams: ParsedUrlQuery }> = ({ routerParams }) => {
+    const [pelanggan] = useFetch(`/pelanggan/${routerParams.id}`, {} as Customer);
+
     const router = useRouter();
     const toast = useToast();
 
@@ -109,12 +112,9 @@ const EditUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const headers = { Cookie: `connect.sid=${context.req.cookies["connect.sid"]}` };
-    const res = await api.get(`/pelanggan/${context.params!.id}`, { headers });
-
     return {
         props: {
-            pelanggan: res.data,
+            routerParams: context.params,
         },
     };
 };

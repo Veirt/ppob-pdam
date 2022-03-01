@@ -6,6 +6,7 @@ import { ParsedUrlQuery } from "querystring";
 import { FC, useEffect, useState } from "react";
 import { Customer, Query, Usage } from "../../@types";
 import Pagination from "../../components/pagination";
+import useFetch from "../../hooks/useFetch";
 import api from "../../utils/api";
 import toOptions from "../../utils/toOptions";
 import toPeriod from "../../utils/toPeriod";
@@ -17,11 +18,12 @@ interface UsageQuery extends Query {
 
 interface Props {
     routerQuery: ParsedUrlQuery;
-    customers: Customer[];
-    period: { month: number; year: number }[];
 }
 
-const UsageTable: FC<Props> = ({ routerQuery, customers, period }) => {
+const UsageTable: FC<Props> = ({ routerQuery }) => {
+    const [customers] = useFetch<Customer[]>("/pelanggan", []);
+    const [period] = useFetch<{ year: number; month: number }[]>("pelanggan/pemakaian/periode", []);
+
     const customerOptions = toOptions(customers, "id_pelanggan", "nama", {
         label: "Semua",
         value: "",
@@ -159,18 +161,9 @@ const UsageTable: FC<Props> = ({ routerQuery, customers, period }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const headers = { Cookie: `connect.sid=${context.req.cookies["connect.sid"]}` };
-
-    const res = await api.get("/pelanggan", { headers });
-    const customers = res.data.result;
-
-    const period = await api.get("/pelanggan/pemakaian/periode", { headers });
-
     return {
         props: {
             routerQuery: context.query,
-            customers,
-            period: period.data,
         },
     };
 };

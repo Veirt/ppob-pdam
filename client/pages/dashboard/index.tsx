@@ -1,8 +1,8 @@
 import { Box, Button, Container, Flex } from "@chakra-ui/react";
-import type { GetServerSideProps, NextPage } from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import Authorization from "../../components/authorization";
 import api from "../../utils/api";
 
@@ -34,11 +34,53 @@ const DashboardItem: FC = ({ children }) => {
     );
 };
 
-interface Props {
-    serverProps: { [key: string]: any };
-}
+const Home: NextPage = () => {
+    const [dashboardData, setDashboardData] = useState({
+        paidOffCount: 0,
+        paidCount: 0,
+        customerCount: 0,
+        employeeCount: 0,
+        customerNotCheckedCount: 0,
+    });
 
-const Home: NextPage<Props> = ({ serverProps }) => {
+    useEffect(() => {
+        async function fetchDashboardData() {
+            const belum_dibayar = await api
+                .get("/pelanggan/pemakaian?search=&sudah_dibayar=0&id_pelanggan=", {
+                    withCredentials: true,
+                })
+                .catch(() => ({ data: { result: [] } }));
+
+            const sudah_dibayar = await api
+                .get("/pelanggan/pemakaian?search=&sudah_dibayar=1&id_pelanggan=", {
+                    withCredentials: true,
+                })
+                .catch(() => ({ data: { result: [] } }));
+
+            const pelanggan = await api
+                .get("/pelanggan", { withCredentials: true })
+                .catch(() => ({ data: { result: [] } }));
+
+            const petugas = await api
+                .get("/petugas", { withCredentials: true })
+                .catch(() => ({ data: { result: [] } }));
+
+            setDashboardData({
+                paidCount: sudah_dibayar.data.result.length,
+                paidOffCount: belum_dibayar.data.result.length,
+                customerCount: pelanggan.data.result.length,
+                employeeCount: petugas.data.result.length,
+                customerNotCheckedCount: pelanggan.data.result.filter(
+                    (p: { sudah_dicatat: boolean }) => {
+                        if (!p.sudah_dicatat) return p;
+                    }
+                ).length,
+            });
+        }
+
+        fetchDashboardData();
+    }, []);
+
     return (
         <>
             <Head>
@@ -53,7 +95,7 @@ const Home: NextPage<Props> = ({ serverProps }) => {
                         <InfoItem href="/pelanggan">
                             Jumlah Pelanggan
                             <br />
-                            {serverProps.customerCount}
+                            {dashboardData.customerCount}
                         </InfoItem>
                     </Authorization>
 
@@ -61,7 +103,7 @@ const Home: NextPage<Props> = ({ serverProps }) => {
                         <InfoItem href="/petugas">
                             Jumlah Petugas
                             <br />
-                            {serverProps.employeeCount}
+                            {dashboardData.employeeCount}
                         </InfoItem>
                     </Authorization>
 
@@ -69,7 +111,7 @@ const Home: NextPage<Props> = ({ serverProps }) => {
                         <InfoItem href="/pelanggan/tagihan?sudah_dibayar=0">
                             Jumlah Tagihan Belum Dibayar
                             <br />
-                            {serverProps.paidOffCount}
+                            {dashboardData.paidOffCount}
                         </InfoItem>
                     </Authorization>
 
@@ -77,7 +119,7 @@ const Home: NextPage<Props> = ({ serverProps }) => {
                         <InfoItem href="/pelanggan/tagihan?sudah_dibayar=1">
                             Jumlah Tagihan Sudah Dibayar
                             <br />
-                            {serverProps.paidCount}
+                            {dashboardData.paidCount}
                         </InfoItem>
                     </Authorization>
 
@@ -85,7 +127,7 @@ const Home: NextPage<Props> = ({ serverProps }) => {
                         <InfoItem href="/pelanggan?sudah_dicatat=0">
                             Jumlah Pemakaian Belum Dicatat
                             <br />
-                            {serverProps.customerNotCheckedCount}
+                            {dashboardData.customerNotCheckedCount}
                         </InfoItem>
                     </Authorization>
                 </Flex>
@@ -168,40 +210,6 @@ const Home: NextPage<Props> = ({ serverProps }) => {
             </Container>
         </>
     );
-};
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-    const headers = { Cookie: `connect.sid=${context.req.cookies["connect.sid"]}` };
-
-    const belum_dibayar = await api
-        .get("/pelanggan/pemakaian?search=&sudah_dibayar=0&id_pelanggan=", { headers })
-        .catch(() => ({ data: { result: [] } }));
-
-    const sudah_dibayar = await api
-        .get("/pelanggan/pemakaian?search=&sudah_dibayar=1&id_pelanggan=", { headers })
-        .catch(() => ({ data: { result: [] } }));
-
-    const pelanggan = await api
-        .get("/pelanggan", { headers })
-        .catch(() => ({ data: { result: [] } }));
-
-    const petugas = await api.get("/petugas", { headers }).catch(() => ({ data: { result: [] } }));
-
-    return {
-        props: {
-            serverProps: {
-                paidCount: sudah_dibayar.data.result.length,
-                paidOffCount: belum_dibayar.data.result.length,
-                customerCount: pelanggan.data.result.length,
-                employeeCount: petugas.data.result.length,
-                customerNotCheckedCount: pelanggan.data.result.filter(
-                    (p: { sudah_dicatat: boolean }) => {
-                        if (!p.sudah_dicatat) return p;
-                    }
-                ).length,
-            },
-        },
-    };
 };
 
 export default Home;

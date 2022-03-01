@@ -16,10 +16,12 @@ import {
 } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { ParsedUrlQuery } from "querystring";
+import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { Employee, Usage, ValidationError } from "../../../@types";
 import { useAuth } from "../../../components/providers/UserProvider";
+import useFetch from "../../../hooks/useFetch";
 import api, { isAxiosError } from "../../../utils/api";
 import toCurrency from "../../../utils/toCurrency";
 import toPeriod from "../../../utils/toPeriod";
@@ -32,11 +34,20 @@ interface IPaymentState {
     petugas: Employee;
 }
 
-const Usage: FC<{ usage: Usage }> = ({ usage }) => {
+const Usage: FC<{ routerParams: ParsedUrlQuery }> = ({ routerParams }) => {
     const router = useRouter();
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isAlertOpen, onOpen: onAlertOpen, onClose: onAlertClose } = useDisclosure();
+
+    useEffect(() => {
+        async function fetchUsage() {
+            const res = await api.get(`/pelanggan/pemakaian/${routerParams.id}`);
+            setPayment({ ...payment, pemakaian: res.data });
+        }
+
+        fetchUsage();
+    }, []);
 
     const { user } = useAuth();
 
@@ -45,7 +56,21 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
 
     const [payment, setPayment] = useState<IPaymentState>({
         petugas: user as Employee,
-        pemakaian: usage,
+        pemakaian: {
+            tagihan: { total_bayar: 0, total_pemakaian: 0 },
+            denda: 0,
+            tanggal: new Date(),
+            meter_awal: 0,
+            pembayaran: null,
+            meter_akhir: 0,
+            id_pemakaian: 0,
+            pelanggan: {
+                id_pelanggan: 0,
+                nama: "",
+                alamat: "",
+                golongan: { id_golongan: 0, nama_golongan: "" },
+            },
+        },
         biaya_admin: 2500,
     });
 
@@ -251,13 +276,9 @@ const Usage: FC<{ usage: Usage }> = ({ usage }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const headers = { Cookie: `connect.sid=${context.req.cookies["connect.sid"]}` };
-
-    const res = await api.get(`/pelanggan/pemakaian/${context.params!.id}`, { headers });
-
     return {
         props: {
-            usage: res.data,
+            routerParams: context.params,
         },
     };
 };
