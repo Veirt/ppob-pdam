@@ -154,6 +154,16 @@ const Home: NextPage<Props> = ({ serverProps }) => {
                             </NextLink>
                         </DashboardItem>
                     </Authorization>
+
+                    <Authorization roles={["pembayaran"]}>
+                        <DashboardItem>
+                            <NextLink href="/pembayaran/" passHref>
+                                <Button minWidth={"40"} minHeight={"16"}>
+                                    Pembayaran
+                                </Button>
+                            </NextLink>
+                        </DashboardItem>
+                    </Authorization>
                 </Flex>
             </Container>
         </>

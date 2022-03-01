@@ -23,7 +23,7 @@ export const getPembayaran: Controller = async (req, res) => {
     const [result, count] = await pembayaranRepository.findAndCount({
         skip,
         take,
-        relations: ["petugas", "pemakaian"],
+        relations: ["petugas", "pemakaian", "pemakaian.pelanggan"],
     });
 
     return res.json({ result, count });

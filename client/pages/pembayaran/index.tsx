@@ -44,6 +44,7 @@ const PaymentTable: FC<Props> = ({ routerQuery }) => {
                     <Thead>
                         <Tr>
                             <Th>Id Pembayaran</Th>
+                            <Th>Nama</Th>
                             <Th>Tanggal Bayar</Th>
                             <Th isNumeric>Pemakaian</Th>
                             <Th>Periode Pemakaian</Th>
@@ -57,6 +58,7 @@ const PaymentTable: FC<Props> = ({ routerQuery }) => {
                             return (
                                 <Tr key={payment.id_pembayaran}>
                                     <Td>{payment.id_pembayaran}</Td>
+                                    <Td>{payment.pemakaian?.pelanggan?.nama}</Td>
                                     <Td>
                                         {new Date(payment.tanggal_bayar).toLocaleString("id-ID")}
                                     </Td>
