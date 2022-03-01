@@ -55,22 +55,25 @@ const PaymentTable: FC<Props> = ({ routerQuery }) => {
                     </Thead>
                     <Tbody>
                         {payments.map((payment) => {
-                            return (
-                                <Tr key={payment.id_pembayaran}>
-                                    <Td>{payment.id_pembayaran}</Td>
-                                    <Td>{payment.pemakaian?.pelanggan?.nama}</Td>
-                                    <Td>
-                                        {new Date(payment.tanggal_bayar).toLocaleString("id-ID")}
-                                    </Td>
-                                    <Td isNumeric>
-                                        {`${payment.pemakaian?.meter_awal} - ${payment.pemakaian?.meter_akhir} `}
-                                    </Td>
-                                    <Td>{toPeriod(payment.pemakaian?.tanggal)}</Td>
-                                    <Td>{toCurrency(payment.biaya_admin)}</Td>
-                                    <Td>{toCurrency(payment.pemakaian?.denda)}</Td>
-                                    <Td>{payment.petugas.nama}</Td>
-                                </Tr>
-                            );
+                            if (payment.pemakaian)
+                                return (
+                                    <Tr key={payment.id_pembayaran}>
+                                        <Td>{payment.id_pembayaran}</Td>
+                                        <Td>{payment.pemakaian?.pelanggan?.nama}</Td>
+                                        <Td>
+                                            {new Date(payment.tanggal_bayar).toLocaleString(
+                                                "id-ID"
+                                            )}
+                                        </Td>
+                                        <Td isNumeric>
+                                            {`${payment.pemakaian?.meter_awal} - ${payment.pemakaian?.meter_akhir} `}
+                                        </Td>
+                                        <Td>{toPeriod(payment.pemakaian?.tanggal)}</Td>
+                                        <Td>{toCurrency(payment.biaya_admin)}</Td>
+                                        <Td>{toCurrency(payment.pemakaian?.denda)}</Td>
+                                        <Td>{payment.petugas.nama}</Td>
+                                    </Tr>
+                                );
                         })}
                     </Tbody>
                 </Table>

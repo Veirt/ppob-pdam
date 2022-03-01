@@ -205,7 +205,11 @@ export const validateGolongan = async (body: any, id?: string) => {
                             return value;
                         },
                     },
-                    meter_kubik_akhir: { type: "number", positive: true, optional: true },
+                    meter_kubik_akhir: {
+                        type: "number",
+                        convert: true,
+                        optional: true,
+                    },
                     tarif: { type: "number", positive: true, convert: true },
                 },
             },
@@ -236,7 +240,7 @@ export const validateGolongan = async (body: any, id?: string) => {
     // could have find a better solution.
     // forgive me, future of me.
 
-    if (body.tarif[0].meter_kubik_awal !== 0) {
+    if (body.tarif[0].meter_kubik_awal != 0) {
         result.push({
             type: "invalid",
             message: "Meter Kubik awal pertama harus 0",

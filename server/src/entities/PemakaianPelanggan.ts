@@ -25,7 +25,7 @@ class PemakaianPelanggan {
     @OneToOne(() => PembayaranPelanggan, (pembayaran) => pembayaran.pemakaian, {
         cascade: true,
         onUpdate: "CASCADE",
-        onDelete: "SET NULL",
+        onDelete: "CASCADE",
     })
     @JoinColumn({ name: "pembayaran" })
     pembayaran?: PembayaranPelanggan;
