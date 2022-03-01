@@ -219,7 +219,7 @@ const BillTable: FC<Props> = ({ routerQuery, customers, period }) => {
                         </Table>
                         <Pagination
                             isLoading={isLoading}
-                            query={query}
+                            query={query as any}
                             setQuery={setQuery}
                             count={count}
                         />
