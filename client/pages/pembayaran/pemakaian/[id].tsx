@@ -21,7 +21,6 @@ import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 import { Employee, Usage, ValidationError } from "../../../@types";
 import { useAuth } from "../../../components/providers/UserProvider";
-import useFetch from "../../../hooks/useFetch";
 import api, { isAxiosError } from "../../../utils/api";
 import toCurrency from "../../../utils/toCurrency";
 import toPeriod from "../../../utils/toPeriod";

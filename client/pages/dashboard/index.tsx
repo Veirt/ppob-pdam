@@ -197,7 +197,7 @@ const Home: NextPage = () => {
                         </DashboardItem>
                     </Authorization>
 
-                    <Authorization roles={["pembayaran"]}>
+                    <Authorization roles={["petugas loket"]}>
                         <DashboardItem>
                             <NextLink href="/pembayaran/" passHref>
                                 <Button minWidth={"40"} minHeight={"16"}>

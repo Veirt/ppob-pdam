@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { Customer, ValidationError } from "../../../../@types";
-import useFetch from "../../../../hooks/useFetch";
 import api, { isAxiosError } from "../../../../utils/api";
 
 interface IUsageState {
@@ -25,7 +24,7 @@ const CreateUsage: FC<{ routerParams: ParsedUrlQuery }> = ({ routerParams }) => 
             setUsage({ ...usage, pelanggan: res.data });
         }
         fetchPelanggan();
-    });
+    }, []);
 
     const [usage, setUsage] = useState<IUsageState>({
         pelanggan: {
