@@ -23,7 +23,10 @@ const EditGolongan = () => {
 
     const handleTarifChange = (e: ChangeEvent<HTMLInputElement>, i: number) => {
         const newTarif = golongan.tarif.slice();
-        newTarif[i][e.target.name as keyof Tarif] = Number(e.target.value);
+        (newTarif as any)[i][e.target.name as keyof Tarif] = e.target.value;
+
+        console.log(e.target.name, e.target.value);
+        console.log(newTarif);
 
         if (newTarif.length > 1 && e.target.name === "meter_kubik_akhir") {
             (newTarif as any)[i + 1]["meter_kubik_awal"] = Number(e.target.value) + 1;

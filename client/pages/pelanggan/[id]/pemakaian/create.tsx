@@ -1,8 +1,10 @@
 import { Box, Button, Container, FormLabel, Input, useToast } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { ParsedUrlQuery } from "querystring";
+import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { Customer, ValidationError } from "../../../../@types";
+import useFetch from "../../../../hooks/useFetch";
 import api, { isAxiosError } from "../../../../utils/api";
 
 interface IUsageState {
@@ -10,14 +12,30 @@ interface IUsageState {
     meter_akhir: number;
 }
 
-const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
+const CreateUsage: FC<{ routerParams: ParsedUrlQuery }> = ({ routerParams }) => {
     const router = useRouter();
     const toast = useToast();
 
     const [isLoading, setLoading] = useState(false);
 
+    useEffect(() => {
+        async function fetchPelanggan() {
+            const res = await api.get(`/pelanggan/${routerParams.id}`);
+
+            setUsage({ ...usage, pelanggan: res.data });
+        }
+        fetchPelanggan();
+    });
+
     const [usage, setUsage] = useState<IUsageState>({
-        pelanggan: pelanggan,
+        pelanggan: {
+            nama: "",
+            id_pelanggan: 0,
+            golongan: { id_golongan: 0 },
+            alamat: "",
+            sudah_dicatat: false,
+            pemakaian: [],
+        },
         meter_akhir: 0,
     });
 
@@ -75,7 +93,7 @@ const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
                         <Input
                             id="meter_awal"
                             type="text"
-                            value={pelanggan.pemakaian?.at(-1)?.meter_akhir || 0}
+                            value={usage.pelanggan.pemakaian?.at(-1)?.meter_akhir || 0}
                             disabled
                             onChange={handleChange}
                             required
@@ -104,12 +122,9 @@ const CreateUsage: FC<{ pelanggan: Customer }> = ({ pelanggan }) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const headers = { Cookie: `connect.sid=${context.req.cookies["connect.sid"]}` };
-    const res = await api.get(`/pelanggan/${context.params!.id}`, { headers });
-
     return {
         props: {
-            pelanggan: res.data,
+            routerParams: context.params,
         },
     };
 };

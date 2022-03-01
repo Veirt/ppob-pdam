@@ -93,7 +93,7 @@ const GolonganForm: FC<Props> = ({
                                     <FormLabel>Tarif</FormLabel>
                                     <Input
                                         name="tarif"
-                                        type="number"
+                                        type="text"
                                         value={t.tarif ?? ""}
                                         onChange={(e) => handleTarifChange(e, idx)}
                                         required
