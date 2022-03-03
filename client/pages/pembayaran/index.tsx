@@ -16,7 +16,7 @@ const PaymentTable: FC<Props> = ({ routerQuery }) => {
     const [isLoading, setLoading] = useState(false);
 
     const [payments, setPayments] = useState<Payment[]>([]);
-    const [query, setQuery] = useState<Query>({ take: 10, skip: 0, search: "", ...routerQuery });
+    const [query, setQuery] = useState<Query>({ take: 20, skip: 0, search: "", ...routerQuery });
     const [count, setCount] = useState(0);
 
     const fetchPayment = async () => {

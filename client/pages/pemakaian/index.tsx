@@ -60,7 +60,7 @@ const UsageTable: FC<Props> = ({ routerQuery }) => {
 
     return (
         <>
-            <Container maxW="container.lg">
+            <Container maxW="container.xl">
                 <Box m={3}>
                     <Flex>
                         <Box flexGrow={1}>
