@@ -62,54 +62,61 @@ const UsageTable: FC<Props> = ({ routerQuery }) => {
         <>
             <Container maxW="container.lg">
                 <Box m={3}>
-                    <Select
-                        id="golongan"
-                        instanceId="golongan-select"
-                        name="golongan"
-                        options={customerOptions}
-                        value={{
-                            value: query.id_pelanggan || 0,
-                            label:
-                                customers.find(
-                                    (customer) => customer.id_pelanggan == query.id_pelanggan
-                                )?.nama ?? "Semua",
-                        }}
-                        onChange={(v) => {
-                            setQuery({
-                                ...query,
-                                id_pelanggan: v!.value as string,
-                            });
-                        }}
-                    />
+                    <Flex>
+                        <Box flexGrow={1}>
+                            <Select
+                                id="golongan"
+                                instanceId="golongan-select"
+                                name="golongan"
+                                options={customerOptions}
+                                value={{
+                                    value: query.id_pelanggan || 0,
+                                    label:
+                                        customers.find(
+                                            (customer) =>
+                                                customer.id_pelanggan == query.id_pelanggan
+                                        )?.nama ?? "Semua",
+                                }}
+                                onChange={(v) => {
+                                    setQuery({
+                                        ...query,
+                                        id_pelanggan: v!.value as string,
+                                    });
+                                }}
+                            />
+                        </Box>
 
-                    <Select
-                        id="periode"
-                        instanceId="periode-select"
-                        name="periode"
-                        options={(() => {
-                            const initial = { label: "Semua", value: "" };
+                        <Box flexGrow={1}>
+                            <Select
+                                id="periode"
+                                instanceId="periode-select"
+                                name="periode"
+                                options={(() => {
+                                    const initial = { label: "Semua", value: "" };
 
-                            const periodOptions = period.map((p) => ({
-                                value: `${p.year}-${p.month}`,
-                                label: toPeriod(new Date(`${p.year}-${p.month}`)),
-                            }));
-                            periodOptions.unshift(initial);
+                                    const periodOptions = period.map((p) => ({
+                                        value: `${p.year}-${p.month}`,
+                                        label: toPeriod(new Date(`${p.year}-${p.month}`)),
+                                    }));
+                                    periodOptions.unshift(initial);
 
-                            return periodOptions;
-                        })()}
-                        value={{
-                            value: query.periode ?? "",
-                            label: query.periode
-                                ? toPeriod(new Date(query.periode))
-                                : "Semua periode",
-                        }}
-                        onChange={(v) => {
-                            setQuery({
-                                ...query,
-                                periode: v!.value as string,
-                            });
-                        }}
-                    />
+                                    return periodOptions;
+                                })()}
+                                value={{
+                                    value: query.periode ?? "",
+                                    label: query.periode
+                                        ? toPeriod(new Date(query.periode))
+                                        : "Semua periode",
+                                }}
+                                onChange={(v) => {
+                                    setQuery({
+                                        ...query,
+                                        periode: v!.value as string,
+                                    });
+                                }}
+                            />
+                        </Box>
+                    </Flex>
                 </Box>
 
                 <Table variant="simple">
