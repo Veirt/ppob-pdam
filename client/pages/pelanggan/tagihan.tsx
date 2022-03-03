@@ -59,11 +59,7 @@ const BillTable: FC<Props> = ({ routerQuery }) => {
         periode: "",
         ...routerQuery,
     });
-    const [label, setLabel] = useState(
-        routerQuery.id_pelanggan
-            ? customers.find((customer) => customer.id_pelanggan == routerQuery.id_pelanggan)?.nama
-            : "Semua Pelanggan"
-    );
+
     const [count, setCount] = useState(0);
 
     const fetchUsage = async () => {
@@ -116,14 +112,17 @@ const BillTable: FC<Props> = ({ routerQuery }) => {
                                 options={customerOptions}
                                 value={{
                                     value: query.id_pelanggan || "0",
-                                    label,
+                                    label:
+                                        customers.find(
+                                            (customer) =>
+                                                customer.id_pelanggan == query.id_pelanggan
+                                        )?.nama ?? "Semua",
                                 }}
                                 onChange={(v) => {
                                     setQuery({
                                         ...query,
                                         id_pelanggan: v!.value as string,
                                     });
-                                    setLabel(v!.label);
                                 }}
                             />
                         </Box>
