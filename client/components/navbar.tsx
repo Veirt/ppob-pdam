@@ -58,19 +58,25 @@ const NavBar = () => {
                                 </LinkItem>
                             </Authorization>
 
-                            <Authorization roles={["petugas loket"]}>
-                                <LinkItem path={path} href="/pelanggan/tagihan">
-                                    Tagihan
-                                </LinkItem>
-                            </Authorization>
-
                             <Authorization roles={["petugas meteran"]}>
                                 <LinkItem path={path} href="/pemakaian">
                                     Pemakaian
                                 </LinkItem>
                             </Authorization>
 
+                            <Authorization roles={["petugas loket"]}>
+                                <LinkItem path={path} href="/pelanggan/tagihan">
+                                    Tagihan
+                                </LinkItem>
+                                <LinkItem path={path} href="/pembayaran">
+                                    Pembayaran
+                                </LinkItem>
+                            </Authorization>
+
                             <Authorization roles={["admin"]}>
+                                <LinkItem path={path} href="/petugas">
+                                    Petugas
+                                </LinkItem>
                                 <LinkItem path={path} href="/golongan">
                                     Golongan
                                 </LinkItem>
