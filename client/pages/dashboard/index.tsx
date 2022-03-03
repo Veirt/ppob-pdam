@@ -1,46 +1,41 @@
-import { Box, Button, Container, Flex } from "@chakra-ui/react";
+import { Button, Container, Flex, Icon } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
 import { FC, useEffect, useState } from "react";
+import { FaFileAlt, FaFileInvoice, FaFileInvoiceDollar, FaUser, FaUserTie } from "react-icons/fa";
 import Authorization from "../../components/authorization";
 import api from "../../utils/api";
 
 interface InfoProps {
     href: string;
+    icon: React.ReactElement;
 }
 
-const InfoItem: FC<InfoProps> = ({ children, href }) => {
+const InfoItem: FC<InfoProps> = ({ children, href, icon }) => {
     return (
         <NextLink href={href}>
             <Button
-                colorScheme={"green"}
+                leftIcon={icon}
+                colorScheme={"teal"}
+                borderRadius={0}
                 mx="3"
                 my="3"
-                borderRadius={"none"}
-                minWidth={"72"}
-                minHeight={"16"}>
+                minWidth={"96"}
+                minHeight={"40"}>
                 {children}
             </Button>
         </NextLink>
     );
 };
 
-const DashboardItem: FC = ({ children }) => {
-    return (
-        <Box mx={"5"} padding={"3"}>
-            {children}
-        </Box>
-    );
-};
-
 const Home: NextPage = () => {
     const [dashboardData, setDashboardData] = useState({
-        paidOffCount: 0,
-        paidCount: 0,
-        customerCount: 0,
-        employeeCount: 0,
-        customerNotCheckedCount: 0,
+        paidOffCount: undefined,
+        paidCount: undefined,
+        customerCount: undefined,
+        employeeCount: undefined,
+        customerNotCheckedCount: undefined,
     });
 
     useEffect(() => {
@@ -92,7 +87,7 @@ const Home: NextPage = () => {
             <Container my="5" maxW={"container.xl"}>
                 <Flex justifyContent="center" wrap="wrap">
                     <Authorization>
-                        <InfoItem href="/pelanggan">
+                        <InfoItem icon={<Icon w={20} h={20} as={FaUser} />} href="/pelanggan">
                             Jumlah Pelanggan
                             <br />
                             {dashboardData.customerCount}
@@ -100,7 +95,7 @@ const Home: NextPage = () => {
                     </Authorization>
 
                     <Authorization roles={["admin"]}>
-                        <InfoItem href="/petugas">
+                        <InfoItem icon={<Icon w={20} h={20} as={FaUserTie} />} href="/petugas">
                             Jumlah Petugas
                             <br />
                             {dashboardData.employeeCount}
@@ -108,7 +103,9 @@ const Home: NextPage = () => {
                     </Authorization>
 
                     <Authorization roles={["petugas loket"]}>
-                        <InfoItem href="/pelanggan/tagihan?sudah_dibayar=0">
+                        <InfoItem
+                            icon={<Icon w={20} h={20} as={FaFileInvoice} />}
+                            href="/pelanggan/tagihan?sudah_dibayar=0">
                             Jumlah Tagihan Belum Dibayar
                             <br />
                             {dashboardData.paidOffCount}
@@ -116,7 +113,9 @@ const Home: NextPage = () => {
                     </Authorization>
 
                     <Authorization roles={["petugas loket"]}>
-                        <InfoItem href="/pelanggan/tagihan?sudah_dibayar=1">
+                        <InfoItem
+                            icon={<Icon w={20} h={20} as={FaFileInvoiceDollar} />}
+                            href="/pelanggan/tagihan?sudah_dibayar=1">
                             Jumlah Tagihan Sudah Dibayar
                             <br />
                             {dashboardData.paidCount}
@@ -124,87 +123,13 @@ const Home: NextPage = () => {
                     </Authorization>
 
                     <Authorization roles={["petugas meteran"]}>
-                        <InfoItem href="/pelanggan?sudah_dicatat=0">
+                        <InfoItem
+                            icon={<Icon w={20} h={20} as={FaFileAlt} />}
+                            href="/pelanggan?sudah_dicatat=0">
                             Jumlah Pemakaian Belum Dicatat
                             <br />
                             {dashboardData.customerNotCheckedCount}
                         </InfoItem>
-                    </Authorization>
-                </Flex>
-
-                {/* Pelanggan yang belum punya pemakaian periode ini */}
-            </Container>
-
-            <Container maxW={"container.xl"} my="5">
-                <Flex wrap={"wrap"} justifyContent="center">
-                    <Authorization roles={["admin"]}>
-                        <DashboardItem>
-                            <NextLink href="/golongan">
-                                <Button minWidth={"40"} minHeight={"16"}>
-                                    Golongan
-                                </Button>
-                            </NextLink>
-                        </DashboardItem>
-                    </Authorization>
-
-                    <Authorization roles={["petugas meteran", "petugas loket"]}>
-                        <DashboardItem>
-                            <NextLink href="/pelanggan">
-                                <Button minWidth={"40"} minHeight={"16"}>
-                                    Pelanggan
-                                </Button>
-                            </NextLink>
-                        </DashboardItem>
-                    </Authorization>
-
-                    <Authorization roles={["admin"]}>
-                        <DashboardItem>
-                            <NextLink href="/petugas" passHref>
-                                <Button minWidth={"40"} minHeight={"16"}>
-                                    Petugas
-                                </Button>
-                            </NextLink>
-                        </DashboardItem>
-                    </Authorization>
-
-                    <Authorization roles={["admin"]}>
-                        <DashboardItem>
-                            <NextLink href="/role" passHref>
-                                <Button minWidth={"40"} minHeight={"16"}>
-                                    Role
-                                </Button>
-                            </NextLink>
-                        </DashboardItem>
-                    </Authorization>
-
-                    <Authorization roles={["petugas meteran"]}>
-                        <DashboardItem>
-                            <NextLink href="/pemakaian" passHref>
-                                <Button minWidth={"40"} minHeight={"16"}>
-                                    Pemakaian
-                                </Button>
-                            </NextLink>
-                        </DashboardItem>
-                    </Authorization>
-
-                    <Authorization roles={["petugas loket"]}>
-                        <DashboardItem>
-                            <NextLink href="/pelanggan/tagihan" passHref>
-                                <Button minWidth={"40"} minHeight={"16"}>
-                                    Tagihan
-                                </Button>
-                            </NextLink>
-                        </DashboardItem>
-                    </Authorization>
-
-                    <Authorization roles={["petugas loket"]}>
-                        <DashboardItem>
-                            <NextLink href="/pembayaran/" passHref>
-                                <Button minWidth={"40"} minHeight={"16"}>
-                                    Pembayaran
-                                </Button>
-                            </NextLink>
-                        </DashboardItem>
                     </Authorization>
                 </Flex>
             </Container>
