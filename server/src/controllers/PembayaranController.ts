@@ -4,6 +4,7 @@ import PembayaranPelanggan from "../entities/PembayaranPelanggan";
 import Petugas from "../entities/Petugas";
 import createReceipt from "../services/ReceiptService";
 import { handleError, handleValidationError } from "../utils/errorResponse";
+import findTotal from "../utils/findTotal";
 import { validatePembayaran } from "../utils/validation";
 
 const pembayaranRepository = getRepository(PembayaranPelanggan);
@@ -20,11 +21,32 @@ export const getPembayaran: Controller = async (req, res) => {
     const take = Number(req.query.take) || 25;
     const skip = Number(req.query.skip) || 0;
 
-    const [result, count] = await pembayaranRepository.findAndCount({
+    let [result, count] = await pembayaranRepository.findAndCount({
         skip,
         take,
         relations: ["petugas", "pemakaian", "pemakaian.pelanggan"],
     });
+
+    result = await Promise.all(
+        result.map(async (eachPembayaran: PembayaranPelanggan) => {
+            const { tarifPemakaian, totalPemakaian } = await findTotal(
+                eachPembayaran.pemakaian.pelanggan.id_pelanggan,
+                eachPembayaran.pemakaian.meter_awal,
+                eachPembayaran.pemakaian.meter_akhir
+            );
+
+            if (tarifPemakaian) {
+                Object.assign(eachPembayaran, {
+                    tagihan: {
+                        total_pemakaian: totalPemakaian,
+                        total_bayar: tarifPemakaian.tarif * totalPemakaian,
+                    },
+                });
+            }
+
+            return eachPembayaran;
+        })
+    );
 
     return res.json({ result, count });
 };

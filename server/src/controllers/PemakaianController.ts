@@ -55,10 +55,7 @@ export const getPemakaianById: Controller = async (req, res) => {
         // denda
         if (
             (!pemakaian.pembayaran && currDate.getDate() >= 20 && usageDate.getDate() < 20) || // handle ketika pemakaian diinput lebih dari tanggal 20
-            (!pemakaian.pembayaran &&
-                usageYear <= currYear &&
-                usageMonth < currMonth &&
-                currDate.getDate() > 20) ||
+            (!pemakaian.pembayaran && usageYear <= currYear && usageMonth < currMonth) ||
             (lastPemakaianCount > 1 &&
                 lastPemakaian.at(-1)?.id_pemakaian !== pemakaian.id_pemakaian) // handle denda bukan untuk pemakaian paling terbaru
         ) {
@@ -78,6 +75,7 @@ export const getPemakaian: Controller = async (req, res) => {
 
     let pemakaian: any = pemakaianRepository
         .createQueryBuilder("pemakaian")
+        .orderBy("pemakaian.id_pemakaian", "ASC")
         .take(take)
         .skip(skip)
         .innerJoinAndSelect("pemakaian.pelanggan", "pelanggan")

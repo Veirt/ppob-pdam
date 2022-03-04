@@ -46,6 +46,7 @@ export interface Payment {
     biaya_admin: number;
     petugas: Employee;
     pemakaian?: Usage;
+    tagihan?: Bill;
 }
 
 export interface Role {

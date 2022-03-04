@@ -31,7 +31,10 @@ class Petugas {
     @JoinColumn({ name: "role" })
     role!: RolePetugas;
 
-    @OneToMany(() => PembayaranPelanggan, (pembayaran) => pembayaran.petugas)
+    @OneToMany(() => PembayaranPelanggan, (pembayaran) => pembayaran.petugas, {
+        onDelete: "SET NULL",
+        cascade: ["remove"],
+    })
     pembayaran!: PembayaranPelanggan;
 
     async verifyPassword(rawPassword: string) {

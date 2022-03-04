@@ -48,6 +48,7 @@ const PaymentTable: FC<Props> = ({ routerQuery }) => {
                             <Th>Tanggal Bayar</Th>
                             <Th isNumeric>Pemakaian</Th>
                             <Th>Periode Pemakaian</Th>
+                            <Th>Total Bayar</Th>
                             <Th>Biaya Admin</Th>
                             <Th>Denda</Th>
                             <Th>Petugas</Th>
@@ -69,9 +70,10 @@ const PaymentTable: FC<Props> = ({ routerQuery }) => {
                                             {`${payment.pemakaian?.meter_awal} - ${payment.pemakaian?.meter_akhir} `}
                                         </Td>
                                         <Td>{toPeriod(payment.pemakaian?.tanggal)}</Td>
+                                        <Td>{toCurrency(payment.tagihan?.total_bayar)}</Td>
                                         <Td>{toCurrency(payment.biaya_admin)}</Td>
                                         <Td>{toCurrency(payment.pemakaian?.denda)}</Td>
-                                        <Td>{payment.petugas.nama}</Td>
+                                        <Td>{payment.petugas?.nama ?? "Petugas Sudah Keluar"}</Td>
                                     </Tr>
                                 );
                         })}

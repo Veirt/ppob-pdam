@@ -7,13 +7,15 @@ class PembayaranPelanggan {
     @PrimaryGeneratedColumn()
     id_pembayaran!: number;
 
-    @Column({ type: "date" })
+    @Column({ type: "datetime" })
     tanggal_bayar!: Date;
 
     @Column({ type: "int" })
     biaya_admin!: number;
 
-    @ManyToOne(() => Petugas, (petugas) => petugas.pembayaran)
+    @ManyToOne(() => Petugas, (petugas) => petugas.pembayaran, {
+        nullable: true,
+    })
     @JoinColumn({ name: "petugas" })
     petugas!: Petugas;
 
