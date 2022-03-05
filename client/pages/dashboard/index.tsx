@@ -1,4 +1,4 @@
-import { Button, Container, Flex, Text, Icon, Spinner } from "@chakra-ui/react";
+import { Button, Container, Flex, Icon, Spinner } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
