@@ -22,14 +22,6 @@ export const getPemakaianById: Controller = async (req, res) => {
         pemakaian.meter_akhir
     );
 
-    const [lastPemakaian, lastPemakaianCount] = await pemakaianRepository
-        .createQueryBuilder("pemakaian")
-        .where("pemakaian.pembayaran IS NULL")
-        .andWhere("pemakaian.pelanggan = :pelanggan", {
-            pelanggan: pemakaian.pelanggan.id_pelanggan,
-        })
-        .getManyAndCount();
-
     if (tarifPemakaian) {
         Object.assign(pemakaian, {
             tagihan: {
@@ -38,27 +30,15 @@ export const getPemakaianById: Controller = async (req, res) => {
             },
         });
 
+        // denda
         const usageDate = new Date(pemakaian.tanggal);
         const currDate = new Date();
 
-        const currYear = currDate.getFullYear();
-        const currMonth = currDate.getMonth();
+        const diffTime = currDate.getTime() - usageDate.getTime();
+        const diffDays = diffTime / (1000 * 3600 * 24);
 
-        const usageYear = usageDate.getFullYear();
-        const usageMonth = usageDate.getMonth();
-
-        // pemakaian bulan januari 1
-        // skrg tanggal lebih dari 20
-
-        // cek bulan dan tanggal skrg bandingkan
-
-        // denda
-        if (
-            (!pemakaian.pembayaran && currDate.getDate() >= 20 && usageDate.getDate() < 20) || // handle ketika pemakaian diinput lebih dari tanggal 20
-            (!pemakaian.pembayaran && usageYear <= currYear && usageMonth < currMonth) ||
-            (lastPemakaianCount > 1 &&
-                lastPemakaian.at(-1)?.id_pemakaian !== pemakaian.id_pemakaian) // handle denda bukan untuk pemakaian paling terbaru
-        ) {
+        // simple as fuck
+        if (diffDays >= 20) {
             pemakaian.denda = tarifPemakaian.tarif * totalPemakaian * 0.1;
             await pemakaianRepository.save(pemakaian);
         }
