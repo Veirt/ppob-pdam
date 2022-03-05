@@ -1,4 +1,4 @@
-export default (toast: unknown) => {
+const Toast = (toast: unknown) => {
     if (typeof toast === "function")
         toast({
             position: "top-right",
@@ -9,3 +9,5 @@ export default (toast: unknown) => {
             isClosable: true,
         });
 };
+
+export default Toast;
