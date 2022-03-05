@@ -17,7 +17,7 @@ connectDatabase().then(async () => {
     app.use(cors({ credentials: true, origin: process.env.CLIENT_ENDPOINT }));
 
     const RedisStore = connectRedis(session); //Configure redis client
-    const redisClient = new Redis();
+    const redisClient = new Redis(process.env.REDIS_URL || undefined);
 
     app.use(
         session({
