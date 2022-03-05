@@ -1,6 +1,10 @@
 {
+    "engines": {
+        "node": "17.x",
+        "yarn": "1.22.x"
+    },
     "scripts": {
-        "heroku-prebuild": "cd server && yarn install && yarn start",
+        "heroku-prebuild": "cd server && yarn install",
         "start": "cd server && yarn start"
     }
 }
