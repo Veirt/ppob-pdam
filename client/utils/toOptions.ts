@@ -2,7 +2,7 @@ function toOptions<T>(
     states: Array<T>,
     value: keyof T,
     label: keyof T,
-    def?: { label: any; value: any }
+    def?: { label: string; value: unknown }
 ) {
     const options = states.map((state) => ({
         value: state[value] as any,

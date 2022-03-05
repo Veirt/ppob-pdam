@@ -25,11 +25,8 @@ const EditGolongan = () => {
         const newTarif = golongan.tarif.slice();
         (newTarif as any)[i][e.target.name as keyof Tarif] = e.target.value;
 
-        console.log(e.target.name, e.target.value);
-        console.log(newTarif);
-
         if (newTarif.length > 1 && e.target.name === "meter_kubik_akhir") {
-            (newTarif as any)[i + 1]["meter_kubik_awal"] = Number(e.target.value) + 1;
+            newTarif[i + 1]["meter_kubik_awal"] = Number(e.target.value) + 1;
         }
 
         setGolongan({ ...golongan, tarif: newTarif });

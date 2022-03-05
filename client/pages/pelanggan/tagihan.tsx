@@ -29,7 +29,7 @@ import toCurrency from "../../utils/toCurrency";
 import toOptions from "../../utils/toOptions";
 import toPeriod from "../../utils/toPeriod";
 
-interface BillQuery extends Partial<Query> {
+interface BillQuery extends Query {
     sudah_dibayar: "0" | "1" | "";
     id_pelanggan: string;
     periode: string;
@@ -220,7 +220,7 @@ const BillTable: FC<Props> = ({ routerQuery }) => {
                         </Table>
                         <Pagination
                             isLoading={isLoading}
-                            query={query as any}
+                            query={query}
                             setQuery={setQuery}
                             count={count}
                         />

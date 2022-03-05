@@ -48,7 +48,7 @@ export const getPemakaianById: Controller = async (req, res) => {
 };
 
 export const getPemakaian: Controller = async (req, res) => {
-    const { sudah_dibayar, id_pelanggan } = req.query;
+    const { sudah_dibayar, id_pelanggan, periode } = req.query;
 
     const take = Number(req.query.take) || 25;
     const skip = Number(req.query.skip) || 0;
@@ -73,8 +73,8 @@ export const getPemakaian: Controller = async (req, res) => {
         pemakaian = pemakaian.andWhere("pemakaian.pembayaran IS NULL");
     }
 
-    if (req.query.periode) {
-        const [year, month] = (req.query.periode as string).split("-");
+    if (periode) {
+        const [year, month] = (periode as string).split("-");
         pemakaian = pemakaian.andWhere(
             "MONTH(pemakaian.tanggal) = :month AND YEAR(pemakaian.tanggal) = :year",
             { month, year }

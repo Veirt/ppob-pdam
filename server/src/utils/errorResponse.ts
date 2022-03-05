@@ -1,4 +1,5 @@
 import type { Response } from "express";
+import { ValidationError } from "fastest-validator";
 
 export const handleError = (type: string, res: Response, data?: any): Response<any> => {
     let statusCode = 500;
@@ -15,7 +16,9 @@ export const handleError = (type: string, res: Response, data?: any): Response<a
     return res.status(statusCode).json(data);
 };
 
-export const handleValidationError = (validationResult: any[]): any[] | false => {
+export const handleValidationError = (
+    validationResult: ValidationError[]
+): ValidationError[] | false => {
     if (validationResult.length > 0) {
         return validationResult;
     }

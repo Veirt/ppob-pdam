@@ -239,7 +239,6 @@ export const validateGolongan = async (body: any, id?: string) => {
 
     // could have find a better solution.
     // forgive me, future of me.
-
     if (body.tarif[0].meter_kubik_awal != 0) {
         result.push({
             type: "invalid",
