@@ -1,10 +1,11 @@
 import { useToast } from "@chakra-ui/react";
+import type { GolonganState } from "@components/forms/golongan";
+import GolonganForm from "@components/forms/golongan";
+import useFetch from "@hooks/useFetch";
+import type { Tarif } from "@types";
+import api, { isAxiosError } from "@utils/api";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Tarif } from "../../@types";
-import GolonganForm, { GolonganState } from "../../components/forms/golongan";
-import useFetch from "../../hooks/useFetch";
-import api, { isAxiosError } from "../../utils/api";
 
 const EditGolongan = () => {
     const toast = useToast();
@@ -58,15 +59,14 @@ const EditGolongan = () => {
     };
 
     return (
-        <>
-            <GolonganForm
-                state={golongan}
-                setState={setGolongan}
-                handleChange={handleChange}
-                handleTarifChange={handleTarifChange}
-                isLoading={isLoading}
-                handleSubmit={handleSubmit}></GolonganForm>
-        </>
+        <GolonganForm
+            state={golongan}
+            setState={setGolongan}
+            handleChange={handleChange}
+            handleTarifChange={handleTarifChange}
+            isLoading={isLoading}
+            handleSubmit={handleSubmit}
+        />
     );
 };
 

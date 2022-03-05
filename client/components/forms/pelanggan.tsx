@@ -1,9 +1,9 @@
 import { Box, Button, Container, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import useFetch from "@hooks/useFetch";
+import type { Golongan } from "@types";
+import toOptions from "@utils/toOptions";
 import { Select } from "chakra-react-select";
-import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction } from "react";
-import { Golongan } from "../../@types";
-import useFetch from "../../hooks/useFetch";
-import toOptions from "../../utils/toOptions";
+import type { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction } from "react";
 
 export interface CustomerState {
     nama: string;

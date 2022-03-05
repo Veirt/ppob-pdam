@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { User } from "../@types";
+import { User } from "@types";
+import type { FC } from "react";
 import { useAuth } from "./providers/UserProvider";
 
 interface Props {

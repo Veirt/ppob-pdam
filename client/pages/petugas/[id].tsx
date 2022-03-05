@@ -1,10 +1,11 @@
 import { useToast } from "@chakra-ui/react";
+import EmployeeForm, { EmployeeState } from "@components/forms/petugas";
+import useFetch from "@hooks/useFetch";
+import Toast from "@lib/toast";
+import type { ValidationError } from "@types";
+import api, { isAxiosError } from "@utils/api";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { ValidationError } from "../../@types";
-import EmployeeForm, { EmployeeState } from "../../components/forms/petugas";
-import useFetch from "../../hooks/useFetch";
-import api, { isAxiosError } from "../../utils/api";
 
 const EditEmployee = () => {
     const toast = useToast();
@@ -35,14 +36,7 @@ const EditEmployee = () => {
         } catch (err) {
             if (isAxiosError(err)) {
                 err.response!.data.forEach((validationError: ValidationError) => {
-                    toast({
-                        position: "top-right",
-                        title: "Error",
-                        description: validationError.message,
-                        status: "error",
-                        duration: 3000,
-                        isClosable: true,
-                    });
+                    Toast(toast, "any", validationError.message);
                 });
             }
         } finally {
@@ -51,15 +45,13 @@ const EditEmployee = () => {
     };
 
     return (
-        <>
-            <EmployeeForm
-                state={employee}
-                setState={setEmployee}
-                isLoading={isLoading}
-                handleChange={handleChange}
-                handleSubmit={handleSubmit}
-            />
-        </>
+        <EmployeeForm
+            state={employee}
+            setState={setEmployee}
+            isLoading={isLoading}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+        />
     );
 };
 

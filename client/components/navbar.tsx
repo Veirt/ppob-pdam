@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
-import { FC } from "react";
+import type { FC } from "react";
 import Authorization from "./authorization";
 import { useAuth } from "./providers/UserProvider";
 

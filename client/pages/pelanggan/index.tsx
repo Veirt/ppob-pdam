@@ -13,6 +13,7 @@ import {
     Tr,
     useToast,
 } from "@chakra-ui/react";
+import Toast from "@lib/toast";
 import { GetServerSideProps, NextPage } from "next";
 import NextLink from "next/link";
 import { ParsedUrlQuery } from "querystring";
@@ -21,7 +22,6 @@ import { Customer, Query } from "../../@types";
 import DeleteWithAlert from "../../components/alert";
 import Authorization from "../../components/authorization";
 import Pagination from "../../components/pagination";
-import unauthorizedToast from "../../lib/toast/unauthorized";
 import api, { isAxiosError } from "../../utils/api";
 
 interface CustomerQuery extends Query {
@@ -55,7 +55,7 @@ const Pelanggan: NextPage<Props> = ({ routerQuery }) => {
             setCount(res.data.count);
         } catch (err) {
             if (isAxiosError(err)) {
-                if (err.response?.status === 401) unauthorizedToast(toast);
+                if (err.response?.status === 401) Toast(toast, "unauthorized");
             }
         } finally {
             setLoading(false);

@@ -14,16 +14,17 @@ import {
     useDisclosure,
     useToast,
 } from "@chakra-ui/react";
+import { useAuth } from "@components/providers/UserProvider";
+import Toast from "@lib/toast";
+import { Employee, Usage, ValidationError } from "@types";
+import api, { isAxiosError } from "@utils/api";
+import toCurrency from "@utils/toCurrency";
+import toPeriod from "@utils/toPeriod";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { ParsedUrlQuery } from "querystring";
 import { ChangeEvent, FC, FormEvent, useEffect, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
-import { Employee, Usage, ValidationError } from "../../../@types";
-import { useAuth } from "../../../components/providers/UserProvider";
-import api, { isAxiosError } from "../../../utils/api";
-import toCurrency from "../../../utils/toCurrency";
-import toPeriod from "../../../utils/toPeriod";
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -33,7 +34,7 @@ interface IPaymentState {
     petugas: Employee;
 }
 
-const Usage: FC<{ routerParams: ParsedUrlQuery }> = ({ routerParams }) => {
+const UsageForm: FC<{ routerParams: ParsedUrlQuery }> = ({ routerParams }) => {
     const router = useRouter();
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -106,14 +107,7 @@ const Usage: FC<{ routerParams: ParsedUrlQuery }> = ({ routerParams }) => {
 
                     JSON.parse(enc.decode(err.response.data)).forEach(
                         (validationError: ValidationError) => {
-                            toast({
-                                position: "top-right",
-                                title: "Error",
-                                description: validationError.message,
-                                status: "error",
-                                duration: 3000,
-                                isClosable: true,
-                            });
+                            Toast(toast, "any", validationError.message);
                         }
                     );
                 } else {
@@ -282,4 +276,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
 };
 
-export default Usage;
+export default UsageForm;

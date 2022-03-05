@@ -1,15 +1,15 @@
 import { Box, Button, Container, Flex, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import Pagination from "@components/pagination";
+import useFetch from "@hooks/useFetch";
+import type { Customer, Query, Usage } from "@types";
+import api from "@utils/api";
+import toOptions from "@utils/toOptions";
+import toPeriod from "@utils/toPeriod";
 import { Select } from "chakra-react-select";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import NextLink from "next/link";
-import { ParsedUrlQuery } from "querystring";
+import type { ParsedUrlQuery } from "querystring";
 import { FC, useEffect, useState } from "react";
-import { Customer, Query, Usage } from "../../@types";
-import Pagination from "../../components/pagination";
-import useFetch from "../../hooks/useFetch";
-import api from "../../utils/api";
-import toOptions from "../../utils/toOptions";
-import toPeriod from "../../utils/toPeriod";
 
 interface UsageQuery extends Query {
     id_pelanggan: string;

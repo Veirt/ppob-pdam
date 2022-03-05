@@ -1,5 +1,5 @@
 import { Box, Button, Container, FormLabel, Input, Switch } from "@chakra-ui/react";
-import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction } from "react";
+import type { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction } from "react";
 
 export interface RoleState {
     nama_role: string;

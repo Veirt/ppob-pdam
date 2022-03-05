@@ -1,9 +1,9 @@
 import { useToast } from "@chakra-ui/react";
+import EmployeeForm, { EmployeeState } from "@components/forms/petugas";
+import { ValidationError } from "@types";
+import api, { isAxiosError } from "@utils/api";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { ValidationError } from "../../@types";
-import EmployeeForm, { EmployeeState } from "../../components/forms/petugas";
-import api, { isAxiosError } from "../../utils/api";
 
 const CreateEmployee = () => {
     const toast = useToast();
@@ -52,15 +52,13 @@ const CreateEmployee = () => {
     };
 
     return (
-        <>
-            <EmployeeForm
-                state={employee}
-                setState={setEmployee}
-                isLoading={isLoading}
-                handleChange={handleChange}
-                handleSubmit={handleSubmit}
-            />
-        </>
+        <EmployeeForm
+            state={employee}
+            setState={setEmployee}
+            isLoading={isLoading}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+        />
     );
 };
 

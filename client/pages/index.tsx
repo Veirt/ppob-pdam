@@ -1,8 +1,10 @@
 import { Box, Button, Container, FormLabel, Input, useToast } from "@chakra-ui/react";
+import { useAuth } from "@components/providers/UserProvider";
+import Toast from "@lib/toast";
+import api, { isAxiosError } from "@utils/api";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { useAuth } from "../components/providers/UserProvider";
-import api, { isAxiosError } from "../utils/api";
+
 interface State {
     username: string;
     password: string;
@@ -35,14 +37,7 @@ const Login = () => {
             router.replace("/dashboard");
         } catch (err) {
             if (isAxiosError(err)) {
-                toast({
-                    position: "top-right",
-                    title: "Error",
-                    description: err.response!.data.msg,
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                });
+                Toast(toast, "any", err.response?.data.msg);
             }
 
             console.error(`Unexpected error: ${err}`);

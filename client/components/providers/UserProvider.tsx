@@ -1,4 +1,5 @@
-import axios from "axios";
+import type { User } from "@types";
+import api, { isAxiosError } from "@utils/api";
 import {
     createContext,
     Dispatch,
@@ -8,7 +9,6 @@ import {
     useEffect,
     useState,
 } from "react";
-import { User } from "../../@types";
 
 interface Context {
     user: User;
@@ -27,14 +27,14 @@ export const UserProvider: FC = ({ children }) => {
             setLoading(true);
 
             try {
-                const res = await axios.get(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/@me`, {
+                const res = await api.get("/auth/@me", {
                     withCredentials: true,
                 });
 
                 setUser({ ...res.data, isAuthenticated: true });
             } catch (err) {
                 setUser({ isAuthenticated: false });
-                if (axios.isAxiosError(err)) {
+                if (isAxiosError(err)) {
                     if (err.response?.status !== 401) {
                         console.error(`Unexpected error when logging in: ${err}`);
                     }

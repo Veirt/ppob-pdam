@@ -1,11 +1,11 @@
 import { Button, Container, Flex, Icon, Spinner } from "@chakra-ui/react";
+import Authorization from "@components/authorization";
+import api from "@utils/api";
 import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
 import { FC, useEffect, useState } from "react";
 import { FaFileAlt, FaFileInvoice, FaFileInvoiceDollar, FaUser, FaUserTie } from "react-icons/fa";
-import Authorization from "../../components/authorization";
-import api from "../../utils/api";
 
 interface InfoProps {
     href: string;

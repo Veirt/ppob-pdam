@@ -1,9 +1,11 @@
 import { useToast } from "@chakra-ui/react";
+import type { GolonganState } from "@components/forms/golongan";
+import GolonganForm from "@components/forms/golongan";
+import Toast from "@lib/toast";
+import type { Tarif } from "@types";
+import api, { isAxiosError } from "@utils/api";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
-import { Tarif } from "../../@types";
-import GolonganForm, { GolonganState } from "../../components/forms/golongan";
-import api, { isAxiosError } from "../../utils/api";
 
 const CreateGolongan = () => {
     const router = useRouter();
@@ -40,14 +42,7 @@ const CreateGolongan = () => {
         } catch (err) {
             if (isAxiosError(err)) {
                 if (err.response!.status === 400) {
-                    toast({
-                        position: "top-right",
-                        title: "Error",
-                        description: err.response?.data[0].message,
-                        status: "error",
-                        duration: 3000,
-                        isClosable: true,
-                    });
+                    Toast(toast, "any", err.response?.data[0].message);
                 }
             }
         } finally {
@@ -56,15 +51,14 @@ const CreateGolongan = () => {
     };
 
     return (
-        <>
-            <GolonganForm
-                state={golongan}
-                setState={setGolongan}
-                handleChange={handleChange}
-                handleTarifChange={handleTarifChange}
-                isLoading={isLoading}
-                handleSubmit={handleSubmit}></GolonganForm>
-        </>
+        <GolonganForm
+            state={golongan}
+            setState={setGolongan}
+            handleChange={handleChange}
+            handleTarifChange={handleTarifChange}
+            isLoading={isLoading}
+            handleSubmit={handleSubmit}
+        />
     );
 };
 

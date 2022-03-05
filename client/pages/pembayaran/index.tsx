@@ -1,12 +1,12 @@
 import { Container, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
-import { GetServerSideProps } from "next";
-import { ParsedUrlQuery } from "querystring";
+import Pagination from "@components/pagination";
+import type { Payment, Query } from "@types";
+import api from "@utils/api";
+import toCurrency from "@utils/toCurrency";
+import toPeriod from "@utils/toPeriod";
+import type { GetServerSideProps } from "next";
+import type { ParsedUrlQuery } from "querystring";
 import { FC, useEffect, useState } from "react";
-import { Payment, Query } from "../../@types";
-import Pagination from "../../components/pagination";
-import api from "../../utils/api";
-import toCurrency from "../../utils/toCurrency";
-import toPeriod from "../../utils/toPeriod";
 
 interface Props {
     routerQuery: ParsedUrlQuery;

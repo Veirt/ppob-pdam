@@ -1,6 +1,6 @@
 import { Box, Button, CloseButton, Container, Flex, FormLabel, Input } from "@chakra-ui/react";
-import { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction } from "react";
-import { Tarif } from "../../@types";
+import type { Tarif } from "@types";
+import type { ChangeEvent, Dispatch, FC, FormEvent, SetStateAction } from "react";
 
 export interface GolonganState {
     nama_golongan: string;

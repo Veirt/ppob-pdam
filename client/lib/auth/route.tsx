@@ -7,9 +7,9 @@ import {
     CloseButton,
     Spinner,
 } from "@chakra-ui/react";
+import { useAuth } from "@components/providers/UserProvider";
 import { useRouter } from "next/router";
-import { FC } from "react";
-import { useAuth } from "../../components/providers/UserProvider";
+import type { FC } from "react";
 
 const ProtectedRoute: FC = ({ children }) => {
     const router = useRouter();

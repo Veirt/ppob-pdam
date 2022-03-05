@@ -1,5 +1,5 @@
 import { Button, Center } from "@chakra-ui/react";
-import { Dispatch, FC, SetStateAction } from "react";
+import type { Dispatch, FC, SetStateAction } from "react";
 
 interface Props {
     isLoading: boolean;

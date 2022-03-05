@@ -12,21 +12,22 @@ import {
     Tr,
     useToast,
 } from "@chakra-ui/react";
+import DeleteWithAlert from "@components/alert";
+import Pagination from "@components/pagination";
+import { useAuth } from "@components/providers/UserProvider";
+import Toast from "@lib/toast";
+import type { Golongan, Query } from "@types";
+import api, { isAxiosError } from "@utils/api";
 import NextLink from "next/link";
 import { GetServerSideProps } from "next/types";
-import { ParsedUrlQuery } from "querystring";
+import type { ParsedUrlQuery } from "querystring";
 import { ChangeEvent, FC, useEffect, useState } from "react";
-import { Golongan, Query } from "../../@types";
-import DeleteWithAlert from "../../components/alert";
-import Pagination from "../../components/pagination";
-import { useAuth } from "../../components/providers/UserProvider";
-import api, { isAxiosError } from "../../utils/api";
 
 interface Props {
     routerQuery: ParsedUrlQuery;
 }
 
-const Golongan: FC<Props> = ({ routerQuery }) => {
+const GolonganTable: FC<Props> = ({ routerQuery }) => {
     const toast = useToast();
 
     const { loadingUser } = useAuth();
@@ -41,6 +42,7 @@ const Golongan: FC<Props> = ({ routerQuery }) => {
 
         try {
             const res = await api.get("/golongan", { params: query });
+
             setCategory(res.data.result);
             setCount(res.data.count);
         } catch (err) {
@@ -74,14 +76,7 @@ const Golongan: FC<Props> = ({ routerQuery }) => {
             });
         } catch (err) {
             if (isAxiosError(err)) {
-                toast({
-                    position: "top-right",
-                    title: "Error",
-                    description: err.response!.data.message,
-                    status: "error",
-                    duration: 3000,
-                    isClosable: true,
-                });
+                Toast(toast, "any", err.response?.data.message);
             }
         } finally {
             fetchGolongan();
@@ -163,4 +158,4 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
 };
 
-export default Golongan;
+export default GolonganTable;

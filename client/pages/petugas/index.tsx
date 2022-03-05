@@ -12,14 +12,14 @@ import {
     Tr,
     useToast,
 } from "@chakra-ui/react";
-import { GetServerSideProps } from "next";
+import DeleteWithAlert from "@components/alert";
+import Pagination from "@components/pagination";
+import type { Employee, Query } from "@types";
+import api from "@utils/api";
+import type { GetServerSideProps } from "next";
 import NextLink from "next/link";
-import { ParsedUrlQuery } from "querystring";
+import type { ParsedUrlQuery } from "querystring";
 import { ChangeEvent, FC, useEffect, useState } from "react";
-import { Employee, Query } from "../../@types";
-import DeleteWithAlert from "../../components/alert";
-import Pagination from "../../components/pagination";
-import api from "../../utils/api";
 
 interface Props {
     routerQuery: ParsedUrlQuery;

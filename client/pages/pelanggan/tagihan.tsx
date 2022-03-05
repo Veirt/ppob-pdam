@@ -16,18 +16,18 @@ import {
     Thead,
     Tr,
 } from "@chakra-ui/react";
+import Pagination from "@components/pagination";
+import useFetch from "@hooks/useFetch";
+import type { Customer, Query, Usage } from "@types";
+import api from "@utils/api";
+import toCurrency from "@utils/toCurrency";
+import toOptions from "@utils/toOptions";
+import toPeriod from "@utils/toPeriod";
 import { Select } from "chakra-react-select";
-import { GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import NextLink from "next/link";
-import { ParsedUrlQuery } from "querystring";
+import type { ParsedUrlQuery } from "querystring";
 import { ChangeEvent, FC, useEffect, useState } from "react";
-import { Customer, Query, Usage } from "../../@types";
-import Pagination from "../../components/pagination";
-import useFetch from "../../hooks/useFetch";
-import api from "../../utils/api";
-import toCurrency from "../../utils/toCurrency";
-import toOptions from "../../utils/toOptions";
-import toPeriod from "../../utils/toPeriod";
 
 interface BillQuery extends Query {
     sudah_dibayar: "0" | "1" | "";

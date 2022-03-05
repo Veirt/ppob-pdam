@@ -1,11 +1,12 @@
 import { Box, Button, Container, FormLabel, Input, useToast } from "@chakra-ui/react";
-import { GetServerSideProps } from "next";
+import useFetch from "@hooks/useFetch";
+import Toast from "@lib/toast";
+import { Customer, ValidationError } from "@types";
+import api, { isAxiosError } from "@utils/api";
+import type { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import { ParsedUrlQuery } from "querystring";
+import type { ParsedUrlQuery } from "querystring";
 import { ChangeEvent, FC, FormEvent, useState } from "react";
-import { Customer, ValidationError } from "../../../../@types";
-import useFetch from "../../../../hooks/useFetch";
-import api, { isAxiosError } from "../../../../utils/api";
 
 interface IUsageState {
     pelanggan: Customer;
@@ -43,14 +44,7 @@ const EditUsage: FC<{ routerParams: ParsedUrlQuery }> = ({ routerParams }) => {
         } catch (err) {
             if (isAxiosError(err)) {
                 err.response!.data.forEach((validationError: ValidationError) => {
-                    toast({
-                        position: "top-right",
-                        title: "Error",
-                        description: validationError.message,
-                        status: "error",
-                        duration: 3000,
-                        isClosable: true,
-                    });
+                    Toast(toast, "any", validationError.message);
                 });
             }
         } finally {
