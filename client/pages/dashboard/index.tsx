@@ -1,4 +1,4 @@
-import { Button, Container, Flex, Icon } from "@chakra-ui/react";
+import { Button, Container, Flex, Text, Icon, Spinner } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Head from "next/head";
 import NextLink from "next/link";
@@ -23,7 +23,9 @@ const InfoItem: FC<InfoProps> = ({ children, href, icon }) => {
                 my="3"
                 minWidth={"96"}
                 minHeight={"40"}>
-                {children}
+                <Flex flexDirection={"column"} justifyContent="center" alignItems="center">
+                    {children}
+                </Flex>
             </Button>
         </NextLink>
     );
@@ -88,17 +90,15 @@ const Home: NextPage = () => {
                 <Flex justifyContent="center" wrap="wrap">
                     <Authorization>
                         <InfoItem icon={<Icon w={20} h={20} as={FaUser} />} href="/pelanggan">
-                            Jumlah Pelanggan
-                            <br />
-                            {dashboardData.customerCount}
+                            <p>Jumlah Pelanggan</p>
+                            {dashboardData.customerCount ?? <Spinner />}
                         </InfoItem>
                     </Authorization>
 
                     <Authorization roles={["admin"]}>
                         <InfoItem icon={<Icon w={20} h={20} as={FaUserTie} />} href="/petugas">
-                            Jumlah Petugas
-                            <br />
-                            {dashboardData.employeeCount}
+                            <p>Jumlah Petugas</p>
+                            {dashboardData.employeeCount ?? <Spinner />}
                         </InfoItem>
                     </Authorization>
 
@@ -106,9 +106,8 @@ const Home: NextPage = () => {
                         <InfoItem
                             icon={<Icon w={20} h={20} as={FaFileInvoice} />}
                             href="/pelanggan/tagihan?sudah_dibayar=0">
-                            Jumlah Tagihan Belum Dibayar
-                            <br />
-                            {dashboardData.paidOffCount}
+                            <p>Jumlah Tagihan Belum Dibayar</p>
+                            {dashboardData.paidOffCount ?? <Spinner />}
                         </InfoItem>
                     </Authorization>
 
@@ -116,9 +115,8 @@ const Home: NextPage = () => {
                         <InfoItem
                             icon={<Icon w={20} h={20} as={FaFileInvoiceDollar} />}
                             href="/pelanggan/tagihan?sudah_dibayar=1">
-                            Jumlah Tagihan Sudah Dibayar
-                            <br />
-                            {dashboardData.paidCount}
+                            <p>Jumlah Tagihan Sudah Dibayar</p>
+                            {dashboardData.paidCount ?? <Spinner />}
                         </InfoItem>
                     </Authorization>
 
@@ -126,9 +124,8 @@ const Home: NextPage = () => {
                         <InfoItem
                             icon={<Icon w={20} h={20} as={FaFileAlt} />}
                             href="/pelanggan?sudah_dicatat=0">
-                            Jumlah Pemakaian Belum Dicatat
-                            <br />
-                            {dashboardData.customerNotCheckedCount}
+                            <p>Jumlah Pemakaian Belum Dicatat</p>
+                            {dashboardData.customerNotCheckedCount ?? <Spinner />}
                         </InfoItem>
                     </Authorization>
                 </Flex>
