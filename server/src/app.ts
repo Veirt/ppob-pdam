@@ -33,11 +33,11 @@ connectDatabase().then(async () => {
 
     import("./routes").then((router) => app.use(router.default));
 
-    // // handle uncaught error
-    // process.on("uncaughtException", (err) => {
-    //     console.error(`Unexpected error: ${err}`);
-    // });
+    // handle uncaught error
+    process.on("uncaughtException", (err) => {
+        console.error(`Unexpected error: ${err}`);
+    });
 
     const PORT = process.env.PORT || 8080;
-    app.listen(PORT, () => console.log("Listening on http://localhost:8080"));
+    app.listen(PORT, () => console.log(`Listening on http://localhost:${PORT}`));
 });

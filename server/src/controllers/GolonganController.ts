@@ -11,6 +11,7 @@ const tarifRepository = getRepository(TarifPemakaian);
 export const getGolonganById: Controller = async (req, res) => {
     const golongan = await golonganRepository.findOne(req.params.id, { relations: ["tarif"] });
 
+    // sort tarif - hacky way
     //@ts-ignore
     if (golongan) golongan.tarif.sort((a, b) => parseFloat(a.tarif) - parseFloat(b.tarif));
 

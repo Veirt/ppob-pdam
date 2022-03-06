@@ -5,6 +5,7 @@ export default async () => {
         return await createConnection();
     } catch (err) {
         console.error(`Something went wrong when connecting to database: ${err}`);
+
         throw err;
     }
 };
