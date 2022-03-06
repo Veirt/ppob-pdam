@@ -19,12 +19,20 @@ connectDatabase().then(async () => {
     const RedisStore = connectRedis(session); //Configure redis client
     const redisClient = new Redis(process.env.REDIS_URL || undefined);
 
+    if (process.env.NODE_ENV === "production") {
+        app.set("trust proxy", 1);
+    }
+
     app.use(
         session({
             store: new RedisStore({ client: redisClient }),
             saveUninitialized: true,
             resave: true,
             secret: process.env.SESSION_SECRET!,
+            cookie: {
+                sameSite: process.env.NODE_ENV === "production" ? "none" : undefined,
+                secure: process.env.NODE_ENV === "production",
+            },
         })
     );
     app.use(passport.initialize());

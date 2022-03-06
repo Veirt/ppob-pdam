@@ -1,5 +1,5 @@
 import { useAuth } from "@components/providers/UserProvider";
-import api from "@utils/api";
+import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
@@ -10,7 +10,7 @@ const Logout = () => {
     useEffect(() => {
         const logOut = async () => {
             try {
-                await api.post(
+                await axios.post(
                     `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/logout`,
                     {},
                     { withCredentials: true }

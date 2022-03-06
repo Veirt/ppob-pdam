@@ -1,7 +1,8 @@
 import { Box, Button, Container, FormLabel, Input, useToast } from "@chakra-ui/react";
 import { useAuth } from "@components/providers/UserProvider";
 import Toast from "@lib/toast";
-import api, { isAxiosError } from "@utils/api";
+import axios from "axios";
+import { isAxiosError } from "@utils/api";
 import { useRouter } from "next/router";
 import { ChangeEvent, FormEvent, useState } from "react";
 
@@ -28,9 +29,13 @@ const Login = () => {
         setLoading(true);
 
         try {
-            const res = await api.post(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`, {
-                ...state,
-            });
+            const res = await axios.post(
+                `${process.env.NEXT_PUBLIC_API_ENDPOINT}/auth/login`,
+                {
+                    ...state,
+                },
+                { withCredentials: true }
+            );
 
             setUser(res.data);
 
