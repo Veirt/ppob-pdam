@@ -1,16 +1,14 @@
 {
     "name": "server",
     "version": "1.0.0",
-    "description": "",
-    "main": "index.js",
+    "private": false,
+    "license": "AGPL-3.0-or-later",
     "scripts": {
         "start": "ts-node --transpile-only 'src/app.ts'",
         "start:compiled": "cd dist && node app.js",
         "dev": "ts-node-dev 'src/app.ts'",
         "build": "tsc"
     },
-    "keywords": [],
-    "author": "",
     "devDependencies": {
         "@types/connect-redis": "^0.0.18",
         "@types/cors": "^2.8.12",
