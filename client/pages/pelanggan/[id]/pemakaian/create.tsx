@@ -2,6 +2,7 @@ import { Box, Button, Container, FormLabel, Input, useToast } from "@chakra-ui/r
 import Toast from "@lib/toast";
 import { Customer, ValidationError } from "@types";
 import api, { isAxiosError } from "@utils/api";
+import toPeriod from "@utils/toPeriod";
 import type { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import type { ParsedUrlQuery } from "querystring";
@@ -79,6 +80,11 @@ const CreateUsage: FC<{ routerParams: ParsedUrlQuery }> = ({ routerParams }) => 
                             onChange={handleChange}
                             required
                         />
+                    </Box>
+
+                    <Box my={3}>
+                        <FormLabel>Periode</FormLabel>
+                        <Input type="text" disabled value={toPeriod(new Date())} />
                     </Box>
 
                     <Box my={3}>
